@@ -24,7 +24,7 @@ export function Frame({ meta, children }: { meta: EpisodeMeta; children: ReactNo
           </button>
         </header>
       )}
-      <Stage record={record}>
+      <Stage>
         <Suspense fallback={null}>{children}</Suspense>
         <Mark number={meta.number} />
       </Stage>
