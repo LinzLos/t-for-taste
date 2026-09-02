@@ -1,0 +1,58 @@
+/* Chassis only. Episodes own everything inside .stage.
+   Deliberately not a component library: paper ground, ink, one mono face, no cards. */
+:root {
+  --paper: #efe9dd;
+  --ink: #141210;
+  --rule: #141210;
+  --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.4 var(--mono); }
+a { color: inherit; }
+
+/* index */
+.index { max-width: 62ch; margin: 0 auto; padding: 8vh 24px 12vh; }
+.index h1 { font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.04em; margin: 0 0 .3em; font-weight: 700; }
+.lede { margin: 0 0 3em; max-width: 44ch; }
+.episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
+.episode-list li { border-bottom: 2px solid var(--rule); }
+.episode-list a { display: grid; grid-template-columns: 5ch 1fr auto auto; gap: 1.5ch; padding: 1.1em 0; text-decoration: none; }
+.episode-list a:hover .name { text-decoration: underline; text-underline-offset: .2em; }
+.episode-list .mat, .episode-list .draft { opacity: .55; }
+.episode-list li[data-status="draft"] .name { opacity: .55; }
+.sign { margin-top: 4em; opacity: .55; }
+
+/* frame */
+.frame { min-height: 100%; display: grid; grid-template-rows: auto 1fr auto; }
+.frame-bar { display: flex; align-items: baseline; gap: 2ch; padding: 14px 20px; border-bottom: 2px solid var(--rule); }
+.frame-bar .back { text-decoration: none; font-weight: 700; }
+.frame-bar .title { flex: 1; }
+.rm-toggle { font: inherit; background: none; border: 2px solid var(--rule); color: inherit; padding: 2px 10px; cursor: pointer; }
+.rm-toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+.stage-host { position: relative; display: grid; place-items: center; padding: 24px; min-height: 0; overflow: hidden; }
+.stage { position: relative; flex: none; transform-origin: center; overflow: hidden; background: #fff; box-shadow: 0 0 0 2px var(--rule); }
+.frame--record { grid-template-rows: 1fr; }
+.frame--record .stage-host { padding: 0; background: var(--paper); height: 100vh; }
+.frame--record .stage { box-shadow: none; }
+
+.mark { position: absolute; left: 36px; bottom: 32px; font: 700 28px/1 var(--mono); letter-spacing: .02em; color: currentColor; mix-blend-mode: difference; color: #fff; pointer-events: none; }
+
+.caption { padding: 20px; border-top: 2px solid var(--rule); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
+.caption dt { font-weight: 700; }
+.caption dd { margin: 0; }
+.values { border-collapse: collapse; align-self: start; }
+.values caption { text-align: left; font-weight: 700; margin-bottom: .5em; }
+.values th, .values td { text-align: left; padding: .25em 2ch .25em 0; border-top: 1px solid var(--rule); vertical-align: top; font-weight: 400; }
+.meta-line { grid-column: 1 / -1; margin: 0; opacity: .55; }
+@media (max-width: 720px) { .caption { grid-template-columns: 1fr; } }
+
+/* draft stub inside the stage */
+.stub { position: absolute; inset: 0; display: grid; place-content: center; gap: .5em; text-align: center; font: 700 40px/1 var(--mono); background: #d8d3c7; color: var(--ink); }
+.stub span + span { font-size: 22px; font-weight: 400; opacity: .6; }
+
+/* reduced-motion twin: episodes read [data-reduced="true"] or useReducedMotion() */
+html[data-reduced="true"] .stage * { animation-duration: 0s !important; transition-duration: 0s !important; }

@@ -1,0 +1,29 @@
+{
+  "name": "t-for-taste",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "manifest": "tsx scripts/manifest.ts",
+    "prebuild": "npm run manifest",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "motion": "^12.23.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.14.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}
