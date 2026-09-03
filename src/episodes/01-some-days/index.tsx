@@ -25,17 +25,47 @@ function useRage(onRage: () => void) {
 }
 
 // ── Pieces ───────────────────────────────────────────────────────────────────
-function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => void }) {
+// Cards can be dragged (a working prototype should let you move the pieces; the wires follow).
+// A small movement threshold keeps a tap a tap.
+const DRAG_THRESHOLD = 4
+function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos: { x: number; y: number }; onPress?: () => void; onMove: (id: string, x: number, y: number) => void }) {
   const state = n.state[beat]
   const pill = n.pill[beat]
+  const drag = useRef<{ sx: number; sy: number; ox: number; oy: number; k: number; moved: boolean } | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return
+    const scene = e.currentTarget.parentElement as HTMLElement
+    const k = scene.getBoundingClientRect().width / scene.offsetWidth
+    drag.current = { sx: e.clientX, sy: e.clientY, ox: pos.x, oy: pos.y, k, moved: false }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current; if (!d) return
+    const dx = (e.clientX - d.sx) / d.k, dy = (e.clientY - d.sy) / d.k
+    if (!d.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
+    if (!d.moved) { d.moved = true; setDragging(true) }
+    const el = e.currentTarget
+    onMove(n.id, Math.max(0, Math.min(1008 - el.offsetWidth, d.ox + dx)), Math.max(0, Math.min(800 - el.offsetHeight, d.oy + dy)))
+  }
+  const onPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = drag.current; drag.current = null
+    e.currentTarget.releasePointerCapture(e.pointerId)
+    setDragging(false)
+    if (d && !d.moved && onPress) onPress()
+  }
   return (
     <div
-      className={`node node--${state}${n.dashed ? ' node--dashed' : ''}`}
-      style={{ left: n.x, top: n.y }}
+      className={`node node--${state}${n.dashed ? ' node--dashed' : ''}${dragging ? ' node--dragging' : ''}`}
+      style={{ left: pos.x, top: pos.y }}
       data-node={n.id}
-      onClick={onPress}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={() => { drag.current = null; setDragging(false) }}
       role={onPress ? 'button' : undefined}
       tabIndex={onPress ? 0 : undefined}
+      onKeyDown={onPress ? e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPress() } } : undefined}
     >
       <span className="node-type">{n.type}</span>
       <span className="node-title">{n.title}</span>
@@ -45,7 +75,7 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
   )
 }
 
-function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElement>; beat: Beat; stateOf: (id: string) => string }) {
+function Connectors({ host, beat, stateOf, layoutKey }: { host: React.RefObject<HTMLDivElement>; beat: Beat; stateOf: (id: string) => string; layoutKey: string }) {
   const [d, setD] = useState<{ d: string; dashed: boolean; id: string; from: string }[]>([])
   const [tick, setTick] = useState(0)
   useEffect(() => { const el = host.current; if (!el) return; const ro = new ResizeObserver(() => setTick(t => t + 1)); ro.observe(el); return () => ro.disconnect() }, [host])
@@ -61,7 +91,7 @@ function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElem
       const sx = A.cx + 40
       return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 70} ${B.cx} ${B.t - 70} ${B.cx} ${B.t}` }
     }))
-  }, [host, beat, tick])
+  }, [host, beat, tick, layoutKey])
   return (
     <svg className="edges" aria-hidden>
       {d.map(e => {
@@ -122,6 +152,9 @@ const CLICK_GAPS = [0, 0.7, 0.45, 0.3, 0.2, 0.15]
 export default function SomeDays() {
   const [beat, setBeat] = useState<Beat>('calm')
   const [tries, setTries] = useState(2)
+  const [pos, setPos] = useState<Record<string, { x: number; y: number }>>(() => Object.fromEntries(NODES.map(n => [n.id, { x: n.x, y: n.y }])))
+  const move = useCallback((id: string, x: number, y: number) => setPos(p => ({ ...p, [id]: { x, y } })), [])
+  const layoutKey = useMemo(() => JSON.stringify(pos), [pos])
   const { reduced } = useReducedMotion()
   const canvas = useRef<HTMLDivElement>(null)
   const scene = useRef<HTMLDivElement>(null)
@@ -285,8 +318,8 @@ export default function SomeDays() {
         <div className="main">
           <div className="canvas" ref={canvas}>
             <div className="scene" ref={scene} style={{ transform: `scale(${sceneScale})` }}>
-              <Connectors host={scene} beat={beat} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
-              {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
+              <Connectors host={scene} beat={beat} layoutKey={layoutKey} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
+              {nodes.map(n => <Node key={n.id} n={n} beat={beat} pos={pos[n.id]} onMove={move} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
             </div>
           </div>
           <div className="log" ref={logRef}>

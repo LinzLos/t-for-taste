@@ -341,3 +341,6 @@ When the dot reaches Summarize the card wiggles (±3px, ±6px on a rage tap, fou
 
 ## Who is talking (2026-09-02, Lindsay: "how do I know what the user is typing and what the AI is saying")
 Two voices were already there (Fredoka right-aligned bubble vs Courier Prime left-aligned muted) but too subtle at sidebar size. Now: system lines carry a left rule in the state colour (teal while trying, hot once stuck), and the person's bubble has a fill. No persona, no name, no "I". When the live typing lands, motion joins the cue: she types, the machine's lines land whole.
+
+## Draggy droppy (2026-09-02, Lindsay)
+Cards drag with the pointer (pointer capture, scale-aware so it works in the scaled scene and in record mode, clamped to the canvas). The wires re-measure as a card moves. A 4px movement threshold keeps a tap a tap, so rage-clicking Reconnect still works and a drag never counts as a click. Grab and grabbing cursors, a lift shadow while dragging, keyboard Enter/Space still presses Reconnect.
