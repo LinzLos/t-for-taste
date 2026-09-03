@@ -118,3 +118,6 @@ Implications for the build (agent notes, not decisions):
 **Who:** Lindsay. The chat has to be typed live in the build, like a person doing it, so it reads as real. The chat area should be smaller, leaving more room for the agent workspace.
 **What changed in Figma:** canvas 640 → 800 tall; log 550 → 390. Messages are anchored to the bottom so the newest sits by the composer; older lines fade (0.6, then 0.35) and clip off the top. Lower nodes spread down 80px to use the space; connectors regenerated.
 **For the code build:** user lines type in character by character with a caret, at a human cadence that speeds up as the rage builds; system lines land after a beat; the log scrolls, it never grows; the composer is where the typing happens before each line commits. The cursor's rage clicking and the typing share one tempo curve.
+
+## Radius values pushed (2026-09-02, Lindsay: "can't tell at 24")
+Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathing **32 → 8**, shown at 24. Done = **0**. Reconnecting = jitter **0 ↔ 8**, shown at 4, hot stroke. Applied to the study strip and in context to frames 01–03. The rule stays: 0 or "not set yet"; the 48 is a state, not a style.
