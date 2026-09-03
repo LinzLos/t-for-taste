@@ -31,7 +31,7 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
   return (
     <div
       className={`node node--${state}${n.dashed ? ' node--dashed' : ''}`}
-      style={{ left: `min(${(n.x / 1008) * 100}%, calc(100% - 366px))`, top: `min(${(n.y / 800) * 100}%, calc(100% - 216px))` }}
+      style={{ left: n.x, top: n.y }}
       data-node={n.id}
       onClick={onPress}
       role={onPress ? 'button' : undefined}
@@ -124,7 +124,15 @@ export default function SomeDays() {
   const [tries, setTries] = useState(2)
   const { reduced } = useReducedMotion()
   const canvas = useRef<HTMLDivElement>(null)
+  const scene = useRef<HTMLDivElement>(null)
   const logRef = useRef<HTMLDivElement>(null)
+  // The canvas is a composed picture (1008 × 800). It scales to fit whatever box the window gives it.
+  const [sceneScale, setSceneScale] = useState(1)
+  useEffect(() => {
+    const el = canvas.current; if (!el) return
+    const fit = () => setSceneScale(Math.max(0.2, Math.min(el.clientWidth / 1008, el.clientHeight / 800)))
+    fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect()
+  }, [beat])
 
   const rage = useRage(() => setBeat(b => (b === 'calm' ? 'threshold' : b)))
   const [attempts, setAttempts] = useState<string[]>([])
@@ -174,7 +182,7 @@ export default function SomeDays() {
 
   // The pulse: something leaves Lotion, gets about halfway, and fizzles. Nothing arrives. That is the story.
   const pulse = useCallback((hot = false) => {
-    const el = canvas.current; if (!el || reduced) return
+    const el = scene.current; if (!el || reduced) return
     const path = el.querySelector<SVGPathElement>('#edge-lotion-summarize'), dot = el.querySelector<SVGCircleElement>('.pulse')
     if (!path || !dot) return
     gsap.killTweensOf(dot)
@@ -194,7 +202,7 @@ export default function SomeDays() {
   // Placeholder melt: cards soften, then slide off. The real choreography comes from Lindsay's Figma pass.
   useEffect(() => {
     if (beat !== 'pressed') return
-    const el = canvas.current!
+    const el = scene.current!
     const cards = el.querySelectorAll<HTMLElement>('.node')
     if (reduced) { const t = setTimeout(() => setBeat('review'), 200); return () => clearTimeout(t) }
     const tl = gsap.timeline({ onComplete: () => setBeat('review') })
@@ -257,8 +265,10 @@ export default function SomeDays() {
       ) : (
         <div className="main">
           <div className="canvas" ref={canvas}>
-            <Connectors host={canvas} beat={beat} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
-            {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
+            <div className="scene" ref={scene} style={{ transform: `scale(${sceneScale})` }}>
+              <Connectors host={scene} beat={beat} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
+              {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
+            </div>
           </div>
           <div className="log" ref={logRef}>
             <div className="messages" ref={msgsRef}>

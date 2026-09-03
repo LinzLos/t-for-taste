@@ -42,8 +42,9 @@ html[data-reduced="true"] .builder .rage { animation: none; }
 .rail span { width: 30px; height: 30px; border: 2.5px solid var(--muted); } .rail span.on { border-color: var(--ink); }
 
 /* canvas */
-.canvas { position: relative; flex: 1 1 auto; min-height: 0; height: 62%; }
-.edges { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.canvas { position: relative; flex: 1 1 auto; min-height: 0; height: 62%; overflow: hidden; }
+.scene { position: absolute; left: 0; top: 0; width: 1008px; height: 800px; transform-origin: top left; }
+.edges { position: absolute; inset: 0; width: 1008px; height: 800px; pointer-events: none; }
 .edge { fill: none; stroke: var(--line-strong); stroke-width: 3; stroke-linecap: round; } .edge--dashed { stroke-dasharray: 10 10; }
 /* edges carry state: listening marches, stuck goes hot and stops, idle stays dim */
 .edge--idle { opacity: .55; }
@@ -117,5 +118,5 @@ html[data-reduced="true"] .offer { animation: none; }
 @container (min-aspect-ratio: 1/1) {
   .main { flex-direction: row; }
   .log { width: 42%; max-width: 560px; height: auto; border-top: 0; border-left: 2px solid var(--line); }
-  .canvas { flex: 1; height: auto; min-height: 520px; }
+  .canvas { flex: 1; height: auto; min-height: 0; }
 }
