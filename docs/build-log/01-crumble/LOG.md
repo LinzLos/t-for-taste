@@ -72,3 +72,12 @@ Implications for the build (agent notes, not decisions):
 3. Never sent · Notify Marike stayed queued the whole time.
 **Why:** this is her Inkeep review pattern (rank by risk to the human, per-change undo, undo-all as the safety net) doing its real job inside the joke. The rage button becomes an entry point to review rather than a reset, which makes it a UX pattern and not just a gag. Chip reads "reviewing".
 **Open for Lindsay:** whether the review lives in the canvas area (current) or slides up from the log; whether "Try again, paragraph kept" should pre-fill the composer; the melt's end state now has to reveal a panel, not an empty wall.
+
+## Scenario v3: the integration that connects to the wrong place (2026-09-02, Lindsay's direction, agent's copy)
+**Who:** Lindsay: make it Marike setting up a workflow with a faux integration, a play on Notion, and something failing. Agent chose the failure and wrote the lines.
+**The faux integration:** **Notation**. (Sillier alternative considered: Lotion.)
+**The failure:** Notation connects to Marike's personal workspace instead of TulipTech's. Zero pages found. Every Reconnect reauthorizes the same wrong workspace. Rewrite and Notify Marike never start.
+**Frames:** Trigger node is now Notation · "Page saved · billing-and-invoices" (connecting → reconnecting · 9:41). Rewrite is queued throughout. Regenerate became Reconnect · "Reauthorize Notation" (attempt 2 → attempt 6 of 6), the cursor's rage target. Chip: connecting… → still connecting… → reviewing.
+**Log:** "connect Notation and pull billing-and-invoices" / Notation connected · 0 pages found / "it's in the TulipTech workspace, Billing folder" / same / "I CAN SEE IT RIGHT THERE" / reauthorizing Notation · attempt 6 · 0 pages found / "IT IS A PUBLIC PAGE".
+**Review:** 1 (hot) Connected to the wrong workspace · Switch. 2 Asked you to reauthorize six times · the button never changed the question. 3 Never ran. Footer: Disconnect Notation / Reconnect to TulipTech (primary).
+**Why this failure:** it is real, common, and not the agent being dumb; the system asked the wrong question six times. The review's job is to name the question, which is the whole point of the pattern.
