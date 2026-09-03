@@ -39,3 +39,10 @@ Implications for the build (agent notes, not decisions):
 - "Ready to start again" needs one honest affordance underneath, not a second UI. Probably a single prompt field and a blinking caret.
 - Reduced-motion twin: the state change still happens; the melt becomes a fade; the clean slate still arrives.
 - Filename/slug stays `01-crumble` until the spec is final, then rename to match the material.
+
+## Figma spec, first pass (2026-09-02, agent from Lindsay's verbal brief)
+**File:** https://www.figma.com/design/bHwmwtxOx3rm97VfoluIpg/t-for-taste
+**Who:** agent built the frames; Lindsay named the project ("some days are better than others") and set the concept.
+**What:** a `T/01 builder` variable collection (10 colours, dark), four components (Chip, Top button with publish/rage variants, Cursor, Node with done/running/queued/error variants), and four 1080×1350 state frames: 01 calm, 02 threshold, 03 pressed, 04 reveal.
+**Why these choices, all open to Lindsay:** Space Grotesk + JetBrains Mono + Bricolage Grotesque ExtraBold (no Inter, no Geist). Acid lime for "alive", the same hot orange as the plaster build for the threshold, so T/01 keeps one uncomfortable colour across both builds. The builder is a node-canvas workflow tool, not a chat app, so the melt has parts. The prompt log escalates in words while the cursor trail tightens toward Regenerate, which is the acceleration made visible. The top button is the only primary action, so its state change is unmistakable. The reveal is one field and a caret, nothing else.
+**Agent decisions Lindsay has not touched:** every colour value, the fonts, node copy, the four log lines, drip placement in 03, the "ready" chip in 04.
