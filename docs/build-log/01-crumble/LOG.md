@@ -85,3 +85,7 @@ Implications for the build (agent notes, not decisions):
 ## De-referencing pass (2026-09-02, Lindsay's intent: not so referential to the Inkeep challenge)
 **What moved away from the challenge:** billing-and-invoices → spring-lots; Rewrite "Tighten the pricing intro" → Summarize "Two lines for the team"; Slack #billing → #growers; the "Billing folder" → "under Sales"; footer "Not sure about any of it?" → "Not the day for this?" (ties to the title). 
 **What stays:** TulipTech and Marike, because the world is hers and it is not the challenge's copy. The review pattern's shape (ranked, per-finding action, one primary) stays because it is a pattern, not a quote.
+
+## Two calls (2026-09-02, Lindsay)
+**Elevation swap:** cards are now the deep purple (#220633 → bg/panel) and the wall is the aubergine (#241f27 → bg/canvas). Agent's reasoning, which she asked about first: the most saturated colour was on the wall, so cards receded; with the purple on the cards they read as slabs on a wall, which is what the melt needs. Field stays #352c3c. Swatches relabelled.
+**The faux Notion is Lotion.** Lindsay: "lotion is funny yes." Replaced everywhere: node title, "Reauthorize Lotion", the log, the review, "Disconnect Lotion".
