@@ -14,12 +14,6 @@
 .rail { grid-row: 2; grid-column: 1; }
 .main { grid-row: 2; grid-column: 2; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
 .review { grid-row: 2; grid-column: 2; overflow: auto; }
-/* landscape: the chat is a side panel, the canvas gets the rest */
-@container (min-aspect-ratio: 1/1) {
-  .main { flex-direction: row; }
-  .log { width: 42%; max-width: 560px; height: auto; border-top: 0; border-left: 2px solid var(--line); }
-  .canvas { flex: 1; height: auto; min-height: 520px; }
-}
 .builder button { font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 /* top bar */
@@ -118,3 +112,10 @@ html[data-reduced="true"] .offer { animation: none; }
 .cursor { position: absolute; left: 0; top: 0; width: 32px; height: 46px; pointer-events: none; z-index: 40; opacity: 0; will-change: transform; }
 .cursor svg path { fill: var(--ink); stroke: var(--canvas); stroke-width: 2; stroke-linejoin: round; }
 .hint { position: absolute; right: 40px; bottom: 30px; margin: 0; font-family: var(--mono); font-size: 18px; color: var(--muted); opacity: .6; pointer-events: none; }
+
+/* landscape: the chat is a side panel, the canvas gets the rest. Last, so it outranks the base rules. */
+@container (min-aspect-ratio: 1/1) {
+  .main { flex-direction: row; }
+  .log { width: 42%; max-width: 560px; height: auto; border-top: 0; border-left: 2px solid var(--line); }
+  .canvas { flex: 1; height: auto; min-height: 520px; }
+}

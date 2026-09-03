@@ -9,8 +9,8 @@ export function Stage({ children, record }: { children: ReactNode; record?: bool
   const host = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
   // Fluid needs room. Under 900px wide (phones, narrow tablets) the scaled 4:5 stage reads better.
-  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 900px)').matches)
-  useEffect(() => { const mq = window.matchMedia('(min-width: 900px)'); const on = (e: MediaQueryListEvent) => setWide(e.matches); mq.addEventListener('change', on); return () => mq.removeEventListener('change', on) }, [])
+  const [wide, setWide] = useState(() => window.innerWidth >= 900)
+  useEffect(() => { const on = () => setWide(window.innerWidth >= 900); on(); window.addEventListener('resize', on); const ro = new ResizeObserver(on); ro.observe(document.documentElement); return () => { window.removeEventListener('resize', on); ro.disconnect() } }, [])
   const fluid = !record && wide
 
   useEffect(() => {
