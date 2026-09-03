@@ -85,6 +85,7 @@ function Connectors({ host, beat, stateOf, layoutKey }: { host: React.RefObject<
   useLayoutEffect(() => {
     const el = host.current, root = svg.current; if (!el || !root) return
     const box = el.getBoundingClientRect()
+    if (!box.width || !el.offsetWidth) return // not laid out yet (hidden tab, first paint); the observer will call again
     const k = box.width / el.offsetWidth // any transform scale (record mode); 1 when fluid
     const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); const l = (b.left - box.left) / k, t = (b.top - box.top) / k, w = b.width / k, h = b.height / k; return { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2 } }
     for (const [a, b] of EDGES) {

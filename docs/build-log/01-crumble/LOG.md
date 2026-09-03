@@ -366,3 +366,4 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 - **Parked:** drag and drop (`DRAG_ENABLED`).
 - **Her open calls:** "Had enough?" with fresh eyes · melt frames for beat three · caption pass · wrapper pass · social-legibility type pass · "the rundown" name · pink heart or ink.
 - **Next build in order:** live typing + cursor tempo (plan above) → melt from her frames → record.
+**Post-audit check:** two console errors showed on a hidden-tab reload (wires with NaN coordinates, and a GSAP error downstream of them). Cause: measuring wires before the scene has a size. Guarded: the wire pass returns early when the scene has no width and lets the resize observer call again. Replayed every step with an error trap: tap, pulse, reception, play, autoplay, melt. Zero errors.
