@@ -200,3 +200,6 @@ Today's type decisions apply to the **episode** only: Fredoka for the product, C
 **What runs:** the four beats inside the stage. `story.ts` holds the copy as data (nodes, log, review, rage parameters). Calm → rage-click Reconnect (5 presses inside 1.5s) → threshold → press the button → placeholder melt (cards soften to 48 then slide off, log drops) → review. ← / → step beats for recording. Publish is live CSS: label plus a teal `::after` copy, rest (0,3), hover (4,3) with the overshoot easing, press (1,2). Radius-as-state is CSS: soft 48 dashed, trying breathes 32→8, stuck jitters 0↔8 in hot. Reduced-motion twin: no breathing, no jitter, no melt tween.
 **Not yet:** the scripted cursor, live typing in the composer, the real melt choreography, dust and drips. Those wait on Lindsay's Figma pass for 03.
 **How to test:** `http://localhost:5180/t-for-taste/#/01` (chassis) or `…/#/01?record` (stage only). Hover and press Publish. Rage-click Reconnect. Press the button. Arrow keys step.
+
+## Chassis rules: hot pink (2026-09-02, Lindsay)
+All chassis rules (`--rule`) go from ink black to **#ff2fa6**, the Penguin hot pink from the Pelham palette. Index list lines, frame bar border, stage outline, caption divider, values table lines, motion toggle border. A first mark of her wrapper pass, made ahead of it.
