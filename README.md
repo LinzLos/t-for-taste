@@ -1,6 +1,6 @@
 # T for Taste
 
-I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist.
+Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time.
 
 Fresh React + TypeScript builds. Not derived from the portfolio. Not a component library.
 

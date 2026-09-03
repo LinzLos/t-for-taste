@@ -6,6 +6,7 @@ import { Mark } from './Mark'
 import { Caption } from './Caption'
 import { useReducedMotion } from './reduced-motion'
 import { BeatsProvider, useBeats } from './beats'
+import { Footer } from './Footer'
 
 // Everything around an episode. `?record` strips it down to the bare stage
 // with the mark, which is what gets screen-captured for LinkedIn.
@@ -51,6 +52,7 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
       </Stage>
       {!record && <Transport reduced={reduced} toggle={toggle} />}
       {!record && <Caption meta={meta} />}
+      {!record && <Footer />}
     </div>
   )
 }

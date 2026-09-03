@@ -9,6 +9,7 @@ import '@fontsource/courier-prime/700.css'
 import '@fontsource/fredoka/400.css'
 import '@fontsource/fredoka/600.css'
 import '@fontsource/fredoka/700.css'
+import '@fontsource/monofett/400.css'
 import './chassis/chassis.css'
 
 createRoot(document.getElementById('root')!).render(

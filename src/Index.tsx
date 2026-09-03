@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { episodes } from './episodes'
 import { useReducedMotion } from './chassis/reduced-motion'
+import { Footer } from './chassis/Footer'
 
 // The period rolls out of the e. Two ideas: a GATE (an overflow-hidden window that starts at the
 // e's right edge, so nothing shows until the ball crosses it) and a real ROLL (an off-centre highlight,
@@ -55,7 +56,7 @@ export function Index() {
   return (
     <main className="index">
       <div className="title-clip"><h1>T for<br /><RollingDot /></h1></div>
-      <p className="lede">I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist.</p>
+      <p className="lede">Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
           <li key={meta.slug} data-status={meta.status}>
@@ -68,7 +69,7 @@ export function Index() {
           </li>
         ))}
       </ol>
-      <p className="sign">Ship fast, laugh last.</p>
+      <Footer />
     </main>
   )
 }

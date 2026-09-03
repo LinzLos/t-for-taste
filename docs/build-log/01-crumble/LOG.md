@@ -298,3 +298,7 @@ The **caption section** (Default / Change / Reason, the values table, the meta l
 ## Two notes (2026-09-02, Lindsay)
 - "Ship fast, laugh last." is upright now; she didn't like the italic.
 - **Tap fallbacks on mobile:** tapping the word "Taste" toggles the olive (the dot is too small to tap on a phone; hover on the dot still works on desktop). Tapping Publish plays the swish (adds a `swished` class for 340ms, same transform as hover), then the press tuck and the return happen as normal.
+
+## Footer + lede (2026-09-02, Lindsay)
+**Footer, on the index and every episode page:** "Ship fast, laugh last." upright · **ZUNIGO** in Monofett (the mark her portfolio footer uses), linking to zunigo.net, pink underline on hover · "♥ 2026" in mono. Monofett self-hosted via fontsource.
+**Lede, second draft:** she questioned "I build AI products" (over-claims, says nothing about taste). Now: "Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time." Hers to sharpen.
