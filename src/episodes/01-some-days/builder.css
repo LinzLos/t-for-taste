@@ -61,10 +61,10 @@ html[data-reduced="true"] .builder .rage { animation: none; }
 html[data-reduced="true"] .edge--flow { animation: none; }
 .pulse { fill: var(--live); opacity: 0; filter: drop-shadow(0 0 6px var(--live)); }
 .pulse--hot { fill: var(--hot); filter: drop-shadow(0 0 6px var(--hot)); }
-.node { position: absolute; width: 350px; box-sizing: border-box; padding: 32px; background: var(--panel); border: 2px solid var(--line-strong); display: flex; flex-direction: column; gap: 6px; will-change: transform, border-radius; }
-.node-type { font-family: var(--mono); font-size: 18px; line-height: 20px; letter-spacing: .04em; color: var(--muted); }
-.node-title { font-size: 30px; line-height: 36px; font-weight: 600; } .node-sub { font-size: 24px; line-height: 29px; color: var(--muted); }
-.pill { align-self: flex-start; font-family: var(--mono); font-weight: 700; font-size: 22px; line-height: 21px; padding: 4px 12px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
+.node { position: absolute; width: 350px; box-sizing: border-box; padding: 32px; background: var(--panel); border: 2px solid var(--line-strong); display: flex; flex-direction: column; gap: 10px; will-change: transform, border-radius; }
+.node-type { font-family: var(--mono); font-size: 18px; line-height: 24px; letter-spacing: .04em; color: var(--muted); }
+.node-title { font-size: 30px; line-height: 40px; font-weight: 600; } .node-sub { font-size: 24px; line-height: 32px; color: var(--muted); }
+.pill { align-self: flex-start; font-family: var(--mono); font-weight: 700; font-size: 22px; line-height: 24px; padding: 5px 14px; margin-top: 2px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
 /* radius as state: cards harden as they resolve */
 .node--soft { border-radius: 48px; border-style: dashed; border-color: var(--line); }
 .node--trying { border-radius: 28px; border-color: var(--live); animation: breathe 1.8s ease-in-out infinite; }
@@ -126,15 +126,15 @@ html[data-reduced="true"] .offer { animation: none; }
   .main { flex-direction: row; }
   .canvas { flex: 1; height: auto; min-height: 0; }
   /* a real side chat: narrower, smaller type, tighter padding */
-  .log { width: 34%; min-width: 320px; max-width: 440px; height: auto; min-height: 0; padding: 20px 22px; gap: 12px; border-top: 0; border-left: 2px solid var(--line); }
-  .messages { gap: 10px; }
-  .msg { font-size: 19px; padding: 9px 14px; }
-  .sys { font-size: 16px; }
-  .field { font-size: 19px; padding: 12px 14px; }
-  .send { border-left-width: 28px; border-top-width: 14px; border-bottom-width: 14px; }
-  .offer { padding: 16px 18px; gap: 8px; }
-  .offer b { font-size: 22px; } .offer > span { font-size: 18px; }
-  .builder .offer .action, .builder .offer .primary { font-size: 17px; padding: 8px 14px; }
+  .log { width: 30%; min-width: 300px; max-width: 400px; height: auto; min-height: 0; padding: 16px 18px; gap: 10px; border-top: 0; border-left: 2px solid var(--line); }
+  .messages { gap: 8px; }
+  .msg { font-size: 16px; padding: 8px 12px; border-width: 1.5px; }
+  .sys { font-size: 14px; }
+  .field { font-size: 16px; padding: 10px 12px; border-width: 1.5px; }
+  .send { border-left-width: 22px; border-top-width: 11px; border-bottom-width: 11px; }
+  .offer { padding: 14px 16px; gap: 6px; border-width: 1.5px; }
+  .offer b { font-size: 19px; } .offer > span { font-size: 15px; }
+  .builder .offer .action, .builder .offer .primary { font-size: 15px; padding: 7px 12px; }
 }
 
 /* fluid app window: chrome at app size, not social-stage size (the cards live in the scaled scene and keep theirs) */
