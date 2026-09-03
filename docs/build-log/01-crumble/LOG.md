@@ -100,3 +100,8 @@ Implications for the build (agent notes, not decisions):
 **Pelham values (agent's translation of the covers):** canvas near-black #0d0a0c, cards dark plum #1c1220, field #2a1a30, ink pale yellow #f5e9a8, accent electric cyan #2bb3d6, threshold hot pink #ff2fa6, danger-on near-black. Spares on the swatch row, unassigned: sunset orange #ff6a1f, deep magenta #8a1a6b.
 **Where:** new section "T/01 states · Pelham" below the originals, with clones of all four frames and labelled swatches. The section carries the mode explicitly; the frames inherit it.
 **Her call:** which mode ships, or a hybrid (e.g. only salmon → hot pink on the original).
+
+## Palette decision (2026-09-02, Lindsay)
+**Ships:** her first palette, the "dark" mode: aubergine wall, deep purple cards, cream ink, teal accent, salmon threshold.
+**Kept as discovery:** the "pelham" mode and its section stay in the file as the road not taken. Her words: "I like the palette I came up with first but I like that we have discovery."
+**Why it matters for the series:** the post can show the comparison and the choice. That is a taste decision made visible, which is the whole point.
