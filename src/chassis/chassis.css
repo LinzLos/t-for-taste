@@ -72,11 +72,28 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
 .caption dt { font-weight: 700; font-style: italic; }
 .caption dd { margin: 0; }
-.values { border-collapse: collapse; align-self: start; font-family: var(--mono); font-size: 15px; }
+.values { border-collapse: collapse; align-self: start; font-family: var(--mono); font-size: 15px; width: 100%; table-layout: fixed; }
+.values th { width: 11ch; }
+.values td { overflow-wrap: anywhere; }
 .values caption { text-align: left; font-weight: 700; margin-bottom: .5em; }
 .values th, .values td { text-align: left; padding: .25em 2ch .25em 0; border-top: 1px solid var(--rule); vertical-align: top; font-weight: 400; }
 .meta-line { grid-column: 1 / -1; margin: 0; opacity: .55; font-family: var(--mono); font-size: 14px; }
 @media (max-width: 720px) { .caption { grid-template-columns: 1fr; } }
+
+/* phone: stack the episode row, tighten the frame, keep everything inside the viewport */
+@media (max-width: 600px) {
+  .index { padding: 6vh 20px 10vh; }
+  .episode-list a { grid-template-columns: 5ch 1fr; grid-template-rows: auto auto; }
+  .episode-list .name { grid-column: 2; }
+  .episode-list .mat, .episode-list .draft { grid-column: 2; font-size: 13px; }
+  .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
+  .frame-bar .title { flex-basis: 100%; }
+  .stage-host { padding: 12px; height: auto; min-height: 0; }
+  .transport { padding: 8px 14px; gap: 10px; font-size: 13px; }
+  .caption { padding: 16px 14px; gap: 20px; }
+  .caption dl { grid-template-columns: 7ch 1fr; }
+}
+html, body { overflow-x: hidden; }
 
 /* draft stub inside the stage */
 .stub { position: absolute; inset: 0; display: grid; place-content: center; gap: .5em; text-align: center; font: 700 40px/1 var(--mono); background: #d8d3c7; color: var(--ink); }
