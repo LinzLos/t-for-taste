@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import gsap from 'gsap'
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
+gsap.registerPlugin(MotionPathPlugin)
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
@@ -43,22 +45,28 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
   )
 }
 
-function Connectors({ host, beat }: { host: React.RefObject<HTMLDivElement>; beat: Beat }) {
-  const [d, setD] = useState<{ d: string; dashed: boolean }[]>([])
+function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElement>; beat: Beat; stateOf: (id: string) => string }) {
+  const [d, setD] = useState<{ d: string; dashed: boolean; id: string; from: string }[]>([])
   useLayoutEffect(() => {
     const el = host.current; if (!el) return
     const box = el.getBoundingClientRect()
     const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); return { l: b.left - box.left, r: b.right - box.left, t: b.top - box.top, b: b.bottom - box.top, cx: b.left - box.left + b.width / 2, cy: b.top - box.top + b.height / 2 } }
     setD(EDGES.map(([a, b, dashed]) => {
       const A = r(a), B = r(b)
-      if (a === 'lotion') return { dashed, d: `M ${A.r} ${A.cy} C ${A.r + 40} ${A.cy} ${B.l - 40} ${B.cy} ${B.l} ${B.cy}` }
+      const id = `edge-${a}-${b}`
+      if (a === 'lotion') return { id, from: a, dashed, d: `M ${A.r} ${A.cy} C ${A.r + 40} ${A.cy} ${B.l - 40} ${B.cy} ${B.l} ${B.cy}` }
       const sx = b === 'tell' ? A.l + 60 : A.r - 60
-      return { dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 60} ${B.cx} ${B.t - 60} ${B.cx} ${B.t}` }
+      return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 60} ${B.cx} ${B.t - 60} ${B.cx} ${B.t}` }
     }))
   }, [host, beat])
   return (
     <svg className="edges" width={1008} height={800} aria-hidden>
-      {d.map((e, i) => <path key={i} d={e.d} className={e.dashed ? 'edge edge--dashed' : 'edge'} />)}
+      {d.map(e => {
+        const st = stateOf(e.from)
+        const cls = ['edge', e.dashed ? 'edge--dashed' : '', st === 'trying' ? 'edge--flow' : st === 'stuck' ? 'edge--stuck' : 'edge--idle'].join(' ')
+        return <path key={e.id} id={e.id} d={e.d} className={cls} />
+      })}
+      <circle className="pulse" r={7} />
     </svg>
   )
 }
@@ -165,6 +173,25 @@ export default function SomeDays() {
   // Record mode plays itself after a beat, so a recording needs no hands.
   useEffect(() => { if (params.has('record') && !params.has('hold')) { const t = setTimeout(play, 800); return () => clearTimeout(t) } }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // The pulse: something leaves Lotion, gets about halfway, and fizzles. Nothing arrives. That is the story.
+  const pulse = useCallback((hot = false) => {
+    const el = canvas.current; if (!el || reduced) return
+    const path = el.querySelector<SVGPathElement>('#edge-lotion-summarize'), dot = el.querySelector<SVGCircleElement>('.pulse')
+    if (!path || !dot) return
+    gsap.killTweensOf(dot)
+    gsap.timeline()
+      .set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
+      .to(dot, { motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: 0, end: 0.42 }, duration: 0.55, ease: 'power2.out' })
+      .to(dot, { autoAlpha: 0, scale: 0.2, duration: 0.28, ease: 'power2.in' }, '-=0.08')
+  }, [reduced])
+  useEffect(() => { if (flash) pulse(true) }, [flash, pulse])
+  useEffect(() => {
+    if (beat !== 'calm') return
+    const first = setTimeout(() => pulse(), 900)
+    const id = setInterval(() => pulse(), 2400)
+    return () => { clearTimeout(first); clearInterval(id) }
+  }, [beat, pulse])
+
   // Placeholder melt: cards soften, then slide off. The real choreography comes from Lindsay's Figma pass.
   useEffect(() => {
     if (beat !== 'pressed') return
@@ -231,7 +258,7 @@ export default function SomeDays() {
       ) : (
         <>
           <div className="canvas" ref={canvas}>
-            <Connectors host={canvas} beat={beat} />
+            <Connectors host={canvas} beat={beat} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
             {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
           </div>
           <div className="log" ref={logRef}>
