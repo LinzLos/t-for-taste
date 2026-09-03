@@ -47,10 +47,10 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index .foot { margin-top: 5em; }
 .frame .foot { margin: 0; padding: 18px 20px 22px; }
 .sign { opacity: .55; }
-.mark-home { font-family: var(--mark); font-size: 26px; line-height: 1; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
+.mark-home { font-family: var(--mark); font-size: 26px; line-height: 1; letter-spacing: .02em; text-decoration: none; color: var(--ink); opacity: .55; }
 .mark-home:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .25em; }
 .love { margin-left: auto; font-family: var(--mono); font-size: 14px; opacity: .7; }
-.heart { color: var(--ink); }
+.heart { color: var(--ink); font-size: 26px; line-height: 1; vertical-align: -.1em; }
 
 /* frame */
 /* minmax(0,1fr): the column is the viewport, never propped open by the stage's own width */
