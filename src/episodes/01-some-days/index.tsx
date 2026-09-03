@@ -50,7 +50,8 @@ function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElem
   useLayoutEffect(() => {
     const el = host.current; if (!el) return
     const box = el.getBoundingClientRect()
-    const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); return { l: b.left - box.left, r: b.right - box.left, t: b.top - box.top, b: b.bottom - box.top, cx: b.left - box.left + b.width / 2, cy: b.top - box.top + b.height / 2 } }
+    const k = box.width / 1008 // the stage may be drawn at any scale; the SVG draws in stage units
+    const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); const l = (b.left - box.left) / k, t = (b.top - box.top) / k, w = b.width / k, h = b.height / k; return { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2 } }
     setD(EDGES.map(([a, b, dashed]) => {
       const A = r(a), B = r(b)
       const id = `edge-${a}-${b}`

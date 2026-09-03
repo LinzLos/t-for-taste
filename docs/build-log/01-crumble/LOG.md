@@ -275,3 +275,7 @@ Implementation: one GSAP master timeline with labels per beat; typing via a cust
 
 ## Live connectors (2026-09-02, Lindsay: "the connectors don't work, it doesn't feel real")
 **Built:** edges carry the state of the node they leave. Out of a listening card: teal marching dash (1.1s loop) and, every 2.4s, a pulse that leaves Lotion, reaches ~42% of the way to Summarize and fizzles. Nothing arrives; that is the story drawn on the wire. Every Reconnect tap fires the same pulse, hot. At the threshold the edge goes hot and the marching stops. Edges out of soft cards stay dim and dashed, since nothing has ever flowed there. GSAP MotionPathPlugin (free) moves the pulse along the real path. Reduced motion: no march, no pulses.
+**Connector bug found and fixed:** endpoints were measured in screen pixels while the SVG draws in stage units, so at any scale other than 1 the edges landed small and behind the cards (that is why the first pass, at full scale, looked fine and every chassis view since did not). Measurements now divide by the stage scale.
+
+## Note for later (2026-09-02, Lindsay)
+The **caption section** (Default / Change / Reason, the values table, the meta line) will get its own pass: content and design both. Nothing there is final.
