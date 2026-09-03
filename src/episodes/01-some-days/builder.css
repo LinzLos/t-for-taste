@@ -64,7 +64,7 @@ html[data-reduced="true"] .edge--flow { animation: none; }
 .node { position: absolute; width: 350px; box-sizing: border-box; padding: 32px; background: var(--panel); border: 2px solid var(--line-strong); display: flex; flex-direction: column; gap: 10px; will-change: transform, border-radius; }
 .node-type { font-family: var(--mono); font-size: 18px; line-height: 24px; letter-spacing: .04em; color: var(--muted); }
 .node-title { font-size: 30px; line-height: 40px; font-weight: 600; } .node-sub { font-size: 24px; line-height: 32px; color: var(--muted); }
-.pill { align-self: flex-start; font-family: var(--mono); font-weight: 700; font-size: 22px; line-height: 24px; padding: 5px 14px; margin-top: 2px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
+.pill { align-self: flex-start; white-space: nowrap; font-family: var(--mono); font-weight: 700; font-size: 20px; line-height: 24px; padding: 5px 14px; margin-top: 2px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
 /* radius as state: cards harden as they resolve */
 .node--soft { border-radius: 48px; border-style: dashed; border-color: var(--line); }
 .node--trying { border-radius: 28px; border-color: var(--live); animation: breathe 1.8s ease-in-out infinite; }
@@ -157,3 +157,20 @@ html[data-reduced="true"] .offer { animation: none; }
 .stage--fluid .builder .action { font-size: 16px; padding: 7px 14px; }
 .stage--fluid .review-foot p { font-size: 16px; }
 .stage--fluid .builder .review-foot .action, .stage--fluid .builder .primary { font-size: 17px; padding: 10px 18px; }
+
+/* the chat in the app window: real UI sizes. (Social frame and record keep the big type.) */
+.stage--fluid .log { padding: 14px 16px; gap: 10px; }
+.stage--fluid .messages { gap: 8px; }
+.stage--fluid .msg { font-size: 14px; line-height: 1.35; padding: 7px 11px; border-width: 1.5px; max-width: 88%; }
+.stage--fluid .sys { font-size: 12.5px; line-height: 1.4; }
+.stage--fluid .field { font-size: 14px; padding: 9px 11px; border-width: 1.5px; }
+.stage--fluid .send { border-left-width: 18px; border-top-width: 9px; border-bottom-width: 9px; }
+.stage--fluid .offer { padding: 14px 14px 12px; gap: 6px; border-width: 1.5px; }
+.stage--fluid .offer b { font-size: 16px; }
+.stage--fluid .offer > span { font-size: 13.5px; line-height: 1.4; }
+.stage--fluid .offer-buttons { gap: 8px; margin-top: 4px; }
+.stage--fluid .builder .offer .action, .stage--fluid .builder .offer .primary { font-size: 13px; padding: 7px 12px; white-space: nowrap; box-shadow: 0 3px 0 var(--ink); }
+.stage--fluid .builder .offer .action { box-shadow: none; }
+@container (min-aspect-ratio: 1/1) {
+  .stage--fluid .log { width: 30%; min-width: 300px; max-width: 380px; }
+}
