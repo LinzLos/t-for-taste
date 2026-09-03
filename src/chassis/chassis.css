@@ -18,7 +18,8 @@ a { color: inherit; }
 
 /* index */
 .index { max-width: 62ch; margin: 0 auto; padding: 8vh 24px 12vh; }
-.index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
+.index h1 { font-family: var(--serif); overflow: hidden; font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
+.dot { display: inline-block; color: var(--rule); transform-origin: 50% 85%; will-change: transform; }
 .lede { margin: 0 0 3em; max-width: 44ch; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }

@@ -203,3 +203,9 @@ Today's type decisions apply to the **episode** only: Fredoka for the product, C
 
 ## Chassis rules: hot pink (2026-09-02, Lindsay)
 All chassis rules (`--rule`) go from ink black to **#ff2fa6**, the Penguin hot pink from the Pelham palette. Index list lines, frame bar border, stage outline, caption divider, values table lines, motion toggle border. A first mark of her wrapper pass, made ahead of it.
+
+## The rolling period (2026-09-02, Lindsay's spec)
+**Her ask:** a period after "Taste" that rolls in like a ball on page load, with a small delay, deliberate and assertive rather than eye-blink fast, may extend past and snap back into place.
+**Built (chassis index, `motion/react`):** the dot is a separate span in the rule pink. 0.5s delay so the title lands first. Then 1.25s: x from 58vw to −0.22em (overshoot into the word) with `circOut`, then to 0 with an overshoot curve `[.34,1.56,.64,1]` so the snap-back has a tiny wobble. Squash and stretch ride along: scaleX 1.25 → 0.82 → 1, scaleY 0.8 → 1.18 → 1, origin near the baseline so it lands on its foot. The h1 clips overflow so the ball enters from the edge, not from outer space.
+**Reduced motion:** the dot is simply there.
+**Values are the agent's first pass; the delay and the overshoot distance are the two she'll feel first.**
