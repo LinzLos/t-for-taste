@@ -113,3 +113,8 @@ Implications for the build (agent notes, not decisions):
 **Connectors share it:** dashed into a soft card, solid into a hard one, marching dash into a card that is trying.
 **Guardrails:** pill text and stroke remain the true read; radius is the fast read. "Radius is 0 or full" still holds for static UI; intermediates exist only as motion or as not-set-yet. Reduced-motion twin freezes breathing at mid radius and the stutter at a hard corner.
 **Open for Lindsay:** exact radius values and timings; whether "never ran" needs its own look or is just queued that outlived the run.
+
+## Live chat and proportions (2026-09-02, Lindsay)
+**Who:** Lindsay. The chat has to be typed live in the build, like a person doing it, so it reads as real. The chat area should be smaller, leaving more room for the agent workspace.
+**What changed in Figma:** canvas 640 → 800 tall; log 550 → 390. Messages are anchored to the bottom so the newest sits by the composer; older lines fade (0.6, then 0.35) and clip off the top. Lower nodes spread down 80px to use the space; connectors regenerated.
+**For the code build:** user lines type in character by character with a caret, at a human cadence that speeds up as the rage builds; system lines land after a beat; the log scrolls, it never grows; the composer is where the typing happens before each line commits. The cursor's rage clicking and the typing share one tempo curve.
