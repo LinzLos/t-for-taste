@@ -170,3 +170,7 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 ## Mono pick: Courier Prime (2026-09-02, Lindsay: "another harmonization point")
 **Who:** Lindsay picked Courier Prime from the mono study. It was already the chassis mono in `src/chassis/chassis.css`, so the mono thread is now one font in both surfaces: chassis values line and T/NN mark, product chips, type labels, pills and system lines. Medium maps to Bold (Courier Prime has two weights). JetBrains Mono is retired from the file's frames; the study strips keep it for comparison.
 **System now:** serif = chassis (pending) · Courier Prime = system everywhere · Fredoka = the product in T/01 · Bricolage ExtraBold = the crack.
+
+## Bricolage out; three fonts (2026-09-02, Lindsay)
+**Who:** Lindsay. "I just have 3 fonts right." Bricolage ExtraBold was only on the rage button; it is gone from the file. The button now says it in **Fredoka Bold, 32px, all caps**: the product's own voice losing it. Colour and words carry the crack, not a fourth face.
+**Final type system for T/01:** serif (chassis, pick pending) · Courier Prime (system, both surfaces) · Fredoka (product, inside the stage). Nothing else.
