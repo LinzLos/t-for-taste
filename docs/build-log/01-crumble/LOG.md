@@ -334,3 +334,4 @@ When the dot reaches Summarize the card wiggles (±3px, ±6px on a rage tap, fou
 
 ## The ellipsis types itself (2026-09-02, Lindsay)
 "connecting…" and "still connecting…" in the top bar now animate the dots (one, two, three, cycle at 1.2s) so the state reads as happening rather than as a label. Reduced motion shows a static ellipsis; screen readers get the plain ellipsis.
+**Correction (Lindsay: "the receiver cannot copy the sender's motion, otherwise it is confusing"):** reception no longer touches corner radius, which is the sender's language. Summarize now gets knocked: the sideways nudge (±3px, ±6 hot) plus a knock of colour on its left edge where the dot lands (6px teal, or hot, fading to the 2px line over 0.6s). Sender breathes shape; receiver gets knocked. Two vocabularies, one exchange.

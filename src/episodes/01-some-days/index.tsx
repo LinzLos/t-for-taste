@@ -186,7 +186,8 @@ export default function SomeDays() {
     const path = el.querySelector<SVGPathElement>('#edge-lotion-summarize'), dot = el.querySelector<SVGCircleElement>('.pulse')
     if (!path || !dot) return
     gsap.killTweensOf(dot)
-    // Reception: the card the dot lands on wiggles and its corners firm for a beat, then relax. It got something. Still waiting.
+    // Reception, in its own vocabulary (never the sender's): the sender breathes its shape; the receiver
+    // gets knocked. A sideways nudge and a short knock of colour on the edge where the dot lands, fading out.
     const target = el.querySelector<HTMLElement>('[data-node=summarize]')
     const receive = () => {
       if (!target) return
@@ -198,8 +199,7 @@ export default function SomeDays() {
         .to(target, { x: amp, duration: 0.05, ease: 'none' })
         .to(target, { x: -amp, duration: 0.05, ease: 'none', repeat: 3, yoyo: true })
         .to(target, { x: 0, duration: 0.08, ease: 'power2.out' })
-        .to(target, { borderRadius: hot ? 12 : 20, duration: 0.18, ease: 'power2.out' }, 0)
-        .to(target, { borderRadius: 48, duration: 0.45, ease: 'power2.inOut' }, 0.3)
+        .fromTo(target, { borderLeftColor: hot ? '#ff9b71' : '#1b998b', borderLeftWidth: 6 }, { borderLeftColor: '#3f3547', borderLeftWidth: 2, duration: 0.6, ease: 'power2.out' }, 0.05)
     }
     const pt = gsap.timeline()
     if (import.meta.env.DEV) Object.assign(window, { __pulse: pt })
