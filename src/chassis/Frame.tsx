@@ -2,7 +2,6 @@ import { Suspense, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import type { EpisodeMeta } from '../episodes/types'
 import { Stage } from './Stage'
-import { Mark } from './Mark'
 import { Caption } from './Caption'
 import { useReducedMotion } from './reduced-motion'
 import { BeatsProvider, useBeats } from './beats'
@@ -48,7 +47,6 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
       )}
       <Stage>
         <Suspense fallback={null}>{children}</Suspense>
-        <Mark number={meta.number} />
       </Stage>
       {!record && <Transport reduced={reduced} toggle={toggle} />}
       {!record && <Caption meta={meta} />}
