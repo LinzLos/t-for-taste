@@ -74,6 +74,9 @@ html[data-reduced="true"] .edge--flow { animation: none; }
 .node--stuck .pill { background: var(--hot); color: var(--hot-on); border-color: var(--hot); }
 .node--dashed { border-style: dashed; }
 .node { cursor: grab; touch-action: none; }
+/* the one card you press sits one elevation up and lifts on hover */
+.node[role=button] { background: var(--field); border-color: var(--line-strong); transition: background .18s ease, border-color .18s ease, transform .18s ease; }
+.node[role=button]:hover { background: #3d3345; border-color: var(--muted); transform: translateY(-2px); }
 .node--dragging { cursor: grabbing; z-index: 3; box-shadow: 0 14px 30px -12px rgba(0,0,0,.6); }
 .node[role=button]:not(.node--dragging):active { transform: translateY(2px); }
 @keyframes breathe { 0%, 100% { border-radius: 52px; } 50% { border-radius: 4px; } }
