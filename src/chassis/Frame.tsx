@@ -13,15 +13,21 @@ export function Frame(props: { meta: EpisodeMeta; children: ReactNode }) {
   return <BeatsProvider><FrameInner {...props} /></BeatsProvider>
 }
 
-function BeatStrip() {
+// Under the stage, like a player: play, the beats, the motion toggle.
+function Transport({ reduced, toggle }: { reduced: boolean; toggle: () => void }) {
   const ctl = useBeats()
-  if (!ctl) return null
   return (
-    <div className="beats" role="group" aria-label="story beats">
-      {ctl.beats.map((b, i) => (
-        <button key={b} type="button" aria-current={i === ctl.index} onClick={() => ctl.go(i)}>{i + 1} {b}</button>
-      ))}
-      {ctl.hint && <span className="beats-hint">{ctl.hint}</span>}
+    <div className="transport">
+      {ctl?.play && <button type="button" className="play" onClick={ctl.play} disabled={ctl.playing}>{ctl.playing ? 'playing…' : '▶ play'}</button>}
+      {ctl && (
+        <div className="beats" role="group" aria-label="story beats">
+          {ctl.beats.map((b, i) => (
+            <button key={b} type="button" aria-current={i === ctl.index} onClick={() => ctl.go(i)}>{i + 1} {b}</button>
+          ))}
+        </div>
+      )}
+      {ctl?.hint && <span className="beats-hint">{ctl.hint}</span>}
+      <button type="button" className="rm-toggle" aria-pressed={reduced} onClick={toggle}>motion {reduced ? 'off' : 'on'}</button>
     </div>
   )
 }
@@ -37,16 +43,13 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
         <header className="frame-bar">
           <Link to="/" className="back">T for Taste</Link>
           <span className="title">{meta.title}</span>
-          <BeatStrip />
-          <button type="button" className="rm-toggle" aria-pressed={reduced} onClick={toggle}>
-            motion {reduced ? 'off' : 'on'}
-          </button>
         </header>
       )}
       <Stage>
         <Suspense fallback={null}>{children}</Suspense>
         <Mark number={meta.number} />
       </Stage>
+      {!record && <Transport reduced={reduced} toggle={toggle} />}
       {!record && <Caption meta={meta} />}
     </div>
   )

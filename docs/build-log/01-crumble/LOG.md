@@ -257,3 +257,10 @@ The recording is one continuous take, driven by a timeline, no clicks by a human
 7. **Length target:** 26–30s. Calm 8s, escalation 10s, press and melt 4s, review 6s.
 Implementation: one GSAP master timeline with labels per beat; typing via a custom tween on a character index; cursor via motion path; the rage detector stays real (the scripted clicks go through the same code path as a human's).
 **Follow-up:** the builder's generic `button` reset outranked the styled buttons (specificity), so Publish rendered at body size. Styled buttons are now scoped `.builder .publish` etc.
+
+## The hatch grows where the rage is; a cursor actor; a transport row (2026-09-02, Lindsay's notes on localhost)
+**Her notes:** the escape hatch must not be a state of Publish; show a cursor so viewers see what is being clicked; the header is clumsy and the button shouldn't be up there; the story must work when she interacts with it.
+**Built:**
+- **Publish stays Publish.** The "FUCK THIS SHIT." button now rises out of the Reconnect card at the threshold (hatch animation: 320ms, overshoot curve, scaleY from .2 at the card's bottom edge). The escape hatch appears where the anger is.
+- **Cursor actor.** A play button runs the story: the pointer fades in at the composer, travels to Reconnect (0.9s), clicks six times with gaps 0.7 / 0.45 / 0.3 / 0.2 / 0.15s (the sixth crosses 5-in-1.5s through the real rage detector), travels to the hatch, pauses, presses. Manual clicks work at any point and the two share one code path. Record mode auto-plays after 0.8s (`?record&hold` to stop that).
+- **Transport row** under the stage: ▶ play, the four beats, the hint, the motion toggle. The frame bar is back to the series name and the episode title. Record mode hides the transport.

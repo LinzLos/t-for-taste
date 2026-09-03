@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import gsap from 'gsap'
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
@@ -87,6 +88,24 @@ function Review({ onReset }: { onReset: () => void }) {
   )
 }
 
+// ── The cursor: a scripted actor so viewers can see what is being clicked ────
+function Cursor({ el }: { el: React.RefObject<HTMLDivElement> }) {
+  return (
+    <div className="cursor" ref={el} aria-hidden>
+      <svg width="32" height="46" viewBox="0 0 32 46"><path d="M2 2 L2 38 L12 29 L18 44 L25 41 L19 27 L30 27 Z" /></svg>
+    </div>
+  )
+}
+
+// Stage coordinates of the things the cursor visits (builder space, 1080 × 1350).
+const SPOT = {
+  composer: { x: 640, y: 1290 },
+  reconnect: { x: 72 + 640 + 175, y: 160 + 510 + 120 },
+  rage: { x: 72 + 640 + 175, y: 160 + 700 + 40 },
+}
+// Click intervals: a person losing patience. The 6th click is the one that crosses 5-in-1.5s.
+const CLICK_GAPS = [0, 0.7, 0.45, 0.3, 0.2, 0.15]
+
 // ── The episode ──────────────────────────────────────────────────────────────
 export default function SomeDays() {
   const [beat, setBeat] = useState<Beat>('calm')
@@ -97,6 +116,37 @@ export default function SomeDays() {
 
   const rage = useRage(() => setBeat(b => (b === 'calm' ? 'threshold' : b)))
   const pressReconnect = () => { if (beat === 'calm') { setTries(t => Math.min(t + 1, 6)); rage() } }
+  const pressRef = useRef(pressReconnect); pressRef.current = pressReconnect
+  const cursorEl = useRef<HTMLDivElement>(null)
+  const [playing, setPlaying] = useState(false)
+  const [params] = useSearchParams()
+
+  // Autoplay: the cursor walks the story through the same code paths a human uses.
+  const play = useCallback(() => {
+    if (playing) return
+    setTries(2); setBeat('calm'); setPlaying(true)
+    if (reduced) { const t = setTimeout(() => { setBeat('threshold'); setTimeout(() => setBeat('pressed'), 900) }, 900); return () => clearTimeout(t) }
+    const c = cursorEl.current!
+    const tl = gsap.timeline({ onComplete: () => setPlaying(false) })
+    tl.set(c, { x: SPOT.composer.x, y: SPOT.composer.y, autoAlpha: 0, scale: 1 })
+      .to(c, { autoAlpha: 1, duration: 0.3 }, 0.4)
+      .to(c, { x: SPOT.reconnect.x, y: SPOT.reconnect.y, duration: 0.9, ease: 'power2.inOut' }, 0.6)
+    let t = 1.7
+    CLICK_GAPS.forEach(gap => {
+      t += gap
+      tl.to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t)
+      tl.call(() => pressRef.current(), [], t)
+    })
+    tl.to(c, { x: SPOT.rage.x, y: SPOT.rage.y, duration: 0.6, ease: 'power2.inOut' }, t + 0.7)
+      .to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t + 1.6)
+      .call(() => setBeat(b => (b === 'threshold' ? 'pressed' : b)), [], t + 1.6)
+      .to(c, { autoAlpha: 0, duration: 0.4 }, t + 2.2)
+    if (import.meta.env.DEV) Object.assign(window, { __auto: tl })
+    return () => tl.kill()
+  }, [playing, reduced])
+
+  // Record mode plays itself after a beat, so a recording needs no hands.
+  useEffect(() => { if (params.has('record') && !params.has('hold')) { const t = setTimeout(play, 800); return () => clearTimeout(t) } }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Placeholder melt: cards soften, then slide off. The real choreography comes from Lindsay's Figma pass.
   useEffect(() => {
@@ -131,7 +181,7 @@ export default function SomeDays() {
 
   // Publish the beats to the chassis so the story can be stepped from the frame bar.
   const go = useCallback((i: number) => { if (BEATS[i] === 'calm') setTries(2); setBeat(BEATS[i]) }, [])
-  const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or press the button' : undefined }), [beat, go])
+  const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, play, playing, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or press the button' : undefined }), [beat, go, play, playing])
   useRegisterBeats(controls)
 
   return (
@@ -140,9 +190,7 @@ export default function SomeDays() {
         <div className="row1">
           <span className="menu" aria-hidden><i /><i /><i /></span>
           <span className="project">some days are better than others</span>
-          {raged
-            ? <button type="button" className="rage" onClick={() => beat === 'threshold' && setBeat('pressed')}>Fuck this shit.</button>
-            : <button type="button" className="publish" data-label="Publish"><span>Publish</span></button>}
+          <button type="button" className="publish" data-label="Publish"><span>Publish</span></button>
         </div>
         <div className="row2">
           <span className="chip">tuliptech-docs</span>
@@ -156,6 +204,7 @@ export default function SomeDays() {
         {['chat', 'nodes', 'files', 'logs', 'deploy'].map((n, i) => <span key={n} className={i === 1 ? 'on' : undefined} title={n} />)}
       </nav>
 
+      <Cursor el={cursorEl} />
       {beat === 'review' ? (
         <Review onReset={reset} />
       ) : (
@@ -163,6 +212,11 @@ export default function SomeDays() {
           <div className="canvas" ref={canvas}>
             <Connectors host={canvas} beat={beat} />
             {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
+            {raged && (
+              <button type="button" className="rage" style={{ left: 640, top: 700 }} onClick={() => beat === 'threshold' && setBeat('pressed')}>
+                Fuck this shit.
+              </button>
+            )}
           </div>
           <div className="log" ref={logRef}>
             <div className="messages" ref={msgsRef}>
