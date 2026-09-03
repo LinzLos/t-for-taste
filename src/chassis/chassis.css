@@ -27,6 +27,10 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .ball { position: absolute; left: .06em; bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
   background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%); }
+/* The olive: a layer that fades in on hover once the period has settled. Green skin, pimento off-centre. */
+.ball::after { content: ''; position: absolute; inset: 0; border-radius: 50%; opacity: 0; transition: opacity 220ms ease-out;
+  background: radial-gradient(circle at 62% 50%, #d1342f 0 26%, #7a8f1c 30%, #55661a 92%, #3d4a12 100%); }
+.ball.is-olive::after { opacity: 1; }
 .lede { margin: 0 0 3em; max-width: 44ch; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }

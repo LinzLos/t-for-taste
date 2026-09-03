@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { episodes } from './episodes'
@@ -10,20 +11,32 @@ import { useReducedMotion } from './chassis/reduced-motion'
 const BALL = { r: 0.085, start: -1.05, over: 0.14 } // em
 function RollingDot() {
   const { reduced } = useReducedMotion()
+  const [settled, setSettled] = useState(reduced)
+  const [olive, setOlive] = useState(false)
   const turnOut = ((BALL.over - BALL.start) / BALL.r) * (180 / Math.PI)
   const turnBack = (BALL.over / BALL.r) * (180 / Math.PI)
+  const rest = turnOut - turnBack
+
+  // The easter egg: once the period has settled, hovering it turns it a quarter turn into an olive.
+  // Some days are better than others. Mostly a period, occasionally a martini.
+  const roll = { x: [`${BALL.start}em`, `${BALL.over}em`, '0em'], rotate: [0, turnOut, rest] }
+  const hover = { x: '0em', rotate: olive ? rest + 90 : rest }
+
   return (
-    <span className="gate">
+    <span className="gate" onMouseEnter={() => settled && setOlive(true)} onMouseLeave={() => setOlive(false)}>
       <span className="sr">.</span>
       {reduced ? (
-        <span className="ball" aria-hidden />
+        <span className={olive ? 'ball is-olive' : 'ball'} aria-hidden />
       ) : (
         <motion.span
-          className="ball"
+          className={olive ? 'ball is-olive' : 'ball'}
           aria-hidden
           initial={{ x: `${BALL.start}em`, rotate: 0 }}
-          animate={{ x: [`${BALL.start}em`, `${BALL.over}em`, '0em'], rotate: [0, turnOut, turnOut - turnBack] }}
-          transition={{ delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
+          animate={settled ? hover : roll}
+          transition={settled
+            ? { duration: 0.26, ease: [0.33, 1, 0.68, 1] }
+            : { delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
+          onAnimationComplete={() => setSettled(true)}
         />
       )}
     </span>
