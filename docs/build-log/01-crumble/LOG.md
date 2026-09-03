@@ -23,3 +23,19 @@ Open design parameters, Lindsay's call in Figma: click count, time window, wheth
 
 ## Next entries
 Lindsay takes this build into Figma to handle taste, then brings the values back. Entries from here on are hers.
+
+## Concept v2 (2026-09-02, Lindsay, verbal; she will spec it further)
+Not a shatter. A **melt**. Material changes from plaster to something that slumps: the UI slides and drips off the bottom of the screen, "the blob", components sliding down.
+The scene is a **modern AI builder screen**, not a campaign control panel. The story in beats:
+1. A **cursor** (the user's) is trying to do something in the builder. Attempts repeat and **accelerate** into a rage click.
+2. The acceleration crosses a threshold and a **state change** appears on a button **at the top** of the screen: "fuck this shit."
+3. The user presses it. The UI **melts away** toward the bottom.
+4. Underneath: something AI-like, a **builder ready to start again**. Clean slate.
+Tone: funny, not friction-y. The button is relief, not punishment.
+
+Implications for the build (agent notes, not decisions):
+- The cursor is a scripted actor, not the real pointer. It gets its own easing curve, and the acceleration IS the rage-click parameter made visible.
+- Melt is a per-component timeline (order, sag, stretch, detach, drip), so the layout of the fake builder decides the choreography. Design the builder with the melt order in mind.
+- "Ready to start again" needs one honest affordance underneath, not a second UI. Probably a single prompt field and a blinking caret.
+- Reduced-motion twin: the state change still happens; the melt becomes a fade; the clean slate still arrives.
+- Filename/slug stays `01-crumble` until the spec is final, then rename to match the material.
