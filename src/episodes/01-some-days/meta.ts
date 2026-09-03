@@ -14,7 +14,7 @@ export const meta: EpisodeMeta = {
   values: [
     { label: 'Rage detector', value: '5 presses inside 1.5s on the same control' },
     { label: 'Soft card', value: 'radius 48, dashed, untouched' },
-    { label: 'Trying', value: 'radius breathes 32 → 8, 1.6s' },
+    { label: 'Trying', value: 'radius breathes 52 → 4, 1.8s' },
     { label: 'Stuck', value: 'radius jitters 0 ↔ 8, never settles, hot' },
     { label: 'Publish', value: 'label + teal shadow (0,3); hover (4,3) with overshoot cubic-bezier(.2,1.6,.4,1) 260ms; press (1,2) 80ms' },
     { label: 'Melt', value: 'placeholder: cards soften to 48 then slide 900px, 1.35s power2.in' },

@@ -186,14 +186,6 @@ export default function SomeDays() {
     const path = el.querySelector<SVGPathElement>('#edge-lotion-summarize'), dot = el.querySelector<SVGCircleElement>('.pulse')
     if (!path || !dot) return
     gsap.killTweensOf(dot)
-    // The source beats: a ring expands off the Lotion card and the card lifts a hair, then the dot leaves its edge.
-    const src = el.querySelector<HTMLElement>('[data-node=lotion]')
-    if (src) {
-      const c = hot ? '255,155,113' : '27,153,139'
-      gsap.timeline()
-        .fromTo(src, { boxShadow: `0 0 0 0 rgba(${c},.55)` }, { boxShadow: `0 0 0 22px rgba(${c},0)`, duration: 0.8, ease: 'power2.out' })
-        .fromTo(src, { scale: 1 }, { scale: 1.025, duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut', transformOrigin: '50% 50%' }, 0)
-    }
     gsap.timeline()
       .set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
       .to(dot, { motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: 0, end: 1 }, duration: 0.9, ease: 'power1.inOut' })

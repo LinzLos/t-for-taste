@@ -60,16 +60,16 @@ html[data-reduced="true"] .edge--flow { animation: none; }
 .pill { align-self: flex-start; font-family: var(--mono); font-weight: 700; font-size: 22px; line-height: 21px; padding: 4px 12px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
 /* radius as state: cards harden as they resolve */
 .node--soft { border-radius: 48px; border-style: dashed; border-color: var(--line); }
-.node--trying { border-radius: 24px; border-color: var(--live); animation: breathe 1.6s ease-in-out infinite; }
+.node--trying { border-radius: 28px; border-color: var(--live); animation: breathe 1.8s ease-in-out infinite; }
 .node--trying .pill { background: var(--live); color: var(--canvas); border-color: var(--live); }
 .node--set { border-radius: 0; } .node--set .pill { color: var(--live); border-color: var(--live); }
 .node--stuck { border-radius: 4px; border-color: var(--hot); animation: jitter .32s steps(2, jump-none) infinite; }
 .node--stuck .pill { background: var(--hot); color: var(--hot-on); border-color: var(--hot); }
 .node--dashed { border-style: dashed; } .node[role=button] { cursor: pointer; }
 .node[role=button]:active { transform: translateY(2px); }
-@keyframes breathe { 0%, 100% { border-radius: 32px; } 50% { border-radius: 8px; } }
+@keyframes breathe { 0%, 100% { border-radius: 52px; } 50% { border-radius: 4px; } }
 @keyframes jitter { 0% { border-radius: 0; } 100% { border-radius: 8px; } }
-html[data-reduced="true"] .node--trying { animation: none; border-radius: 20px; }
+html[data-reduced="true"] .node--trying { animation: none; border-radius: 28px; }
 html[data-reduced="true"] .node--stuck { animation: none; border-radius: 0; }
 
 /* log: small, bottom-anchored, never grows */
