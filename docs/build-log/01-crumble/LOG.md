@@ -282,3 +282,7 @@ The **caption section** (Default / Change / Reason, the values table, the meta l
 
 ## Three cards, not four (2026-09-02, Lindsay: social size limit; three is better balanced and gives more room)
 **Dropped:** Tell Marike. It was downstream of Summarize and the review never named it. **Kept:** Lotion (listening), Summarize (waiting), Reconnect (the thing being hammered). Reconnect now hangs off Lotion with the dashed edge, which is where a retry belongs. Positions in the 1008×800 canvas: Lotion (60,60), Summarize (580,230), Reconnect (300,500). Same in the Figma frames 01–03, connectors redrawn, cursor and trail moved.
+
+## Two notes (2026-09-02, Lindsay)
+**Story principle, in her words paraphrased:** we may "cheat" on the story for legibility, but reassess; balance legibility with rigor and sharp design judgment. Working test: cheating is fine when it removes something the viewer would have to hold in their head, not fine when it removes something the review depends on. Three cards passed. Anything further gets the same question.
+**Period gate bug:** the reveal window was .3em wide; the ball at .06em + .17em plus the .14em overshoot reached .37em, so the mask clipped it at the most visible moment. Gate is now .6em wide with a −.3em right margin, so the layout keeps the period's advance and the overshoot has room.

@@ -23,7 +23,8 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
-.gate { display: inline-block; position: relative; vertical-align: baseline; width: .3em; height: .32em; overflow: hidden; margin-left: .04em; }
+/* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
+.gate { display: inline-block; position: relative; vertical-align: baseline; width: .6em; height: .34em; overflow: hidden; margin-left: .04em; margin-right: -.3em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .ball { position: absolute; left: .06em; bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
   background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%); }
