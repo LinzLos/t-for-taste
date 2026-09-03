@@ -1,22 +1,53 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { episodes } from './episodes'
 import { useReducedMotion } from './chassis/reduced-motion'
 
-// The period is born out of the e: it starts small and behind the letter, grows as it rolls right,
-// overshoots its slot a touch, then settles back. Deliberate, not eager. 0.6s delay so the title lands first.
+// The period rolls out of the e. Two ideas: a GATE (an overflow-hidden window that starts at the
+// e's right edge, so nothing shows until the ball crosses it) and a real ROLL (an off-centre highlight
+// in the fill, rotated by distance / radius, so the turn is visible). No scale change: a ball doesn't grow.
 function RollingDot() {
   const { reduced } = useReducedMotion()
-  if (reduced) return <span className="dot">.</span>
+  const ref = useRef<HTMLSpanElement>(null)
+  const probe = useRef<HTMLElement>(null)
+  const [origin, setOrigin] = useState<string>()
+  const [travel, setTravel] = useState({ start: -1.05, over: 0.14 })
+
+  // Find the glyph's ink centre so it spins on its own axis: a zero-height inline-block sits on the baseline.
+  useLayoutEffect(() => {
+    const el = ref.current, pr = probe.current
+    if (!el || !pr) return
+    const box = el.getBoundingClientRect(), base = pr.getBoundingClientRect().top - box.top
+    const fs = parseFloat(getComputedStyle(el).fontSize)
+    const c = document.createElement('canvas').getContext('2d')!
+    c.font = `700 ${fs}px Literata, Georgia, serif`
+    const m = c.measureText('.')
+    const r = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 2
+    const cx = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2
+    setOrigin(`${cx}px ${base - r}px`)
+    // roll: rotate by distance / radius. travel is in em, r in px.
+    const rem = r / fs
+    setTravel({ start: -1.05, over: 0.14, ...({ turnOut: ((1.05 + 0.14) / rem) * (180 / Math.PI), turnBack: (0.14 / rem) * (180 / Math.PI) } as object) })
+  }, [])
+
+  const t = travel as { start: number; over: number; turnOut?: number; turnBack?: number }
+  const out = t.turnOut ?? 720, back = t.turnBack ?? 85
+
+  if (reduced) return <span className="gate"><span className="dot dot--still">.</span></span>
   return (
-    <motion.span
-      className="dot"
-      initial={{ x: '-0.72em', scale: 0.15, opacity: 1 }}
-      animate={{ x: ['-0.72em', '0.14em', '0em'], scale: [0.15, 1.04, 1] }}
-      transition={{ delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
-    >
-      .
-    </motion.span>
+    <span className="gate">
+      <motion.span
+        ref={ref}
+        className="dot"
+        style={{ transformOrigin: origin }}
+        initial={{ x: `${t.start}em`, rotate: 0 }}
+        animate={origin ? { x: [`${t.start}em`, `${t.over}em`, '0em'], rotate: [0, out, out - back] } : undefined}
+        transition={{ delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
+      >
+        .<i ref={probe} className="probe" aria-hidden />
+      </motion.span>
+    </span>
   )
 }
 

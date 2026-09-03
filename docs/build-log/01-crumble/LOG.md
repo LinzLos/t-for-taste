@@ -222,3 +222,10 @@ Rules go back to ink black. The period pink (#ff2fa6, now `--pink`) lives on exa
 
 ## Correction (2026-09-02, Lindsay): link text stays ink; pink is the hover underline only
 Link text reverted to ink. On hover, a 2px pink underline offset .2em under the episode title and the back link. So the pink rule is now: the period, and the underline that appears when you hover something clickable.
+
+## Rolling period, fourth pass (2026-09-02, Lindsay: "grow-over-position is not a roll; don't show the dot until it emerges from the e")
+**Two mechanisms:**
+1. **The gate.** The dot sits inside an inline `overflow: hidden` window that begins exactly at the e's right edge (it is the next inline box after the e). Anything left of the edge is clipped, so the dot is invisible until it physically crosses out of the letter. No z-index tricks, no reliance on the glyph's ink covering it.
+2. **A visible roll.** The dot's fill is a radial gradient with an off-centre highlight (background-clip: text), and it rotates by distance ÷ radius, so the turn reads. The ink centre is measured at runtime (canvas `measureText` for the glyph's ink box, a zero-height inline probe for the baseline) and used as the transform origin, so it spins on its own axis rather than wobbling. No scale change: a ball doesn't grow.
+**Path:** x from −1.05em (inside the e) to +0.14em overshoot, then back to 0. Rotation ≈ 1.19em ÷ r out, then back by 0.14em ÷ r. Same timing and curves as before (0.6s delay, 1.4s, standard out then settle).
+**Reduced motion:** a plain pink period, no gradient, no roll.

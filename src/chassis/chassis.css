@@ -21,8 +21,13 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index { max-width: 62ch; margin: 0 auto; padding: 8vh 24px 12vh; }
 .title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
 .index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
-.index h1 { position: relative; z-index: 0; }
-.dot { display: inline-block; position: relative; z-index: -1; color: var(--pink); transform-origin: 50% 85%; will-change: transform; }
+/* The gate: an inline window starting at the e's right edge. Whatever is left of it is invisible. */
+.gate { display: inline-block; overflow: hidden; vertical-align: baseline; line-height: 1.2; padding-right: .3em; margin-right: -.3em; }
+.dot { display: inline-block; will-change: transform; color: transparent;
+  background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%);
+  -webkit-background-clip: text; background-clip: text; }
+.dot--still { color: var(--pink); background: none; }
+.probe { display: inline-block; width: 0; height: 0; }
 .lede { margin: 0 0 3em; max-width: 44ch; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
