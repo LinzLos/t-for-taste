@@ -6,7 +6,7 @@ gsap.registerPlugin(MotionPathPlugin)
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
-import { ATTEMPT, CHIP, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, type Beat, type NodeSpec } from './story'
+import { ATTEMPT, CHIP, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, placeholderFor, type Beat, type NodeSpec } from './story'
 import './builder.css'
 
 export { meta }
@@ -280,7 +280,7 @@ export default function SomeDays() {
                 </div>
               )}
             </div>
-            <div className="composer"><div className="field">Marike, what should change?</div><i className="send" aria-hidden /></div>
+            <div className="composer"><div className="field" key={placeholderFor(beat, tries)}>{placeholderFor(beat, tries)}</div><i className="send" aria-hidden /></div>
           </div>
         </>
       )}

@@ -73,7 +73,9 @@ html[data-reduced="true"] .node--stuck { animation: none; border-radius: 0; }
 .msg { align-self: flex-end; font-size: 26px; padding: 12px 20px; border: 2px solid var(--line); } .msg--hot { border-color: var(--hot); }
 .sys { align-self: flex-start; font-family: var(--mono); font-size: 22px; color: var(--muted); }
 .composer { display: flex; align-items: center; gap: 16px; }
-.field { flex: 1; font-size: 26px; color: var(--muted); background: var(--field); border: 2px solid var(--line); padding: 16px 20px; }
+.field { flex: 1; font-size: 26px; color: var(--muted); background: var(--field); border: 2px solid var(--line); padding: 16px 20px; animation: settle-in .28s ease-out both; }
+@keyframes settle-in { from { opacity: .4; } to { opacity: 1; } }
+html[data-reduced="true"] .field { animation: none; }
 .send { width: 0; height: 0; border-left: 40px solid var(--muted); border-top: 20px solid transparent; border-bottom: 20px solid transparent; }
 
 /* the offer: the system speaks in the log. Calm panel, one teal primary, slides up like a message. */

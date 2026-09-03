@@ -65,6 +65,14 @@ export const OFFER = {
   secondary: 'Keep trying',
 }
 
+// The composer's placeholder follows the state. The system's quietest line, and it should know what is going on.
+export function placeholderFor(beat: Beat, tries: number): string {
+  if (beat === 'threshold' || beat === 'pressed') return 'Reconnecting has not changed the answer'
+  if (tries >= 4) return 'Try a different page, or tell it where to look'
+  if (tries >= 3) return 'Still 0. Where should it look?'
+  return 'Describe a change'
+}
+
 export const CHIP: Record<Beat, string> = { calm: 'connecting…', threshold: 'still connecting…', pressed: 'still connecting…', review: 'reviewing' }
 
 export const REVIEW = {
