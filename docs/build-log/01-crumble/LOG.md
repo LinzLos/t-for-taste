@@ -153,3 +153,12 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 **Log, calm:** "connect Lotion and grab the spring-lots page" / "Connected to Lotion. Can read pages. Found 0." / "it's in TulipTech, under Sales" / "Still 0. Listening at the TulipTech level." (this second system line now seeds finding 4 in plain words; no extra line needed).
 **Log, threshold adds:** "I CAN SEE IT RIGHT THERE" / "Reconnected, try 6. Can now see everything you can. Found 0." (seeds finding 2) / "IT IS A PUBLIC PAGE".
 **Study strip headings:** not started · trying · done · stuck · never ran.
+
+## Type study (2026-09-02, Lindsay's ask: free / Google fonts deployable with React + TypeScript)
+**Constraint:** free fonts only, deployable in the repo. All candidates are Google Fonts; deploy via `@fontsource/<family>` (self-hosted, no runtime request) or a Google Fonts `<link>`.
+**Three study sections in Figma, one per role:**
+- **Serif (chassis header + body, Sastre stand-in):** Literata · Source Serif 4 · Newsreader · Fraunces · Crimson Pro. Each shown as the caption card: T/01 title in Bold, Default/Change/Reason in Regular, values line in mono.
+- **Sans (inside the episode UI, by material):** Space Grotesk (current) · Sora · Nunito and Fredoka (soft, Milgram stand-ins) · Jura, Saira, Chakra Petch (technical, Micronova stand-ins). Each shown as a node card + a user message.
+- **Mono (system voice):** JetBrains Mono · Geist Mono · IBM Plex Mono · Space Mono · Courier Prime. Each shown as chip + system line + the T/01 mark.
+**Not available in Figma:** M PLUS Rounded 1c.
+**Her call:** one serif, one sans, one mono. Agent's leaning: Literata or Newsreader for the serif (warmest at text sizes, real italics), keep Space Grotesk unless a material asks otherwise, JetBrains Mono for the mono.
