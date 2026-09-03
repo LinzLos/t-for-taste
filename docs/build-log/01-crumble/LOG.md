@@ -94,3 +94,9 @@ Implications for the build (agent notes, not decisions):
 **Who:** Lindsay raised three pain points from her own builder use: losing the chat when moving between skill and chat, nav bloat, and an unclear skills / agent / workflow taxonomy. She was unsure whether to address them without making the UI the problem. Agent's call, which she can overturn: the UI in T/01 must stay innocent, so the pain points are not shown as problems; the answers are shown quietly.
 **What:** every Node now carries a one-word type label above its title, exposed as a `type` property: trigger · integration, step · agent, step · action, control · retry. The canvas is the workflow, a node is a step, an agent is a kind of step. No diagram.
 **Not in T/01:** the "chat that stays" (malleable chat window) is its own episode; the taxonomy explainer belongs in a different series.
+
+## Palette comparison: Pelham mode (2026-09-02, Lindsay asked for a side-by-side)
+**Who:** Lindsay loves the David Pelham early-70s Penguin SF cover palette and asked for a duplicate palette option to compare. Agent set it up as a second variable **mode** ("pelham") on the same `T/01 builder` collection, so the tokens stay one source of truth and any frame can flip between "dark" and "pelham".
+**Pelham values (agent's translation of the covers):** canvas near-black #0d0a0c, cards dark plum #1c1220, field #2a1a30, ink pale yellow #f5e9a8, accent electric cyan #2bb3d6, threshold hot pink #ff2fa6, danger-on near-black. Spares on the swatch row, unassigned: sunset orange #ff6a1f, deep magenta #8a1a6b.
+**Where:** new section "T/01 states · Pelham" below the originals, with clones of all four frames and labelled swatches. The section carries the mode explicitly; the frames inherit it.
+**Her call:** which mode ships, or a hybrid (e.g. only salmon → hot pink on the original).
