@@ -24,6 +24,7 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
+.taste { cursor: default; -webkit-tap-highlight-color: transparent; }
 .gate { display: inline-block; position: relative; vertical-align: baseline; width: .6em; height: .34em; overflow: hidden; margin-left: .04em; margin-right: -.3em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .ball { position: absolute; left: .06em; bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
@@ -40,7 +41,7 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .episode-list .num, .episode-list .mat, .episode-list .draft { font-family: var(--mono); font-size: 14px; }
 .episode-list .mat, .episode-list .draft { opacity: .55; }
 .episode-list li[data-status="draft"] .name { opacity: .55; }
-.sign { margin-top: 4em; opacity: .55; font-style: italic; }
+.sign { margin-top: 4em; opacity: .55; }
 
 /* frame */
 /* minmax(0,1fr): the column is the viewport, never propped open by the stage's own width */

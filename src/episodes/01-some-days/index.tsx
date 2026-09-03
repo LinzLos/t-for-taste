@@ -239,7 +239,7 @@ export default function SomeDays() {
         <div className="row1">
           <span className="menu" aria-hidden><i /><i /><i /></span>
           <span className="project">some days are better than others</span>
-          <button type="button" className="publish" data-label="Publish"><span>Publish</span></button>
+          <button type="button" className="publish" data-label="Publish" onClick={e => { const b = e.currentTarget; b.classList.add('swished'); window.setTimeout(() => b.classList.remove('swished'), 340) }}><span>Publish</span></button>
         </div>
         <div className="row2">
           <span className="chip">tuliptech-docs</span>

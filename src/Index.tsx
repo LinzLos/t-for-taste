@@ -22,8 +22,12 @@ function RollingDot() {
   const roll = { x: [`${BALL.start}em`, `${BALL.over}em`, '0em'], rotate: [0, turnOut, rest] }
   const hover = { x: '0em', rotate: olive ? rest + 90 : rest }
 
+  // Touch has no hover: tapping the word toggles the olive. Desktop keeps hover on the dot.
+  const toggle = () => settled && setOlive(o => !o)
   return (
-    <span className="gate" onMouseEnter={() => settled && setOlive(true)} onMouseLeave={() => setOlive(false)}>
+    <>
+    <span className="taste" onClick={toggle}>Taste</span>
+    <span className="gate" onMouseEnter={() => settled && setOlive(true)} onMouseLeave={() => setOlive(false)} onClick={toggle}>
       <span className="sr">.</span>
       {reduced ? (
         <span className={olive ? 'ball is-olive' : 'ball'} aria-hidden />
@@ -40,6 +44,7 @@ function RollingDot() {
         />
       )}
     </span>
+    </>
   )
 }
 
@@ -49,7 +54,7 @@ export function Index() {
   const rows = episodes.slice().reverse()
   return (
     <main className="index">
-      <div className="title-clip"><h1>T for<br />Taste<RollingDot /></h1></div>
+      <div className="title-clip"><h1>T for<br /><RollingDot /></h1></div>
       <p className="lede">I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
