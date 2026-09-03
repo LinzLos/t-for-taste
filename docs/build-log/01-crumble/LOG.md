@@ -344,3 +344,4 @@ Two voices were already there (Fredoka right-aligned bubble vs Courier Prime lef
 
 ## Draggy droppy (2026-09-02, Lindsay)
 Cards drag with the pointer (pointer capture, scale-aware so it works in the scaled scene and in record mode, clamped to the canvas). The wires re-measure as a card moves. A 4px movement threshold keeps a tap a tap, so rage-clicking Reconnect still works and a drag never counts as a click. Grab and grabbing cursors, a lift shadow while dragging, keyboard Enter/Space still presses Reconnect.
+**Dot follows the wire while dragging (Lindsay: "the dot doesn't follow the path when dragging, what's the clean way"):** the pulse no longer rides a cached copy of the path. It carries only a progress value (0 → 1) and on every frame asks the live wire where that progress is (`getPointAtLength`), so a card dragged mid-flight takes the wire and the dot with it. MotionPathPlugin is gone; it is a number and a lookup.

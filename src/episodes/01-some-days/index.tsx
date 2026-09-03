@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import gsap from 'gsap'
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
-gsap.registerPlugin(MotionPathPlugin)
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
@@ -234,10 +232,20 @@ export default function SomeDays() {
         .to(target, { x: 0, duration: 0.08, ease: 'power2.out' })
         .fromTo(target, { borderLeftColor: hot ? '#ff9b71' : '#1b998b', borderLeftWidth: 6 }, { borderLeftColor: '#3f3547', borderLeftWidth: 2, duration: 0.6, ease: 'power2.out' }, 0.05)
     }
+    // The dot carries only a progress value and asks the LIVE wire where that is on every frame,
+    // so a card dragged mid-flight takes the wire and the dot with it. No cached path.
+    const ride = { t: 0 }
+    const place = () => {
+      const live = el.querySelector<SVGPathElement>('#edge-lotion-summarize') ?? path
+      const len = live.getTotalLength(); if (!len) return
+      const p = live.getPointAtLength(ride.t * len)
+      gsap.set(dot, { attr: { cx: p.x, cy: p.y } })
+    }
     const pt = gsap.timeline()
     if (import.meta.env.DEV) Object.assign(window, { __pulse: pt })
-    pt.set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
-      .to(dot, { motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: 0, end: 1 }, duration: 0.9, ease: 'power1.inOut' })
+    pt.set(ride, { t: 0 }).call(place)
+      .set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
+      .to(ride, { t: 1, duration: 0.9, ease: 'power1.inOut', onUpdate: place })
       .call(receive)
       .to(dot, { autoAlpha: 0, scale: 0.3, duration: 0.22, ease: 'power2.in' }, '-=0.05')
   }, [reduced])
