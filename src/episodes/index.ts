@@ -3,7 +3,7 @@ import { lazy } from 'react'
 import { metas } from './registry'
 
 const loaders: Record<string, () => Promise<{ default: React.ComponentType }>> = {
-  crumble: () => import('./01-crumble'),
+  'some-days': () => import('./01-some-days'),
 }
 
 export const episodes = metas
