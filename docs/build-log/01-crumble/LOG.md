@@ -174,3 +174,8 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 ## Bricolage out; three fonts (2026-09-02, Lindsay)
 **Who:** Lindsay. "I just have 3 fonts right." Bricolage ExtraBold was only on the rage button; it is gone from the file. The button now says it in **Fredoka Bold, 32px, all caps**: the product's own voice losing it. Colour and words carry the crack, not a fourth face.
 **Final type system for T/01:** serif (chassis, pick pending) · Courier Prime (system, both surfaces) · Fredoka (product, inside the stage). Nothing else.
+
+## Serif pick: Literata; the system is complete (2026-09-02, Lindsay)
+**Who:** Lindsay picked Literata. Agent audited the Figma states section: every text node is Fredoka or Courier Prime, no stragglers.
+**Deployed in the repo:** `@fontsource/literata` (400, 400 italic, 700), `@fontsource/courier-prime` (400, 700), `@fontsource/fredoka` (400, 600, 700), imported in `src/main.tsx`; self-hosted, no runtime font request. `chassis.css` now defines `--serif`, `--mono`, `--sans`. Body and index title are Literata; frame bar, values table, episode numbers, meta line and the T/NN mark are Courier Prime; Fredoka is available to episodes via `--sans` and used nowhere in the chassis.
+**The system, final for the series:** Literata = Lindsay's voice (chassis). Courier Prime = the system (both surfaces). The product sans is per episode; T/01 = Fredoka.
