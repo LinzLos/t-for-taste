@@ -105,3 +105,11 @@ Implications for the build (agent notes, not decisions):
 **Ships:** her first palette, the "dark" mode: aubergine wall, deep purple cards, cream ink, teal accent, salmon threshold.
 **Kept as discovery:** the "pelham" mode and its section stay in the file as the road not taken. Her words: "I like the palette I came up with first but I like that we have discovery."
 **Why it matters for the series:** the post can show the comparison and the choice. That is a taste decision made visible, which is the whole point.
+
+## Radius as state (2026-09-02, Lindsay's idea, agent's system)
+**Who:** Lindsay: use corner radius to signal good / unknown / trying on the workflow nodes. Agent turned it into a state system and put a study strip in the Components section ("Study · radius as state").
+**Metaphor:** cards harden as they resolve. Soft = unset. Shaping = working. Hard = done. At the escape hatch everything softens before it slides, so the same property tells state and starts the melt.
+**States:** unknown/queued = soft 24px, dashed, no motion · trying = breathing 16→4 over ~1.6s, accent stroke · good/done = hard 0, sets once 24→0 with a short hold before the click · trying-with-no-progress/reconnecting = jitters 0↔6 and never settles, hot stroke · never ran = stays soft forever, dashed.
+**Connectors share it:** dashed into a soft card, solid into a hard one, marching dash into a card that is trying.
+**Guardrails:** pill text and stroke remain the true read; radius is the fast read. "Radius is 0 or full" still holds for static UI; intermediates exist only as motion or as not-set-yet. Reduced-motion twin freezes breathing at mid radius and the stutter at a hard corner.
+**Open for Lindsay:** exact radius values and timings; whether "never ran" needs its own look or is just queued that outlived the run.
