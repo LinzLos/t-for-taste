@@ -63,7 +63,7 @@ function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElem
   return (
     <svg className="edges" width={1008} height={800} aria-hidden>
       {d.map(e => {
-        const st = stateOf(e.from)
+        const st = e.dashed ? 'control' : stateOf(e.from) // control wires (dashed) never carry flow
         const cls = ['edge', e.dashed ? 'edge--dashed' : '', st === 'trying' ? 'edge--flow' : st === 'stuck' ? 'edge--stuck' : 'edge--idle'].join(' ')
         return <path key={e.id} id={e.id} d={e.d} className={cls} />
       })}
