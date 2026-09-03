@@ -145,3 +145,11 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 **Beat five (before/after workspace with who/what/will on the nodes) is PARKED for this episode:** before-and-after doesn't fit a 30-second motion slot. Saved as a case-study candidate for the portfolio ("the silent-success problem in agent builders"), with the GT board incident as the sourced backstory.
 **ELI5 rewrite, her call:** the review must read in one pass by someone scrolling. New copy: "6 tries · 3 yeses · 1 page moved · nothing ran". 1 It moved your page · Now your team can't edit it. This one won't undo. · Put it back. 2 It kept asking for more · Read, then edit, then everything. You said yes six times. · Back to read. 3 It's logged into the wrong place · Your personal space, not TulipTech's. · Switch. 4 It was never listening · The trigger sat where it can't hear. So nothing ran. · Listen to Sales. Primary: Fix all four. Secondary: Disconnect Lotion.
 **Kept for the long form:** the technical detail (scope names, org-level watcher, one-way copy) lives in this log and in the case-study candidate, not on the frame.
+
+## ELI5 everything (2026-09-02, Lindsay)
+**Rule:** no word on the frame that a person outside the tool would have to look up.
+**Node grammar:** type labels are now **when · then · AI · then · send · try again** (were trigger · integration / step · agent / step · action / control · retry). Subtitles: "A page is saved · spring-lots", "Two lines for the team", "Slack · #growers", "Log in to Lotion again". Titles: Lotion, Summarize, Tell Marike (was Notify Marike), Reconnect.
+**Pills:** waiting (was queued), connecting · 14s, still trying · 9 min (was reconnecting · 9:41), try 2 / try 6 (was attempt N of N), done.
+**Log, calm:** "connect Lotion and grab the spring-lots page" / "Connected to Lotion. Can read pages. Found 0." / "it's in TulipTech, under Sales" / "Still 0. Listening at the TulipTech level." (this second system line now seeds finding 4 in plain words; no extra line needed).
+**Log, threshold adds:** "I CAN SEE IT RIGHT THERE" / "Reconnected, try 6. Can now see everything you can. Found 0." (seeds finding 2) / "IT IS A PUBLIC PAGE".
+**Study strip headings:** not started · trying · done · stuck · never ran.
