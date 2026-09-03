@@ -54,6 +54,11 @@ export const LOG: Record<'calm' | 'threshold', Line[]> = {
   ],
 }
 
+// A clock that tells the truth. Starts at 14s so the first frame matches the frames; counts while calm.
+// The jump to "9 min" at the threshold is a jump cut. Keep trying never resets it.
+export const CLOCK_START = 14
+export const fmtClock = (s: number) => (s < 60 ? `${s}s` : `${Math.floor(s / 60)} min${s % 60 ? ` ${s % 60}s` : ''}`)
+
 // What the system says after each Reconnect tap. The loop she is clicking against, made visible.
 export const ATTEMPT = (n: number) => `Reconnected, try ${n}. Found 0.`
 

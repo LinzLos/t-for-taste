@@ -348,3 +348,6 @@ Cards drag with the pointer (pointer capture, scale-aware so it works in the sca
 
 ## Reconnect reads as a control (2026-09-02, Lindsay)
 The one card you press was the same colour as the two you don't. Reconnect now sits one elevation up on the field colour, with a stronger line, and lifts 2px with a lighter fill on hover. Same in the Figma frames (bg/field on the Regenerate instance). Elevation = clickable, in both the code and the file.
+
+## The clock tells the truth (2026-09-02, Lindsay: "a timer on connecting? and does Keep trying reset it, or is that work for nothing")
+**Worth it, in the honest version.** The Lotion pill now counts live while calm ("connecting · 14s, 15s…", minutes after 60). Starts at 14s so the first frame matches the Figma frames. The jump to "still trying · 9 min" at the threshold stays a jump cut (a 30s recording can't earn nine real minutes). **Keep trying never resets anything:** the clock resumes from where it was, the try count keeps climbing (cap 9), the log keeps its history. The choice to keep trying visibly buys nothing, which is the point. Only a full reset (Fix all four, play, or the beat strip's calm) restarts the clock.

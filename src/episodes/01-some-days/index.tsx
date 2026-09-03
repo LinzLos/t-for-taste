@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
-import { ATTEMPT, CHIP, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, placeholderFor, type Beat, type NodeSpec } from './story'
+import { ATTEMPT, CHIP, CLOCK_START, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, fmtClock, placeholderFor, type Beat, type NodeSpec } from './story'
 import './builder.css'
 
 export { meta }
@@ -150,6 +150,8 @@ const CLICK_GAPS = [0, 0.7, 0.45, 0.3, 0.2, 0.15]
 export default function SomeDays() {
   const [beat, setBeat] = useState<Beat>('calm')
   const [tries, setTries] = useState(2)
+  const [clock, setClock] = useState(CLOCK_START)
+  useEffect(() => { if (beat !== 'calm') return; const id = setInterval(() => setClock(c => c + 1), 1000); return () => clearInterval(id) }, [beat])
   const [pos, setPos] = useState<Record<string, { x: number; y: number }>>(() => Object.fromEntries(NODES.map(n => [n.id, { x: n.x, y: n.y }])))
   const move = useCallback((id: string, x: number, y: number) => setPos(p => ({ ...p, [id]: { x, y } })), [])
   const layoutKey = useMemo(() => JSON.stringify(pos), [pos])
@@ -171,7 +173,7 @@ export default function SomeDays() {
   const flashTimer = useRef<number>()
   const pressReconnect = () => {
     if (beat !== 'calm') return
-    const n = Math.min(tries + 1, 6)
+    const n = Math.min(tries + 1, 9)
     setTries(n)
     setAttempts(a => [...a, ATTEMPT(n)])
     setFlash(n); window.clearTimeout(flashTimer.current); flashTimer.current = window.setTimeout(() => setFlash(null), 650)
@@ -185,7 +187,7 @@ export default function SomeDays() {
   // Autoplay: the cursor walks the story through the same code paths a human uses.
   const play = useCallback(() => {
     if (playing) return
-    setTries(2); setAttempts([]); setBeat('calm'); setPlaying(true)
+    setTries(2); setAttempts([]); setClock(CLOCK_START); setBeat('calm'); setPlaying(true)
     if (reduced) { const t = setTimeout(() => { setBeat('threshold'); setTimeout(() => setBeat('pressed'), 900) }, 900); return () => clearTimeout(t) }
     const c = cursorEl.current!
     const root = c.closest('.builder') as HTMLElement
@@ -287,13 +289,14 @@ export default function SomeDays() {
   const nodes = useMemo(() => NODES.map(n => {
     if (n.id === 'reconnect' && beat === 'calm') return { ...n, pill: { ...n.pill, calm: `try ${tries}` } }
     if (n.id === 'lotion' && beat === 'calm' && flash) return { ...n, pill: { ...n.pill, calm: `reconnecting · try ${flash}` }, state: { ...n.state, calm: 'stuck' as const } }
+    if (n.id === 'lotion' && beat === 'calm') return { ...n, pill: { ...n.pill, calm: `connecting · ${fmtClock(clock)}` } }
     return n
-  }), [beat, tries, flash])
+  }), [beat, tries, flash, clock])
   const raged = beat === 'threshold' || beat === 'pressed'
-  const reset = () => { setTries(2); setAttempts([]); setBeat('calm') }
+  const reset = () => { setTries(2); setAttempts([]); setClock(CLOCK_START); setBeat('calm') }
 
   // Publish the beats to the chassis so the story can be stepped from the frame bar.
-  const go = useCallback((i: number) => { if (BEATS[i] === 'calm') { setTries(2); setAttempts([]) } setBeat(BEATS[i]) }, [])
+  const go = useCallback((i: number) => { if (BEATS[i] === 'calm') { setTries(2); setAttempts([]); setClock(CLOCK_START) } setBeat(BEATS[i]) }, [])
   const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, play, playing, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or answer the offer in the chat' : undefined }), [beat, go, play, playing])
   useRegisterBeats(controls)
 
@@ -342,7 +345,7 @@ export default function SomeDays() {
                   <b>{OFFER.title}</b>
                   <span>{OFFER.body}</span>
                   <div className="offer-buttons">
-                    <button type="button" className="action" onClick={() => { setTries(2); setAttempts([]); setBeat('calm') }}>{OFFER.secondary}</button>
+                    <button type="button" className="action" onClick={() => setBeat('calm')}>{OFFER.secondary}</button>
                     <button type="button" className="primary offer-go" onClick={() => beat === 'threshold' && setBeat('pressed')}>{OFFER.primary}</button>
                   </div>
                 </div>
