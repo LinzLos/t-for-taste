@@ -3,17 +3,17 @@ import { motion } from 'motion/react'
 import { episodes } from './episodes'
 import { useReducedMotion } from './chassis/reduced-motion'
 
-// The period rolls in like a ball: a short approach from the right, a gentle deceleration, a small
-// overshoot into the word, then it settles back into its slot. Deliberate, not eager. 0.6s delay so the title lands first.
+// The period is born out of the e: it starts small and behind the letter, grows as it rolls right,
+// overshoots its slot a touch, then settles back. Deliberate, not eager. 0.6s delay so the title lands first.
 function RollingDot() {
   const { reduced } = useReducedMotion()
   if (reduced) return <span className="dot">.</span>
   return (
     <motion.span
       className="dot"
-      initial={{ x: '5.5em', scaleX: 1.1, scaleY: 0.92, opacity: 0 }}
-      animate={{ x: ['5.5em', '-0.12em', '0em'], scaleX: [1.1, 0.95, 1], scaleY: [0.92, 1.05, 1], opacity: [0, 1, 1] }}
-      transition={{ delay: 0.6, duration: 1.5, times: [0, 0.74, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
+      initial={{ x: '-0.72em', scale: 0.15, opacity: 1 }}
+      animate={{ x: ['-0.72em', '0.14em', '0em'], scale: [0.15, 1.04, 1] }}
+      transition={{ delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
     >
       .
     </motion.span>

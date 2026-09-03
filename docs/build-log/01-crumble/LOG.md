@@ -213,3 +213,6 @@ All chassis rules (`--rule`) go from ink black to **#ff2fa6**, the Penguin hot p
 ## Rolling period, second pass (2026-09-02, Lindsay: "less eager, more tasteful; the snap back is a less intense attraction")
 **Fix:** the clip was on the h1, whose .85 line-height box is shorter than the glyphs, so descenders and the period's foot were cut. The clip moved to a `.title-clip` wrapper with padding for descenders (and matching negative margins so the layout doesn't shift).
 **Softer roll:** approach shortened from 58vw to 5.5em; duration 1.5s with a 0.6s delay; deceleration on the standard curve `[.4,0,.2,1]` instead of circOut; overshoot 0.12em instead of 0.22em; the return is a settle on `[.33,1,.68,1]` with no wobble; squash trimmed to 1.1/0.92 → 0.95/1.05 → 1.
+
+## Rolling period, third pass (2026-09-02, Lindsay: "come out of the e, not the right side of the pane")
+The dot now starts at x −0.72em (centred on the e) at scale 0.15, sitting BEHIND the text (z-index −1 under a positioned h1), so it is hidden inside the e and emerges as it grows and rolls right. Overshoot 0.14em, settle to 0. 1.4s after a 0.6s delay; same two curves as the second pass. Born from the letter, not delivered from the edge.
