@@ -209,3 +209,7 @@ All chassis rules (`--rule`) go from ink black to **#ff2fa6**, the Penguin hot p
 **Built (chassis index, `motion/react`):** the dot is a separate span in the rule pink. 0.5s delay so the title lands first. Then 1.25s: x from 58vw to −0.22em (overshoot into the word) with `circOut`, then to 0 with an overshoot curve `[.34,1.56,.64,1]` so the snap-back has a tiny wobble. Squash and stretch ride along: scaleX 1.25 → 0.82 → 1, scaleY 0.8 → 1.18 → 1, origin near the baseline so it lands on its foot. The h1 clips overflow so the ball enters from the edge, not from outer space.
 **Reduced motion:** the dot is simply there.
 **Values are the agent's first pass; the delay and the overshoot distance are the two she'll feel first.**
+
+## Rolling period, second pass (2026-09-02, Lindsay: "less eager, more tasteful; the snap back is a less intense attraction")
+**Fix:** the clip was on the h1, whose .85 line-height box is shorter than the glyphs, so descenders and the period's foot were cut. The clip moved to a `.title-clip` wrapper with padding for descenders (and matching negative margins so the layout doesn't shift).
+**Softer roll:** approach shortened from 58vw to 5.5em; duration 1.5s with a 0.6s delay; deceleration on the standard curve `[.4,0,.2,1]` instead of circOut; overshoot 0.12em instead of 0.22em; the return is a settle on `[.33,1,.68,1]` with no wobble; squash trimmed to 1.1/0.92 → 0.95/1.05 → 1.
