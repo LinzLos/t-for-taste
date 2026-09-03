@@ -219,3 +219,6 @@ The dot now starts at x −0.72em (centred on the e) at scale 0.15, sitting BEHI
 
 ## Chassis colour, settled (2026-09-02, Lindsay)
 Rules go back to ink black. The period pink (#ff2fa6, now `--pink`) lives on exactly two things: the rolling period and hyperlinks (the episode title in the list, the back link in the frame bar). One accent, one job: pink means "this is the thing that moves or the thing you can click."
+
+## Correction (2026-09-02, Lindsay): link text stays ink; pink is the hover underline only
+Link text reverted to ink. On hover, a 2px pink underline offset .2em under the episode title and the back link. So the pink rule is now: the period, and the underline that appears when you hover something clickable.
