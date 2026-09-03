@@ -140,3 +140,8 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 **Translated to Lotion:** the agent installed one page-watcher at the TulipTech level to cover every space; Lotion doesn't pass watchers into private spaces; the trigger was listening to nothing. This is the real reason "never ran" is on the list.
 **Review change:** finding 4 is now "Listening to nothing" with the action "Watch Sales instead". Summary line ends "0 triggers firing".
 **Why it's the best of the four:** nothing errored. It looked installed. That is the purest form of "the user is unaware what it did isn't what they wanted."
+
+## ELI5 pass on the review + beat five parked (2026-09-02, Lindsay)
+**Beat five (before/after workspace with who/what/will on the nodes) is PARKED for this episode:** before-and-after doesn't fit a 30-second motion slot. Saved as a case-study candidate for the portfolio ("the silent-success problem in agent builders"), with the GT board incident as the sourced backstory.
+**ELI5 rewrite, her call:** the review must read in one pass by someone scrolling. New copy: "6 tries · 3 yeses · 1 page moved · nothing ran". 1 It moved your page · Now your team can't edit it. This one won't undo. · Put it back. 2 It kept asking for more · Read, then edit, then everything. You said yes six times. · Back to read. 3 It's logged into the wrong place · Your personal space, not TulipTech's. · Switch. 4 It was never listening · The trigger sat where it can't hear. So nothing ran. · Listen to Sales. Primary: Fix all four. Secondary: Disconnect Lotion.
+**Kept for the long form:** the technical detail (scope names, org-level watcher, one-way copy) lives in this log and in the case-study candidate, not on the frame.
