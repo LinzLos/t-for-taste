@@ -43,14 +43,14 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .episode-list .mat, .episode-list .draft { opacity: .55; }
 .episode-list li[data-status="draft"] .name { opacity: .55; }
 /* footer: the anchor */
-.foot { display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
+.foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
 .index .foot { margin-top: 5em; }
 .frame .foot { margin: 0; padding: 18px 20px 22px; }
-.sign { opacity: .55; }
-.mark-home { font-family: var(--mark); font-size: 26px; line-height: 1; letter-spacing: .02em; text-decoration: none; color: var(--ink); opacity: .55; }
+.sign { opacity: .55; font-size: 15px; line-height: 1; }
+.mark-home { font-family: var(--mark); font-size: 26px; line-height: 1; letter-spacing: .02em; text-decoration: none; color: var(--ink); opacity: .55; display: inline-block; }
 .mark-home:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .25em; }
-.love { margin-left: auto; font-family: var(--mono); font-size: 14px; opacity: .7; }
-.heart { color: var(--ink); font-size: 26px; line-height: 1; vertical-align: -.1em; }
+.love { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 14px; line-height: 1; opacity: .7; }
+.heart { color: var(--ink); font-size: 26px; line-height: 1; }
 
 /* frame */
 /* minmax(0,1fr): the column is the viewport, never propped open by the stage's own width */
