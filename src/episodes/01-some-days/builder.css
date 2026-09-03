@@ -7,11 +7,23 @@
   --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
   position: absolute; inset: 0; background: var(--canvas); color: var(--ink);
   font-family: var(--sans); overflow: hidden; user-select: none;
+  container-type: size;
+  display: grid; grid-template-columns: 72px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr);
+}
+.bar { grid-column: 1 / -1; }
+.rail { grid-row: 2; grid-column: 1; }
+.main { grid-row: 2; grid-column: 2; display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.review { grid-row: 2; grid-column: 2; overflow: auto; }
+/* landscape: the chat is a side panel, the canvas gets the rest */
+@container (min-aspect-ratio: 1/1) {
+  .main { flex-direction: row; }
+  .log { width: 42%; max-width: 560px; height: auto; border-top: 0; border-left: 2px solid var(--line); }
+  .canvas { flex: 1; height: auto; }
 }
 .builder button { font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 /* top bar */
-.bar { position: absolute; top: 0; left: 0; width: 1080px; height: 160px; padding: 24px 32px 22px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-bottom: 2px solid var(--line); }
+.bar { padding: 24px 32px 22px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; border-bottom: 2px solid var(--line); }
 .row1 { display: flex; align-items: center; gap: 20px; }
 .menu { display: flex; flex-direction: column; gap: 6px; } .menu i { display: block; width: 28px; height: 3px; background: var(--muted); }
 .project { flex: 1; font-size: 30px; font-weight: 600; }
@@ -32,12 +44,12 @@ html[data-reduced="true"] .builder .rage { animation: none; }
 .builder .rage:active { transform: translateY(6px); box-shadow: none; }
 
 /* rail */
-.rail { position: absolute; top: 160px; left: 0; width: 72px; bottom: 0; border-right: 2px solid var(--line); display: flex; flex-direction: column; align-items: center; gap: 28px; padding-top: 28px; }
+.rail { border-right: 2px solid var(--line); display: flex; flex-direction: column; align-items: center; gap: 28px; padding-top: 28px; }
 .rail span { width: 30px; height: 30px; border: 2.5px solid var(--muted); } .rail span.on { border-color: var(--ink); }
 
 /* canvas */
-.canvas { position: absolute; top: 160px; left: 72px; width: 1008px; height: 800px; }
-.edges { position: absolute; inset: 0; pointer-events: none; }
+.canvas { position: relative; flex: 1 1 auto; min-height: 0; height: 62%; }
+.edges { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .edge { fill: none; stroke: var(--line-strong); stroke-width: 3; stroke-linecap: round; } .edge--dashed { stroke-dasharray: 10 10; }
 /* edges carry state: listening marches, stuck goes hot and stops, idle stays dim */
 .edge--idle { opacity: .55; }
@@ -66,7 +78,7 @@ html[data-reduced="true"] .node--trying { animation: none; border-radius: 20px; 
 html[data-reduced="true"] .node--stuck { animation: none; border-radius: 0; }
 
 /* log: small, bottom-anchored, never grows */
-.log { position: absolute; left: 72px; top: 960px; width: 1008px; height: 390px; box-sizing: border-box; padding: 28px 32px; border-top: 2px solid var(--line); display: flex; flex-direction: column; justify-content: flex-end; gap: 16px; overflow: hidden; }
+.log { flex: 0 0 auto; height: 38%; min-height: 300px; box-sizing: border-box; padding: 28px 32px; border-top: 2px solid var(--line); display: flex; flex-direction: column; justify-content: flex-end; gap: 16px; overflow: hidden; }
 /* a real scroll container, pinned to the newest line; scrollbar hidden, wheel still works */
 .messages { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; min-height: 0; scrollbar-width: none; }
 .messages::-webkit-scrollbar { display: none; }
@@ -89,7 +101,7 @@ html[data-reduced="true"] .field { animation: none; }
 html[data-reduced="true"] .offer { animation: none; }
 
 /* review */
-.review { position: absolute; top: 160px; left: 72px; width: 1008px; box-sizing: border-box; padding: 56px 48px 48px; display: flex; flex-direction: column; gap: 36px; }
+.review { box-sizing: border-box; padding: 56px 48px 48px; display: flex; flex-direction: column; gap: 36px; }
 .review h2 { margin: 0; font-size: 48px; font-weight: 600; }
 .review-sum { margin: -26px 0 0; font-family: var(--mono); font-size: 22px; color: var(--muted); }
 .findings { list-style: none; margin: 0; padding: 0; }

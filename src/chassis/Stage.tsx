@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-// The 4:5 frame every episode renders into. Logical size is fixed so a
-// recording from one machine matches a recording from another; it scales to fit.
-// The outer box takes the scaled size in layout; the inner stage is transformed.
+// Two modes. Fluid (default): the stage IS the host, the episode lays itself out responsively,
+// and the social frame is whatever you resize the window to. Record (?record): a fixed 1080 × 1350
+// stage scaled to fit, so a recording from any machine is the same picture.
 export const STAGE = { w: 1080, h: 1350 } as const
 
-export function Stage({ children }: { children: ReactNode; record?: boolean }) {
+export function Stage({ children, record }: { children: ReactNode; record?: boolean }) {
   const host = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
 
   useEffect(() => {
+    if (!record) return
     const el = host.current!
     const fit = () => {
       const cs = getComputedStyle(el)
@@ -21,8 +22,17 @@ export function Stage({ children }: { children: ReactNode; record?: boolean }) {
     const ro = new ResizeObserver(fit)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [record])
 
+  if (!record) {
+    return (
+      <div className="stage-host stage-host--fluid" ref={host}>
+        <div className="stage-box stage-box--fluid">
+          <div className="stage stage--fluid">{children}</div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="stage-host" ref={host}>
       <div className="stage-box" style={{ width: STAGE.w * scale, height: STAGE.h * scale }}>

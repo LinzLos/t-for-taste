@@ -31,7 +31,7 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
   return (
     <div
       className={`node node--${state}${n.dashed ? ' node--dashed' : ''}`}
-      style={{ left: n.x, top: n.y }}
+      style={{ left: `${(n.x / 1008) * 100}%`, top: `${(n.y / 800) * 100}%` }}
       data-node={n.id}
       onClick={onPress}
       role={onPress ? 'button' : undefined}
@@ -47,10 +47,12 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
 
 function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElement>; beat: Beat; stateOf: (id: string) => string }) {
   const [d, setD] = useState<{ d: string; dashed: boolean; id: string; from: string }[]>([])
+  const [tick, setTick] = useState(0)
+  useEffect(() => { const el = host.current; if (!el) return; const ro = new ResizeObserver(() => setTick(t => t + 1)); ro.observe(el); return () => ro.disconnect() }, [host])
   useLayoutEffect(() => {
     const el = host.current; if (!el) return
     const box = el.getBoundingClientRect()
-    const k = box.width / 1008 // the stage may be drawn at any scale; the SVG draws in stage units
+    const k = box.width / el.offsetWidth // any transform scale (record mode); 1 when fluid
     const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); const l = (b.left - box.left) / k, t = (b.top - box.top) / k, w = b.width / k, h = b.height / k; return { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2 } }
     setD(EDGES.map(([a, b, dashed]) => {
       const A = r(a), B = r(b)
@@ -59,9 +61,9 @@ function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElem
       const sx = A.cx + 40
       return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 70} ${B.cx} ${B.t - 70} ${B.cx} ${B.t}` }
     }))
-  }, [host, beat])
+  }, [host, beat, tick])
   return (
-    <svg className="edges" width={1008} height={800} aria-hidden>
+    <svg className="edges" aria-hidden>
       {d.map(e => {
         const st = e.dashed ? 'control' : stateOf(e.from) // control wires (dashed) never carry flow
         const cls = ['edge', e.dashed ? 'edge--dashed' : '', st === 'trying' ? 'edge--flow' : st === 'stuck' ? 'edge--stuck' : 'edge--idle'].join(' ')
@@ -106,17 +108,12 @@ function Cursor({ el }: { el: React.RefObject<HTMLDivElement> }) {
   )
 }
 
-// Stage coordinates of the things the cursor visits (builder space, 1080 × 1350).
-const SPOT = {
-  composer: { x: 640, y: 1290 },
-  reconnect: { x: 72 + 300 + 175, y: 160 + 500 + 120 },
-}
-// Where something is, in stage coordinates, whatever scale the stage is drawn at.
-function spotOf(root: HTMLElement, sel: string) {
+// Where something is, in the builder's own pixels, whatever the stage is doing (fluid or scaled).
+function spotOf(root: HTMLElement, sel: string, fx = 0.55, fy = 0.6) {
   const r = root.getBoundingClientRect(), t = root.querySelector(sel)?.getBoundingClientRect()
-  if (!t) return SPOT.reconnect
-  const k = r.width / 1080
-  return { x: (t.left - r.left + t.width * 0.55) / k, y: (t.top - r.top + t.height * 0.6) / k }
+  const k = r.width / root.offsetWidth
+  if (!t) return { x: root.offsetWidth / 2, y: root.offsetHeight / 2 }
+  return { x: (t.left - r.left + t.width * fx) / k, y: (t.top - r.top + t.height * fy) / k }
 }
 // Click intervals: a person losing patience. The 6th click is the one that crosses 5-in-1.5s.
 const CLICK_GAPS = [0, 0.7, 0.45, 0.3, 0.2, 0.15]
@@ -152,18 +149,19 @@ export default function SomeDays() {
     setTries(2); setAttempts([]); setBeat('calm'); setPlaying(true)
     if (reduced) { const t = setTimeout(() => { setBeat('threshold'); setTimeout(() => setBeat('pressed'), 900) }, 900); return () => clearTimeout(t) }
     const c = cursorEl.current!
+    const root = c.closest('.builder') as HTMLElement
+    const at = (sel: string, fx?: number, fy?: number) => spotOf(root, sel, fx, fy)
     const tl = gsap.timeline({ onComplete: () => setPlaying(false) })
-    tl.set(c, { x: SPOT.composer.x, y: SPOT.composer.y, autoAlpha: 0, scale: 1 })
+    tl.set(c, { x: () => at('.field', 0.5, 0.5).x, y: () => at('.field', 0.5, 0.5).y, autoAlpha: 0, scale: 1 })
       .to(c, { autoAlpha: 1, duration: 0.3 }, 0.4)
-      .to(c, { x: SPOT.reconnect.x, y: SPOT.reconnect.y, duration: 0.9, ease: 'power2.inOut' }, 0.6)
+      .to(c, { x: () => at('[data-node=reconnect]', 0.5, 0.62).x, y: () => at('[data-node=reconnect]', 0.5, 0.62).y, duration: 0.9, ease: 'power2.inOut' }, 0.6)
     let t = 1.7
     CLICK_GAPS.forEach(gap => {
       t += gap
       tl.to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t)
       tl.call(() => pressRef.current(), [], t)
     })
-    const root = c.closest('.builder') as HTMLElement
-    tl.to(c, { x: () => spotOf(root, '.offer-go').x, y: () => spotOf(root, '.offer-go').y, duration: 0.7, ease: 'power2.inOut' }, t + 1.1)
+    tl.to(c, { x: () => at('.offer-go').x, y: () => at('.offer-go').y, duration: 0.7, ease: 'power2.inOut' }, t + 1.1)
       .to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t + 2.2)
       .call(() => setBeat(b => (b === 'threshold' ? 'pressed' : b)), [], t + 2.2)
       .to(c, { autoAlpha: 0, duration: 0.4 }, t + 2.8)
@@ -201,8 +199,8 @@ export default function SomeDays() {
     if (reduced) { const t = setTimeout(() => setBeat('review'), 200); return () => clearTimeout(t) }
     const tl = gsap.timeline({ onComplete: () => setBeat('review') })
       .to(cards, { borderRadius: 48, duration: 0.35, ease: 'power2.out', stagger: 0.04 })
-      .to(cards, { y: 900, rotation: () => (Math.random() - 0.5) * 8, duration: 1.35, ease: 'power2.in', stagger: 0.06 }, '+=0.15')
-      .to(logRef.current, { y: 500, autoAlpha: 0, duration: 1.0, ease: 'power2.in' }, '<0.2')
+      .to(cards, { y: () => el.clientHeight + 260, rotation: () => (Math.random() - 0.5) * 8, duration: 1.35, ease: 'power2.in', stagger: 0.06 }, '+=0.15')
+      .to(logRef.current, { y: () => (logRef.current?.clientHeight ?? 400) + 120, autoAlpha: 0, duration: 1.0, ease: 'power2.in' }, '<0.2')
     if (import.meta.env.DEV) Object.assign(window, { __tl: tl, __gsap: gsap })
     return () => { tl.kill() }
   }, [beat, reduced])
@@ -257,7 +255,7 @@ export default function SomeDays() {
       {beat === 'review' ? (
         <Review onReset={reset} />
       ) : (
-        <>
+        <div className="main">
           <div className="canvas" ref={canvas}>
             <Connectors host={canvas} beat={beat} stateOf={id => nodes.find(n => n.id === id)?.state[beat] ?? 'soft'} />
             {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
@@ -282,7 +280,7 @@ export default function SomeDays() {
             </div>
             <div className="composer"><div className="field" key={placeholderFor(beat, tries)}>{placeholderFor(beat, tries)}</div><i className="send" aria-hidden /></div>
           </div>
-        </>
+        </div>
       )}
     </div>
   )

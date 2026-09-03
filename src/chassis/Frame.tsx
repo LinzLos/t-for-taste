@@ -45,7 +45,7 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
           <span className="title">{meta.title}</span>
         </header>
       )}
-      <Stage>
+      <Stage record={record}>
         <Suspense fallback={null}>{children}</Suspense>
       </Stage>
       {!record && <Transport reduced={reduced} toggle={toggle} />}
