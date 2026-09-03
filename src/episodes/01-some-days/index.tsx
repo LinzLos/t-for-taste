@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useReducedMotion } from '../../chassis/reduced-motion'
+import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
 import { CHIP, EDGES, LOG, NODES, RAGE, REVIEW, type Beat, type NodeSpec } from './story'
 import './builder.css'
@@ -122,9 +123,16 @@ export default function SomeDays() {
   }, [beat])
 
   const lines = useMemo(() => beat === 'calm' ? LOG.calm : [...LOG.calm, ...LOG.threshold], [beat])
+  const msgsRef = useRef<HTMLDivElement>(null)
+  useEffect(() => { const m = msgsRef.current; if (m) m.scrollTop = m.scrollHeight }, [lines])
   const nodes = useMemo(() => NODES.map(n => n.id === 'reconnect' && beat === 'calm' ? { ...n, pill: { ...n.pill, calm: `try ${tries}` } } : n), [beat, tries])
   const raged = beat === 'threshold' || beat === 'pressed'
   const reset = () => { setTries(2); setBeat('calm') }
+
+  // Publish the beats to the chassis so the story can be stepped from the frame bar.
+  const go = useCallback((i: number) => { if (BEATS[i] === 'calm') setTries(2); setBeat(BEATS[i]) }, [])
+  const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or press the button' : undefined }), [beat, go])
+  useRegisterBeats(controls)
 
   return (
     <div className={`builder beat-${beat}`} key={beat === 'calm' ? 'fresh' : 'run'}>
@@ -157,7 +165,7 @@ export default function SomeDays() {
             {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
           </div>
           <div className="log" ref={logRef}>
-            <div className="messages">
+            <div className="messages" ref={msgsRef}>
               {lines.map((l, i) => {
                 const fade = lines.length - i
                 const cls = l.who === 'user' ? `msg${l.hot ? ' msg--hot' : ''}` : 'sys'
@@ -168,7 +176,6 @@ export default function SomeDays() {
           </div>
         </>
       )}
-      {beat === 'calm' && <p className="hint">rage-click Reconnect · or → to step</p>}
     </div>
   )
 }

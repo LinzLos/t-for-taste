@@ -241,3 +241,18 @@ Link text reverted to ink. On hover, a 2px pink underline offset .2em under the 
 ## The olive (2026-09-02, Lindsay's idea, agent's placement)
 **Her idea:** make the period a green olive, martini and cheese-plate energy. **Agent's counsel:** not as the default (it turns a typographic wink into a mascot and breaks the one-accent rule), but as an easter egg. **Her call:** "omg yes the easter egg."
 **Built:** once the roll has settled, hovering the period turns it a quarter turn (260ms, settle curve) and fades in an olive layer: green skin, pimento off-centre. Mouse away and it is a period again. It never triggers during the roll, and touch users simply see the period. Reduced motion: colour swap, no turn.
+
+## Chassis fixes + beat strip + the live-session plan (2026-09-02, Lindsay's review of localhost)
+**Her notes:** the stage was clipped and the caption sat over it; Publish was too small to see the effect; the chat needs real scrolling; and she had no idea how to move through the story.
+**Fixes:** the stage fit used the host's outer box including padding, so it scaled a hair too big and got clipped; it now fits the padded box and the frame rows no longer stretch. Publish is 36px/700 and its shadow offsets are in em (rest .12em, hover .16em/.12em, press .04em/.08em) so the swish survives the half-scale chassis view. The log is a real scroll container pinned to the newest line, scrollbar hidden. **Beat strip:** the episode registers its beats with the chassis (`src/chassis/beats.tsx`); the frame bar shows "1 calm · 2 threshold · 3 pressed · 4 review" as buttons with a hint ("or rage-click Reconnect, 5 times fast" / "or press the button"). Record mode hides it.
+
+## Plan: the live session animation (to build after Lindsay's melt frames)
+The recording is one continuous take, driven by a timeline, no clicks by a human. Actors and beats:
+1. **Marike types.** Each user line is typed into the composer character by character with a caret, at a human cadence: ~55ms per character with jitter, a pause on punctuation, a longer pause before a caps line. Then Enter: the line commits to the log with a short slide-up, the composer clears.
+2. **The system answers after a beat.** 600–900ms of a subtle "thinking" state on the Lotion node (radius breathing), then the system line lands in mono. No typing effect for the machine; it appears whole.
+3. **The log scrolls, never grows.** Each commit pushes older lines up with a 220ms ease; the two oldest visible lines fade. Same tempo as the typing so it reads as one motion.
+4. **The cursor is an actor.** A scripted pointer moves from the composer to Reconnect. Its clicks accelerate: intervals 900 → 600 → 350 → 200 → 140ms. Each click bumps "try N" and jitters the Lotion card harder. The fifth click inside 1.5s crosses the rage threshold; the top button flips.
+5. **Tempo is one curve.** Typing cadence, cursor click intervals and the caps escalation all read from the same easing so the rage feels like one person losing patience, not three effects.
+6. **The press.** Cursor travels to the button, pauses 300ms, presses. Melt per Lindsay's Figma frames. Review lands.
+7. **Length target:** 26–30s. Calm 8s, escalation 10s, press and melt 4s, review 6s.
+Implementation: one GSAP master timeline with labels per beat; typing via a custom tween on a character index; cursor via motion path; the rage detector stays real (the scripted clicks go through the same code path as a human's).

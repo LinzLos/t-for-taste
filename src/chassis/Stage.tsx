@@ -12,8 +12,10 @@ export function Stage({ children }: { children: ReactNode; record?: boolean }) {
   useEffect(() => {
     const el = host.current!
     const fit = () => {
-      const { width, height } = el.getBoundingClientRect()
-      setScale(Math.min(width / STAGE.w, height / STAGE.h, 1))
+      const cs = getComputedStyle(el)
+      const width = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+      const height = el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
+      setScale(Math.max(0.1, Math.min(width / STAGE.w, height / STAGE.h, 1)))
     }
     fit()
     const ro = new ResizeObserver(fit)
