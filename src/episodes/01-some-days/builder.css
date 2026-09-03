@@ -25,9 +25,10 @@
 .chip { font-family: var(--mono); font-size: 22px; color: var(--muted); border: 2px solid var(--line); padding: 6px 14px; }
 .chip--live { color: var(--live); border-color: var(--live); } .chip--hot { color: var(--hot); border-color: var(--hot); }
 /* the ellipsis types itself: a state, not a label */
-.dots { display: inline-block; width: 1.6ch; text-align: left; }
-.dots::after { content: ''; animation: dots 1.2s steps(1, end) infinite; }
-@keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75%, 100% { content: '...'; } }
+/* languid: tight dots, slow cycle, and the third dot lingers so it reads as a pause, not a ticker */
+.dots { display: inline-block; width: 1.2ch; text-align: left; letter-spacing: -.12em; opacity: .85; }
+.dots::after { content: ''; animation: dots 3.2s steps(1, end) infinite; }
+@keyframes dots { 0%, 12% { content: ''; } 22% { content: '.'; } 40% { content: '..'; } 58%, 100% { content: '...'; } }
 html[data-reduced="true"] .dots::after { animation: none; content: '…'; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
