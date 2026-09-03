@@ -81,3 +81,7 @@ Implications for the build (agent notes, not decisions):
 **Log:** "connect Notation and pull billing-and-invoices" / Notation connected · 0 pages found / "it's in the TulipTech workspace, Billing folder" / same / "I CAN SEE IT RIGHT THERE" / reauthorizing Notation · attempt 6 · 0 pages found / "IT IS A PUBLIC PAGE".
 **Review:** 1 (hot) Connected to the wrong workspace · Switch. 2 Asked you to reauthorize six times · the button never changed the question. 3 Never ran. Footer: Disconnect Notation / Reconnect to TulipTech (primary).
 **Why this failure:** it is real, common, and not the agent being dumb; the system asked the wrong question six times. The review's job is to name the question, which is the whole point of the pattern.
+
+## De-referencing pass (2026-09-02, Lindsay's intent: not so referential to the Inkeep challenge)
+**What moved away from the challenge:** billing-and-invoices → spring-lots; Rewrite "Tighten the pricing intro" → Summarize "Two lines for the team"; Slack #billing → #growers; the "Billing folder" → "under Sales"; footer "Not sure about any of it?" → "Not the day for this?" (ties to the title). 
+**What stays:** TulipTech and Marike, because the world is hers and it is not the challenge's copy. The review pattern's shape (ranked, per-finding action, one primary) stays because it is a pattern, not a quote.
