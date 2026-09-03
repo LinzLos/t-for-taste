@@ -256,3 +256,4 @@ The recording is one continuous take, driven by a timeline, no clicks by a human
 6. **The press.** Cursor travels to the button, pauses 300ms, presses. Melt per Lindsay's Figma frames. Review lands.
 7. **Length target:** 26–30s. Calm 8s, escalation 10s, press and melt 4s, review 6s.
 Implementation: one GSAP master timeline with labels per beat; typing via a custom tween on a character index; cursor via motion path; the rage detector stays real (the scripted clicks go through the same code path as a human's).
+**Follow-up:** the builder's generic `button` reset outranked the styled buttons (specificity), so Publish rendered at body size. Styled buttons are now scoped `.builder .publish` etc.

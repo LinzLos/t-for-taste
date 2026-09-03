@@ -8,7 +8,7 @@
   position: absolute; inset: 0; background: var(--canvas); color: var(--ink);
   font-family: var(--sans); overflow: hidden; user-select: none;
 }
-.builder button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.builder button { font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 /* top bar */
 .bar { position: absolute; top: 0; left: 0; width: 1080px; height: 160px; padding: 24px 32px 22px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; border-bottom: 2px solid var(--line); }
@@ -20,14 +20,14 @@
 .chip--live { color: var(--live); border-color: var(--live); } .chip--hot { color: var(--hot); border-color: var(--hot); }
 
 /* Publish: label only; the teal shadow is the button. Swish is in the easing. */
-.publish { position: relative; font-size: 36px; font-weight: 700; padding: 6px 8px; z-index: 0; }
-.publish span { position: relative; z-index: 1; }
+.builder .publish { position: relative; font-size: 36px; font-weight: 700; padding: 6px 8px; z-index: 0; }
+.builder .publish span { position: relative; z-index: 1; }
 /* offsets in em so the swish survives the stage scaling down inside the chassis */
-.publish::after { content: attr(data-label); position: absolute; inset: 6px 8px; color: var(--live); z-index: 0; transform: translate(0, .12em); transition: transform 260ms cubic-bezier(.2, 1.6, .4, 1); pointer-events: none; }
-.publish:hover::after { transform: translate(.16em, .12em); }
-.publish:active::after { transform: translate(.04em, .08em); transition-duration: 80ms; }
-.rage { font-size: 32px; font-weight: 700; text-transform: uppercase; letter-spacing: .01em; color: var(--hot-on); background: var(--hot); padding: 18px 36px; box-shadow: 0 6px 0 var(--ink); }
-.rage:active { transform: translateY(6px); box-shadow: none; }
+.builder .publish::after { content: attr(data-label); position: absolute; inset: 6px 8px; color: var(--live); z-index: 0; transform: translate(0, .12em); transition: transform 260ms cubic-bezier(.2, 1.6, .4, 1); pointer-events: none; }
+.builder .publish:hover::after { transform: translate(.16em, .12em); }
+.builder .publish:active::after { transform: translate(.04em, .08em); transition-duration: 80ms; }
+.builder .rage { font-size: 32px; font-weight: 700; text-transform: uppercase; letter-spacing: .01em; color: var(--hot-on); background: var(--hot); padding: 18px 36px; box-shadow: 0 6px 0 var(--ink); }
+.builder .rage:active { transform: translateY(6px); box-shadow: none; }
 
 /* rail */
 .rail { position: absolute; top: 160px; left: 0; width: 72px; bottom: 0; border-right: 2px solid var(--line); display: flex; flex-direction: column; align-items: center; gap: 28px; padding-top: 28px; }
@@ -75,10 +75,10 @@ html[data-reduced="true"] .node--stuck { animation: none; border-radius: 0; }
 .findings .num { width: 36px; font-family: var(--mono); font-weight: 700; font-size: 24px; color: var(--muted); }
 .findings .body { flex: 1; display: flex; flex-direction: column; gap: 8px; } .findings b { font-size: 32px; font-weight: 600; } .findings .body span { font-size: 24px; color: var(--muted); }
 .findings li.hot .num, .findings li.hot b { color: var(--hot); } .findings li.hot .action { border-color: var(--hot); color: var(--hot); }
-.action { font-size: 24px; font-weight: 600; padding: 10px 22px; border: 2px solid var(--line-strong); }
+.builder .action { font-size: 24px; font-weight: 600; padding: 10px 22px; border: 2px solid var(--line-strong); }
 .review-foot { display: flex; flex-direction: column; gap: 14px; } .review-foot p { margin: 0; font-size: 24px; color: var(--muted); }
 .review-foot .buttons { display: flex; justify-content: flex-end; gap: 20px; }
-.review-foot .action { font-size: 26px; padding: 16px 26px; }
-.primary { font-size: 26px; font-weight: 600; padding: 16px 26px; background: var(--live); color: var(--canvas); box-shadow: 0 6px 0 var(--ink); }
+.builder .review-foot .action { font-size: 26px; padding: 16px 26px; }
+.builder .primary { font-size: 26px; font-weight: 600; padding: 16px 26px; background: var(--live); color: var(--canvas); box-shadow: 0 6px 0 var(--ink); }
 
 .hint { position: absolute; right: 40px; bottom: 30px; margin: 0; font-family: var(--mono); font-size: 18px; color: var(--muted); opacity: .6; pointer-events: none; }
