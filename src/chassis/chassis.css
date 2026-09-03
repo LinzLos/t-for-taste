@@ -23,11 +23,10 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
 /* The gate: an inline window starting at the e's right edge. Whatever is left of it is invisible. */
 .gate { display: inline-block; overflow: hidden; vertical-align: baseline; line-height: 1.2; padding-right: .3em; margin-right: -.3em; }
-.dot { display: inline-block; will-change: transform; color: transparent;
+.dot { display: inline-block; line-height: 1.2; will-change: transform; color: transparent;
   background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%);
   -webkit-background-clip: text; background-clip: text; }
 .dot--still { color: var(--pink); background: none; }
-.probe { display: inline-block; width: 0; height: 0; }
 .lede { margin: 0 0 3em; max-width: 44ch; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }

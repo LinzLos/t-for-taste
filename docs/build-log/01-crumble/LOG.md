@@ -229,3 +229,7 @@ Link text reverted to ink. On hover, a 2px pink underline offset .2em under the 
 2. **A visible roll.** The dot's fill is a radial gradient with an off-centre highlight (background-clip: text), and it rotates by distance ÷ radius, so the turn reads. The ink centre is measured at runtime (canvas `measureText` for the glyph's ink box, a zero-height inline probe for the baseline) and used as the transform origin, so it spins on its own axis rather than wobbling. No scale change: a ball doesn't grow.
 **Path:** x from −1.05em (inside the e) to +0.14em overshoot, then back to 0. Rotation ≈ 1.19em ÷ r out, then back by 0.14em ÷ r. Same timing and curves as before (0.6s delay, 1.4s, standard out then settle).
 **Reduced motion:** a plain pink period, no gradient, no roll.
+
+## Lede in her voice + spin axis fix (2026-09-02)
+**Lede (Lindsay):** the placeholder "One interaction per episode…" read as AI-generated. Replaced with a first draft in her direction: "I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist." Hers to rewrite; it lives in `src/Index.tsx`, `index.html` and the README.
+**Spin axis:** the baseline probe measured wrong (61px into a 185px box), so the glyph orbited out of the gate. Baseline now comes from font metrics: half-leading + ascent inside an explicit 1.2 line-height, ink centre from canvas `measureText`.

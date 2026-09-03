@@ -1,6 +1,6 @@
 # T for Taste
 
-One interaction per episode. The default, the change, the reason, and the actual numbers.
+I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist.
 
 Fresh React + TypeScript builds. Not derived from the portfolio. Not a component library.
 

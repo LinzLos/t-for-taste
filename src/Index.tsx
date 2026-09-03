@@ -10,23 +10,24 @@ import { useReducedMotion } from './chassis/reduced-motion'
 function RollingDot() {
   const { reduced } = useReducedMotion()
   const ref = useRef<HTMLSpanElement>(null)
-  const probe = useRef<HTMLElement>(null)
   const [origin, setOrigin] = useState<string>()
   const [travel, setTravel] = useState({ start: -1.05, over: 0.14 })
 
-  // Find the glyph's ink centre so it spins on its own axis: a zero-height inline-block sits on the baseline.
+  // Find the glyph's ink centre so it spins on its own axis. Baseline from font metrics:
+  // inside an inline-block with line-height L, baseline = half-leading + ascent.
   useLayoutEffect(() => {
-    const el = ref.current, pr = probe.current
-    if (!el || !pr) return
-    const box = el.getBoundingClientRect(), base = pr.getBoundingClientRect().top - box.top
-    const fs = parseFloat(getComputedStyle(el).fontSize)
+    const el = ref.current
+    if (!el) return
+    const cs = getComputedStyle(el)
+    const fs = parseFloat(cs.fontSize), L = parseFloat(cs.lineHeight)
     const c = document.createElement('canvas').getContext('2d')!
     c.font = `700 ${fs}px Literata, Georgia, serif`
     const m = c.measureText('.')
+    const A = m.fontBoundingBoxAscent ?? fs * 0.9, D = m.fontBoundingBoxDescent ?? fs * 0.25
+    const base = (L - (A + D)) / 2 + A
     const r = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 2
     const cx = (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2
     setOrigin(`${cx}px ${base - r}px`)
-    // roll: rotate by distance / radius. travel is in em, r in px.
     const rem = r / fs
     setTravel({ start: -1.05, over: 0.14, ...({ turnOut: ((1.05 + 0.14) / rem) * (180 / Math.PI), turnBack: (0.14 / rem) * (180 / Math.PI) } as object) })
   }, [])
@@ -45,7 +46,7 @@ function RollingDot() {
         animate={origin ? { x: [`${t.start}em`, `${t.over}em`, '0em'], rotate: [0, out, out - back] } : undefined}
         transition={{ delay: 0.6, duration: 1.4, times: [0, 0.72, 1], ease: [[0.4, 0, 0.2, 1], [0.33, 1, 0.68, 1]] }}
       >
-        .<i ref={probe} className="probe" aria-hidden />
+        .
       </motion.span>
     </span>
   )
@@ -58,7 +59,7 @@ export function Index() {
   return (
     <main className="index">
       <div className="title-clip"><h1>T for<br />Taste<RollingDot /></h1></div>
-      <p className="lede">One interaction per episode. The default, the change, the reason, and the actual numbers.</p>
+      <p className="lede">I build AI products. Here's what I'm exploring: React and TypeScript patterns, each with a twist.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
           <li key={meta.slug} data-status={meta.status}>
