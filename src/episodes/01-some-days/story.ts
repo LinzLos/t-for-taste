@@ -58,6 +58,17 @@ export const LOG: Record<'calm' | 'threshold', Line[]> = {
   ],
 }
 
+// What the system says after each Reconnect tap. The loop she is clicking against, made visible.
+export const ATTEMPT = (n: number) => `Reconnected, try ${n}. Found 0.`
+
+// The offer. The system speaks in the log, the way it has all along. An option, not a scream.
+export const OFFER = {
+  title: 'Had enough?',
+  body: 'Six tries, same answer. Want the rundown of what actually happened while you clicked?',
+  primary: 'Fuck this, show me',
+  secondary: 'Keep trying',
+}
+
 export const CHIP: Record<Beat, string> = { calm: 'connecting…', threshold: 'still connecting…', pressed: 'still connecting…', review: 'reviewing' }
 
 export const REVIEW = {

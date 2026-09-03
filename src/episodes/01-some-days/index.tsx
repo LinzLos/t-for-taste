@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import { useReducedMotion } from '../../chassis/reduced-motion'
 import { useRegisterBeats } from '../../chassis/beats'
 import { meta } from './meta'
-import { CHIP, EDGES, LOG, NODES, RAGE, REVIEW, type Beat, type NodeSpec } from './story'
+import { ATTEMPT, CHIP, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, type Beat, type NodeSpec } from './story'
 import './builder.css'
 
 export { meta }
@@ -101,7 +101,13 @@ function Cursor({ el }: { el: React.RefObject<HTMLDivElement> }) {
 const SPOT = {
   composer: { x: 640, y: 1290 },
   reconnect: { x: 72 + 640 + 175, y: 160 + 510 + 120 },
-  rage: { x: 72 + 640 + 175, y: 160 + 700 + 40 },
+}
+// Where something is, in stage coordinates, whatever scale the stage is drawn at.
+function spotOf(root: HTMLElement, sel: string) {
+  const r = root.getBoundingClientRect(), t = root.querySelector(sel)?.getBoundingClientRect()
+  if (!t) return SPOT.reconnect
+  const k = r.width / 1080
+  return { x: (t.left - r.left + t.width * 0.55) / k, y: (t.top - r.top + t.height * 0.6) / k }
 }
 // Click intervals: a person losing patience. The 6th click is the one that crosses 5-in-1.5s.
 const CLICK_GAPS = [0, 0.7, 0.45, 0.3, 0.2, 0.15]
@@ -115,7 +121,17 @@ export default function SomeDays() {
   const logRef = useRef<HTMLDivElement>(null)
 
   const rage = useRage(() => setBeat(b => (b === 'calm' ? 'threshold' : b)))
-  const pressReconnect = () => { if (beat === 'calm') { setTries(t => Math.min(t + 1, 6)); rage() } }
+  const [attempts, setAttempts] = useState<string[]>([])
+  const [flash, setFlash] = useState<number | null>(null)
+  const flashTimer = useRef<number>()
+  const pressReconnect = () => {
+    if (beat !== 'calm') return
+    const n = Math.min(tries + 1, 6)
+    setTries(n)
+    setAttempts(a => [...a, ATTEMPT(n)])
+    setFlash(n); window.clearTimeout(flashTimer.current); flashTimer.current = window.setTimeout(() => setFlash(null), 650)
+    rage()
+  }
   const pressRef = useRef(pressReconnect); pressRef.current = pressReconnect
   const cursorEl = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(false)
@@ -124,7 +140,7 @@ export default function SomeDays() {
   // Autoplay: the cursor walks the story through the same code paths a human uses.
   const play = useCallback(() => {
     if (playing) return
-    setTries(2); setBeat('calm'); setPlaying(true)
+    setTries(2); setAttempts([]); setBeat('calm'); setPlaying(true)
     if (reduced) { const t = setTimeout(() => { setBeat('threshold'); setTimeout(() => setBeat('pressed'), 900) }, 900); return () => clearTimeout(t) }
     const c = cursorEl.current!
     const tl = gsap.timeline({ onComplete: () => setPlaying(false) })
@@ -137,10 +153,11 @@ export default function SomeDays() {
       tl.to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t)
       tl.call(() => pressRef.current(), [], t)
     })
-    tl.to(c, { x: SPOT.rage.x, y: SPOT.rage.y, duration: 0.6, ease: 'power2.inOut' }, t + 0.7)
-      .to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t + 1.6)
-      .call(() => setBeat(b => (b === 'threshold' ? 'pressed' : b)), [], t + 1.6)
-      .to(c, { autoAlpha: 0, duration: 0.4 }, t + 2.2)
+    const root = c.closest('.builder') as HTMLElement
+    tl.to(c, { x: () => spotOf(root, '.offer-go').x, y: () => spotOf(root, '.offer-go').y, duration: 0.7, ease: 'power2.inOut' }, t + 1.1)
+      .to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t + 2.2)
+      .call(() => setBeat(b => (b === 'threshold' ? 'pressed' : b)), [], t + 2.2)
+      .to(c, { autoAlpha: 0, duration: 0.4 }, t + 2.8)
     if (import.meta.env.DEV) Object.assign(window, { __auto: tl })
     return () => tl.kill()
   }, [playing, reduced])
@@ -172,16 +189,20 @@ export default function SomeDays() {
     window.addEventListener('keydown', onKey); return () => window.removeEventListener('keydown', onKey)
   }, [beat])
 
-  const lines = useMemo(() => beat === 'calm' ? LOG.calm : [...LOG.calm, ...LOG.threshold], [beat])
+  const lines = useMemo(() => beat === 'calm' ? [...LOG.calm, ...attempts.map(t => ({ who: 'sys' as const, text: t }))] : [...LOG.calm, ...LOG.threshold], [beat, attempts])
   const msgsRef = useRef<HTMLDivElement>(null)
   useEffect(() => { const m = msgsRef.current; if (m) m.scrollTop = m.scrollHeight }, [lines])
-  const nodes = useMemo(() => NODES.map(n => n.id === 'reconnect' && beat === 'calm' ? { ...n, pill: { ...n.pill, calm: `try ${tries}` } } : n), [beat, tries])
+  const nodes = useMemo(() => NODES.map(n => {
+    if (n.id === 'reconnect' && beat === 'calm') return { ...n, pill: { ...n.pill, calm: `try ${tries}` } }
+    if (n.id === 'lotion' && beat === 'calm' && flash) return { ...n, pill: { ...n.pill, calm: `reconnecting · try ${flash}` }, state: { ...n.state, calm: 'stuck' as const } }
+    return n
+  }), [beat, tries, flash])
   const raged = beat === 'threshold' || beat === 'pressed'
-  const reset = () => { setTries(2); setBeat('calm') }
+  const reset = () => { setTries(2); setAttempts([]); setBeat('calm') }
 
   // Publish the beats to the chassis so the story can be stepped from the frame bar.
-  const go = useCallback((i: number) => { if (BEATS[i] === 'calm') setTries(2); setBeat(BEATS[i]) }, [])
-  const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, play, playing, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or press the button' : undefined }), [beat, go, play, playing])
+  const go = useCallback((i: number) => { if (BEATS[i] === 'calm') { setTries(2); setAttempts([]) } setBeat(BEATS[i]) }, [])
+  const controls = useMemo(() => ({ beats: BEATS, index: BEATS.indexOf(beat), go, play, playing, hint: beat === 'calm' ? 'or rage-click Reconnect, 5 times fast' : beat === 'threshold' ? 'or answer the offer in the chat' : undefined }), [beat, go, play, playing])
   useRegisterBeats(controls)
 
   return (
@@ -212,19 +233,24 @@ export default function SomeDays() {
           <div className="canvas" ref={canvas}>
             <Connectors host={canvas} beat={beat} />
             {nodes.map(n => <Node key={n.id} n={n} beat={beat} onPress={n.id === 'reconnect' ? pressReconnect : undefined} />)}
-            {raged && (
-              <button type="button" className="rage" style={{ left: 640, top: 700 }} onClick={() => beat === 'threshold' && setBeat('pressed')}>
-                Fuck this shit.
-              </button>
-            )}
           </div>
           <div className="log" ref={logRef}>
             <div className="messages" ref={msgsRef}>
               {lines.map((l, i) => {
-                const fade = lines.length - i
+                const fade = lines.length - i + (raged ? 1 : 0)
                 const cls = l.who === 'user' ? `msg${l.hot ? ' msg--hot' : ''}` : 'sys'
                 return <div key={i} className={cls} style={{ opacity: fade > 3 ? 0.35 : fade === 3 ? 0.6 : 1 }}>{l.text}</div>
               })}
+              {raged && (
+                <div className="offer" role="group" aria-label="the system offers a rundown">
+                  <b>{OFFER.title}</b>
+                  <span>{OFFER.body}</span>
+                  <div className="offer-buttons">
+                    <button type="button" className="action" onClick={() => { setTries(2); setAttempts([]); setBeat('calm') }}>{OFFER.secondary}</button>
+                    <button type="button" className="primary offer-go" onClick={() => beat === 'threshold' && setBeat('pressed')}>{OFFER.primary}</button>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="composer"><div className="field">Marike, what should change?</div><i className="send" aria-hidden /></div>
           </div>

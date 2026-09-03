@@ -264,3 +264,11 @@ Implementation: one GSAP master timeline with labels per beat; typing via a cust
 - **Publish stays Publish.** The "FUCK THIS SHIT." button now rises out of the Reconnect card at the threshold (hatch animation: 320ms, overshoot curve, scaleY from .2 at the card's bottom edge). The escape hatch appears where the anger is.
 - **Cursor actor.** A play button runs the story: the pointer fades in at the composer, travels to Reconnect (0.9s), clicks six times with gaps 0.7 / 0.45 / 0.3 / 0.2 / 0.15s (the sixth crosses 5-in-1.5s through the real rage detector), travels to the hatch, pauses, presses. Manual clicks work at any point and the two share one code path. Record mode auto-plays after 0.8s (`?record&hold` to stop that).
 - **Transport row** under the stage: ▶ play, the four beats, the hint, the motion toggle. The frame bar is back to the series name and the episode title. Record mode hides the transport.
+
+## Attempts you can see; the offer instead of the scream (2026-09-02, Lindsay's notes)
+**Her notes:** one tap on Reconnect should visibly do something; the hatch arrived abruptly, "like screaming", and did not present as an option. It should read as "had enough? want to do this?" with the system offering to tell you what went on (a debrief-ish thing, not the words forensics or audit).
+**Built:**
+- **Each Reconnect tap is an attempt.** The Lotion card flips to hot "reconnecting · try N" for 650ms, the try count bumps, and the system writes "Reconnected, try N. Found 0." into the log. The loop is visible before the rage.
+- **The offer.** At the threshold the system speaks in the log, where it has been speaking all along: a calm panel slides up (420ms, standard curve). "Had enough?" · "Six tries, same answer. Want the rundown of what actually happened while you clicked?" · secondary "Keep trying" (back to calm) · primary teal "Fuck this, show me" (→ melt → review). Lowercase, deadpan, one accent. No button on the canvas, none in the top bar.
+- **The name:** "the rundown." Alternatives in the same register: debrief, replay, the receipts, retrace.
+- **Cursor:** autoplay now measures the offer's primary button live (in stage coordinates at any scale) and presses it.
