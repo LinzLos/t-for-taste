@@ -18,7 +18,7 @@
 @container (min-aspect-ratio: 1/1) {
   .main { flex-direction: row; }
   .log { width: 42%; max-width: 560px; height: auto; border-top: 0; border-left: 2px solid var(--line); }
-  .canvas { flex: 1; height: auto; }
+  .canvas { flex: 1; height: auto; min-height: 520px; }
 }
 .builder button { font-family: inherit; font-size: inherit; font-weight: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 

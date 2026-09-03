@@ -31,7 +31,7 @@ function Node({ n, beat, onPress }: { n: NodeSpec; beat: Beat; onPress?: () => v
   return (
     <div
       className={`node node--${state}${n.dashed ? ' node--dashed' : ''}`}
-      style={{ left: `${(n.x / 1008) * 100}%`, top: `${(n.y / 800) * 100}%` }}
+      style={{ left: `min(${(n.x / 1008) * 100}%, calc(100% - 366px))`, top: `min(${(n.y / 800) * 100}%, calc(100% - 216px))` }}
       data-node={n.id}
       onClick={onPress}
       role={onPress ? 'button' : undefined}
