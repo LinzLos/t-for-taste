@@ -188,3 +188,9 @@ Today's type decisions apply to the **episode** only: Fredoka for the product, C
 **Values (agent's first pass, hers to tune):** shadow = teal accent, hard-edged (blur 0). Rest offset (0, 6). Hover offset (14, 0), 220ms, power3.out. Press offset (3, 2), 80ms. Release returns to hover if still hovered, else to rest, 180ms. Cream text over a teal offset copy reads like misregistered print.
 **Figma:** Top button set now has state=publish, publish-hover, publish-press, rage. Description on the set carries the timings.
 **Reduced motion:** the three offsets still apply as static states; no tween.
+
+## Publish button, Lindsay's version (2026-09-02)
+**Who:** Lindsay drew the two states herself in Figma ("Top button default state" and the hover frame, now labelled as source). Her geometry is subtler than the agent's first pass: rest shadow (0,3) teal, hover nudged to (2,3), Fredoka SemiBold 28, no visible bg or stroke.
+**Reconciled spec:** rest (0,3) · hover (4,3) reached with an OVERSHOOT easing so the shadow swishes past to ~(8,3) and settles, 260ms, `cubic-bezier(.2,1.6,.4,1)` · press (1,2), 80ms · release to hover 180ms. The swish is in the easing, not the distance.
+**Code:** `filter: drop-shadow()` can't be tweened with overshoot cleanly across browsers; implement the shadow as a second copy of the label (`::after`, teal, `aria-hidden`) translated by (x,y), and tween `transform` with the cubic-bezier. That keeps it GPU-cheap and interruptible.
+**Housekeeping:** a stray teal "Rectangle 1" (14:252) sits at page level near her frames; left alone, hers to delete.
