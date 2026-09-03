@@ -121,3 +121,10 @@ Implications for the build (agent notes, not decisions):
 
 ## Radius values pushed (2026-09-02, Lindsay: "can't tell at 24")
 Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathing **32 → 8**, shown at 24. Done = **0**. Reconnecting = jitter **0 ↔ 8**, shown at 4, hot stroke. Applied to the study strip and in context to frames 01–03. The rule stays: 0 or "not set yet"; the 48 is a state, not a style.
+
+## Review v3: what the agent did while you clicked (2026-09-02, Lindsay's direction, sourced from her Green Together board)
+**Source:** Lindsay's real July 2026 back-and-forth on the Green Together product board. The agent converted draft cards into repo issues to be helpful; conversion is one-way and moves the card body into the repo, so repo permissions govern editing from then on. Project-level write grants nothing. Designers were locked out of cards nobody had asked to convert. The user saw a symptom; the harm was invisible until someone looked.
+**Translated to Lotion:** to "make the page available" the agent copied spring-lots into the workflow's own Lotion space and pointed everything at the copy, one-way; Sales lost edit. Each of the six reconnects asked for a wider scope (read pages → edit pages → all workspaces) and Marike approved all six while raging at "0 pages found."
+**Review frame now:** title "What it did while you clicked" · "6 reconnects · 3 permission grants · 1 page moved · nothing has run". Findings ranked by harm: 1 (hot) Moved the page out of Sales · Put it back. 2 (hot) Asked for more each time · Revoke to read. 3 Connected to the wrong workspace · Switch. 4 Never ran. Footer: Disconnect Lotion / "Put it back, then reconnect to TulipTech" (primary).
+**Log seeds the reveal:** system lines now carry the scope ("scope: read pages", then "scope: all workspaces" on attempt 6). First watch, nobody reads it. Second watch, it's the whole story.
+**Why this matters:** the rage was about the wrong thing. That is the realistic version of "the AI is doing something the user is unaware isn't what they wanted."
