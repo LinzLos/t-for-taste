@@ -129,3 +129,24 @@ html[data-reduced="true"] .offer { animation: none; }
   .offer b { font-size: 22px; } .offer > span { font-size: 18px; }
   .builder .offer .action, .builder .offer .primary { font-size: 17px; padding: 8px 14px; }
 }
+
+/* fluid app window: chrome at app size, not social-stage size (the cards live in the scaled scene and keep theirs) */
+.stage--fluid .builder { grid-template-columns: 56px minmax(0, 1fr); }
+.stage--fluid .bar { padding: 14px 22px 14px; gap: 12px; }
+.stage--fluid .row1 { gap: 14px; }
+.stage--fluid .menu { gap: 4px; } .stage--fluid .menu i { width: 20px; height: 2px; }
+.stage--fluid .project { font-size: 20px; }
+.stage--fluid .row2 { gap: 8px; }
+.stage--fluid .chip { font-size: 14px; padding: 4px 10px; border-width: 1.5px; }
+.stage--fluid .builder .publish { font-size: 24px; padding: 4px 6px; }
+.stage--fluid .builder .publish::after { inset: 4px 6px; }
+.stage--fluid .rail { gap: 18px; padding-top: 18px; }
+.stage--fluid .rail span { width: 20px; height: 20px; border-width: 2px; }
+.stage--fluid .review { padding: 36px 32px 32px; gap: 24px; }
+.stage--fluid .review h2 { font-size: 32px; } .stage--fluid .review-sum { font-size: 15px; margin-top: -16px; }
+.stage--fluid .findings li { padding: 18px 0; gap: 16px; }
+.stage--fluid .findings .num { font-size: 16px; width: 28px; }
+.stage--fluid .findings b { font-size: 22px; } .stage--fluid .findings .body span { font-size: 16px; }
+.stage--fluid .builder .action { font-size: 16px; padding: 7px 14px; }
+.stage--fluid .review-foot p { font-size: 16px; }
+.stage--fluid .builder .review-foot .action, .stage--fluid .builder .primary { font-size: 17px; padding: 10px 18px; }
