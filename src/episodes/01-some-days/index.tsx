@@ -55,9 +55,9 @@ function Connectors({ host, beat, stateOf }: { host: React.RefObject<HTMLDivElem
     setD(EDGES.map(([a, b, dashed]) => {
       const A = r(a), B = r(b)
       const id = `edge-${a}-${b}`
-      if (a === 'lotion') return { id, from: a, dashed, d: `M ${A.r} ${A.cy} C ${A.r + 40} ${A.cy} ${B.l - 40} ${B.cy} ${B.l} ${B.cy}` }
-      const sx = b === 'tell' ? A.l + 60 : A.r - 60
-      return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 60} ${B.cx} ${B.t - 60} ${B.cx} ${B.t}` }
+      if (b === 'summarize') return { id, from: a, dashed, d: `M ${A.r} ${A.cy} C ${A.r + 60} ${A.cy} ${B.l - 60} ${B.cy} ${B.l} ${B.cy}` }
+      const sx = A.cx + 40
+      return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 70} ${B.cx} ${B.t - 70} ${B.cx} ${B.t}` }
     }))
   }, [host, beat])
   return (
@@ -109,7 +109,7 @@ function Cursor({ el }: { el: React.RefObject<HTMLDivElement> }) {
 // Stage coordinates of the things the cursor visits (builder space, 1080 × 1350).
 const SPOT = {
   composer: { x: 640, y: 1290 },
-  reconnect: { x: 72 + 640 + 175, y: 160 + 510 + 120 },
+  reconnect: { x: 72 + 300 + 175, y: 160 + 500 + 120 },
 }
 // Where something is, in stage coordinates, whatever scale the stage is drawn at.
 function spotOf(root: HTMLElement, sel: string) {

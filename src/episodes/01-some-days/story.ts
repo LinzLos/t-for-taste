@@ -19,16 +19,13 @@ export interface NodeSpec {
 
 // Positions are inside the canvas (1008 × 800), matching the Figma frames.
 export const NODES: NodeSpec[] = [
-  { id: 'lotion', type: 'when', title: 'Lotion', sub: 'spring-lots is saved', x: 40, y: 50,
+  { id: 'lotion', type: 'when', title: 'Lotion', sub: 'spring-lots is saved', x: 60, y: 60,
     state: { calm: 'trying', threshold: 'stuck', pressed: 'stuck', review: 'stuck' },
     pill: { calm: 'connecting · 14s', threshold: 'still trying · 9 min', pressed: 'still trying · 9 min', review: '' } },
-  { id: 'summarize', type: 'then · AI', title: 'Summarize', sub: 'Two lines for the team', x: 420, y: 210,
+  { id: 'summarize', type: 'then · AI', title: 'Summarize', sub: 'Two lines for the team', x: 580, y: 230,
     state: { calm: 'soft', threshold: 'soft', pressed: 'soft', review: 'soft' },
     pill: { calm: 'waiting', threshold: 'waiting', pressed: 'waiting', review: '' } },
-  { id: 'tell', type: 'then · send', title: 'Tell Marike', sub: 'Slack · #growers', x: 200, y: 500,
-    state: { calm: 'soft', threshold: 'soft', pressed: 'soft', review: 'soft' },
-    pill: { calm: 'waiting', threshold: 'waiting', pressed: 'waiting', review: '' } },
-  { id: 'reconnect', type: 'try again', title: 'Reconnect', sub: 'Log in to Lotion again', x: 640, y: 510, dashed: true,
+  { id: 'reconnect', type: 'try again', title: 'Reconnect', sub: 'Log in to Lotion again', x: 300, y: 500, dashed: true,
     state: { calm: 'soft', threshold: 'soft', pressed: 'soft', review: 'soft' },
     pill: { calm: 'try 2', threshold: 'try 6', pressed: 'try 6', review: '' } },
 ]
@@ -38,8 +35,7 @@ export const NODE_H = 190 // approximate; connectors read live bounds
 
 export const EDGES: [string, string, boolean][] = [
   ['lotion', 'summarize', false],
-  ['summarize', 'tell', false],
-  ['summarize', 'reconnect', true],
+  ['lotion', 'reconnect', true],
 ]
 
 export interface Line { who: 'user' | 'sys'; text: string; hot?: boolean }

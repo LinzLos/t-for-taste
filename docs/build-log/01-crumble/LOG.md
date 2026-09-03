@@ -279,3 +279,6 @@ Implementation: one GSAP master timeline with labels per beat; typing via a cust
 
 ## Note for later (2026-09-02, Lindsay)
 The **caption section** (Default / Change / Reason, the values table, the meta line) will get its own pass: content and design both. Nothing there is final.
+
+## Three cards, not four (2026-09-02, Lindsay: social size limit; three is better balanced and gives more room)
+**Dropped:** Tell Marike. It was downstream of Summarize and the review never named it. **Kept:** Lotion (listening), Summarize (waiting), Reconnect (the thing being hammered). Reconnect now hangs off Lotion with the dashed edge, which is where a retry belongs. Positions in the 1008×800 canvas: Lotion (60,60), Summarize (580,230), Reconnect (300,500). Same in the Figma frames 01–03, connectors redrawn, cursor and trail moved.
