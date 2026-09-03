@@ -58,3 +58,8 @@ Implications for the build (agent notes, not decisions):
 **Not word for word.** Borrowed the world (tuliptech-docs, billing-and-invoices.md, Pricing tiers, the Preferred tier, 9:15) and the shape of the system line ("60 words became one sentence"). New lines written for the builder.
 **What changed in the frames:** a `tuliptech-docs` chip; nodes are Doc saved → Rewrite ("Tighten the pricing intro") → Notify Marike (Slack · #billing), plus Regenerate ("Retry the rewrite"). Calm log: "tighten the pricing intro" / rewrote Pricing tiers · 60 words → 1 sentence / "no. keep my paragraph, tighten the table notes." / same system line. Threshold adds: "KEEP. MY. PARAGRAPH." / …· Preferred tier removed / "I WROTE THAT AT 9:15". Composer reads "Marike, what should change?"; the reveal field reads "Start again, Marike."
 **Kept:** the project name "some days are better than others" (Lindsay's) stays in the top bar.
+
+## Radius pass (2026-09-02, Lindsay's call)
+**Who:** Lindsay caught it: every radius was 6/8/10px, the shadcn fingerprint. Agent applied the fix.
+**Rule:** hard corners on everything structural (cards, chips, fields, message bubbles, rail icons). Status pills fully round (999), because a pill is a pill. The top button is a hard-edged slab with a solid 6px offset shadow in canvas purple, like the plaster button. In 03 pressed the shadow collapses and the button drops 6px, so the press is physical.
+**Added to the anti-shadcn list:** no 6/8/10px radius family. Radius is either 0 or full.
