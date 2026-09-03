@@ -216,3 +216,6 @@ All chassis rules (`--rule`) go from ink black to **#ff2fa6**, the Penguin hot p
 
 ## Rolling period, third pass (2026-09-02, Lindsay: "come out of the e, not the right side of the pane")
 The dot now starts at x −0.72em (centred on the e) at scale 0.15, sitting BEHIND the text (z-index −1 under a positioned h1), so it is hidden inside the e and emerges as it grows and rolls right. Overshoot 0.14em, settle to 0. 1.4s after a 0.6s delay; same two curves as the second pass. Born from the letter, not delivered from the edge.
+
+## Chassis colour, settled (2026-09-02, Lindsay)
+Rules go back to ink black. The period pink (#ff2fa6, now `--pink`) lives on exactly two things: the rolling period and hyperlinks (the episode title in the list, the back link in the frame bar). One accent, one job: pink means "this is the thing that moves or the thing you can click."
