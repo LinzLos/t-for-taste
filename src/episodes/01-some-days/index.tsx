@@ -192,15 +192,18 @@ export default function SomeDays() {
       if (!target) return
       gsap.killTweensOf(target)
       const amp = hot ? 6 : 3
-      gsap.timeline()
+      const rt = gsap.timeline()
+      if (import.meta.env.DEV) Object.assign(window, { __recv: rt })
+      rt
         .to(target, { x: amp, duration: 0.05, ease: 'none' })
         .to(target, { x: -amp, duration: 0.05, ease: 'none', repeat: 3, yoyo: true })
         .to(target, { x: 0, duration: 0.08, ease: 'power2.out' })
         .to(target, { borderRadius: hot ? 12 : 20, duration: 0.18, ease: 'power2.out' }, 0)
         .to(target, { borderRadius: 48, duration: 0.45, ease: 'power2.inOut' }, 0.3)
     }
-    gsap.timeline()
-      .set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
+    const pt = gsap.timeline()
+    if (import.meta.env.DEV) Object.assign(window, { __pulse: pt })
+    pt.set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
       .to(dot, { motionPath: { path, align: path, alignOrigin: [0.5, 0.5], start: 0, end: 1 }, duration: 0.9, ease: 'power1.inOut' })
       .call(receive)
       .to(dot, { autoAlpha: 0, scale: 0.3, duration: 0.22, ease: 'power2.in' }, '-=0.05')
@@ -265,7 +268,9 @@ export default function SomeDays() {
           <span className="chip">tuliptech-docs</span>
           <span className="chip">main</span>
           <span className="chip">sonnet-5 · auto</span>
-          <span className={`chip chip--${beat === 'review' ? 'live' : raged ? 'hot' : 'live'}`}>{CHIP[beat]}</span>
+          <span className={`chip chip--${beat === 'review' ? 'live' : raged ? 'hot' : 'live'}`}>
+            {CHIP[beat].endsWith('…') ? <>{CHIP[beat].slice(0, -1)}<span className="dots" aria-hidden /><span className="sr">…</span></> : CHIP[beat]}
+          </span>
         </div>
       </header>
 

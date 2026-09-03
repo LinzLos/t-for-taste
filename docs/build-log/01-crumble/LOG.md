@@ -331,3 +331,6 @@ The **caption section** (Default / Change / Reason, the values table, the meta l
 
 ## Reception (2026-09-02, Lindsay: "the receiving node needs a little I'm-connecting shake when the dot gets to it, so sending and reception between nodes have meaning")
 When the dot reaches Summarize the card wiggles (±3px, ±6px on a rage tap, four quick swings and a settle) and its corners firm toward set (48 → 20, or 12 when hot) for a beat, then relax back to soft over 0.45s. It received something and is still waiting. Sending is the Lotion breath and the dot on the wire; reception is the wiggle and the corner firm. One idea, both ends.
+
+## The ellipsis types itself (2026-09-02, Lindsay)
+"connecting…" and "still connecting…" in the top bar now animate the dots (one, two, three, cycle at 1.2s) so the state reads as happening rather than as a label. Reduced motion shows a static ellipsis; screen readers get the plain ellipsis.
