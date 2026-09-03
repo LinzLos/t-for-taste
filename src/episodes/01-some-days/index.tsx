@@ -31,6 +31,7 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
   const pill = n.pill[beat]
   const drag = useRef<{ sx: number; sy: number; ox: number; oy: number; k: number; moved: boolean } | null>(null)
   const [dragging, setDragging] = useState(false)
+  const handledByPointer = useRef(false) // a pointer press already counted; the click that follows must not count twice
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.button !== 0) return
     const scene = e.currentTarget.parentElement as HTMLElement
@@ -50,8 +51,10 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
     const d = drag.current; drag.current = null
     e.currentTarget.releasePointerCapture(e.pointerId)
     setDragging(false)
-    if (d && !d.moved && onPress) onPress()
+    if (d && !d.moved && onPress) { onPress(); handledByPointer.current = true; setTimeout(() => { handledByPointer.current = false }, 0) }
   }
+  // Click fallback for activation that never sends pointer events (assistive tech, synthetic clicks).
+  const onClick = () => { if (handledByPointer.current) return; onPress?.() }
   return (
     <div
       className={`node node--${state}${n.dashed ? ' node--dashed' : ''}${dragging ? ' node--dragging' : ''}`}
@@ -61,6 +64,7 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerCancel={() => { drag.current = null; setDragging(false) }}
+      onClick={onPress ? onClick : undefined}
       role={onPress ? 'button' : undefined}
       tabIndex={onPress ? 0 : undefined}
       onKeyDown={onPress ? e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onPress() } } : undefined}
