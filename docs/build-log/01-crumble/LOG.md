@@ -89,3 +89,8 @@ Implications for the build (agent notes, not decisions):
 ## Two calls (2026-09-02, Lindsay)
 **Elevation swap:** cards are now the deep purple (#220633 → bg/panel) and the wall is the aubergine (#241f27 → bg/canvas). Agent's reasoning, which she asked about first: the most saturated colour was on the wall, so cards receded; with the purple on the cards they read as slabs on a wall, which is what the melt needs. Field stays #352c3c. Swatches relabelled.
 **The faux Notion is Lotion.** Lindsay: "lotion is funny yes." Replaced everywhere: node title, "Reauthorize Lotion", the log, the review, "Disconnect Lotion".
+
+## Node type labels (2026-09-02, from Lindsay's Gumloop pain points)
+**Who:** Lindsay raised three pain points from her own builder use: losing the chat when moving between skill and chat, nav bloat, and an unclear skills / agent / workflow taxonomy. She was unsure whether to address them without making the UI the problem. Agent's call, which she can overturn: the UI in T/01 must stay innocent, so the pain points are not shown as problems; the answers are shown quietly.
+**What:** every Node now carries a one-word type label above its title, exposed as a `type` property: trigger · integration, step · agent, step · action, control · retry. The canvas is the workflow, a node is a step, an agent is a kind of step. No diagram.
+**Not in T/01:** the "chat that stays" (malleable chat window) is its own episode; the taxonomy explainer belongs in a different series.
