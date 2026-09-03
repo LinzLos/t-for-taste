@@ -47,7 +47,7 @@ html[data-reduced="true"] .builder .rage { animation: none; }
 html[data-reduced="true"] .edge--flow { animation: none; }
 .pulse { fill: var(--live); opacity: 0; filter: drop-shadow(0 0 6px var(--live)); }
 .pulse--hot { fill: var(--hot); filter: drop-shadow(0 0 6px var(--hot)); }
-.node { position: absolute; width: 350px; box-sizing: border-box; padding: 22px 24px; background: var(--panel); border: 2px solid var(--line-strong); display: flex; flex-direction: column; gap: 6px; will-change: transform, border-radius; }
+.node { position: absolute; width: 350px; box-sizing: border-box; padding: 32px; background: var(--panel); border: 2px solid var(--line-strong); display: flex; flex-direction: column; gap: 6px; will-change: transform, border-radius; }
 .node-type { font-family: var(--mono); font-size: 18px; letter-spacing: .04em; color: var(--muted); }
 .node-title { font-size: 30px; font-weight: 600; } .node-sub { font-size: 24px; color: var(--muted); }
 .pill { align-self: flex-start; font-family: var(--mono); font-weight: 700; font-size: 22px; padding: 4px 12px; border-radius: 999px; border: 2px solid var(--line); color: var(--muted); }
