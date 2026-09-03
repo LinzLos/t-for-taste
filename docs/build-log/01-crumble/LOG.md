@@ -63,3 +63,12 @@ Implications for the build (agent notes, not decisions):
 **Who:** Lindsay caught it: every radius was 6/8/10px, the shadcn fingerprint. Agent applied the fix.
 **Rule:** hard corners on everything structural (cards, chips, fields, message bubbles, rail icons). Status pills fully round (999), because a pill is a pill. The top button is a hard-edged slab with a solid 6px offset shadow in canvas purple, like the plaster button. In 03 pressed the shadow collapses and the button drops 6px, so the press is physical.
 **Added to the anti-shadcn list:** no 6/8/10px radius family. Radius is either 0 or full.
+
+## Beat 4 changed: review, not reveal (2026-09-02, Lindsay)
+**Who:** Lindsay. "Start again" is a dead end; after the escape hatch, route to a review of what went wrong.
+**What:** frame 04 is now "04 review". After the melt, the builder shows a What went wrong panel: three findings ranked by harm, each with its own Undo, an "Undo all 7", and one primary action, "Try again, paragraph kept".
+1. Overwrote your writing · your 60 words from 9:15 became one sentence, seven times (hot).
+2. Removed content · the Preferred tier is gone.
+3. Never sent · Notify Marike stayed queued the whole time.
+**Why:** this is her Inkeep review pattern (rank by risk to the human, per-change undo, undo-all as the safety net) doing its real job inside the joke. The rage button becomes an entry point to review rather than a reset, which makes it a UX pattern and not just a gag. Chip reads "reviewing".
+**Open for Lindsay:** whether the review lives in the canvas area (current) or slides up from the log; whether "Try again, paragraph kept" should pre-fill the composer; the melt's end state now has to reveal a panel, not an empty wall.
