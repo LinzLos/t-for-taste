@@ -182,3 +182,9 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 
 ## Scope note (2026-09-02, Lindsay)
 Today's type decisions apply to the **episode** only: Fredoka for the product, Courier Prime for its system voice. The wrapper site ("chassis") gets its own separate pass later. Literata is deployed there as a placeholder, not a decision.
+
+## Publish button: shadow swish (2026-09-02, Lindsay's spec)
+**Her call:** no typical button background or stroke. The label alone, and the hard offset shadow is the affordance. Default sits below; hover swishes it to the right; press tucks it in.
+**Values (agent's first pass, hers to tune):** shadow = teal accent, hard-edged (blur 0). Rest offset (0, 6). Hover offset (14, 0), 220ms, power3.out. Press offset (3, 2), 80ms. Release returns to hover if still hovered, else to rest, 180ms. Cream text over a teal offset copy reads like misregistered print.
+**Figma:** Top button set now has state=publish, publish-hover, publish-press, rage. Description on the set carries the timings.
+**Reduced motion:** the three offsets still apply as static states; no tween.
