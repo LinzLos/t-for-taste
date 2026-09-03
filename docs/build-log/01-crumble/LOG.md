@@ -302,3 +302,4 @@ The **caption section** (Default / Change / Reason, the values table, the meta l
 ## Footer + lede (2026-09-02, Lindsay)
 **Footer, on the index and every episode page:** "Ship fast, laugh last." upright · **ZUNIGO** in Monofett (the mark her portfolio footer uses), linking to zunigo.net, pink underline on hover · "♥ 2026" in mono. Monofett self-hosted via fontsource.
 **Lede, second draft:** she questioned "I build AI products" (over-claims, says nothing about taste). Now: "Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time." Hers to sharpen.
+**Lede, third draft (her title dilemma: design engineer vs product designer):** no title in the lede. The series demonstrates; the portfolio declares (design engineer, decided 27 Aug), and the footer mark links there. Now: "Small React and TypeScript builds about how AI products should feel, one call at a time."

@@ -56,7 +56,7 @@ export function Index() {
   return (
     <main className="index">
       <div className="title-clip"><h1>T for<br /><RollingDot /></h1></div>
-      <p className="lede">Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time.</p>
+      <p className="lede">Small React and TypeScript builds about how AI products should feel, one call at a time.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
           <li key={meta.slug} data-status={meta.status}>

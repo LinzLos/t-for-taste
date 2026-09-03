@@ -1,6 +1,6 @@
 # T for Taste
 
-Design engineer. Small React and TypeScript builds about how AI products should feel, one call at a time.
+Small React and TypeScript builds about how AI products should feel, one call at a time.
 
 Fresh React + TypeScript builds. Not derived from the portfolio. Not a component library.
 
