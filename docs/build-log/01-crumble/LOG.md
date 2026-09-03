@@ -162,3 +162,7 @@ Soft/queued/never-ran = **48**, dashed muted stroke. Trying/connecting = breathi
 - **Mono (system voice):** JetBrains Mono · Geist Mono · IBM Plex Mono · Space Mono · Courier Prime. Each shown as chip + system line + the T/01 mark.
 **Not available in Figma:** M PLUS Rounded 1c.
 **Her call:** one serif, one sans, one mono. Agent's leaning: Literata or Newsreader for the serif (warmest at text sizes, real italics), keep Space Grotesk unless a material asks otherwise, JetBrains Mono for the mono.
+
+## Sans pick: Fredoka (2026-09-02, Lindsay: "omg love this")
+**Who:** Lindsay picked Fredoka from the sans study (agent had flagged it as the risky one; her call wins, and the rage reads funnier when the product is cute). Applied inside the stage only: Node component, Publish button, top-bar name, messages, composer, review. Chassis untouched. **The rage button stays Bricolage ExtraBold**: it is the crack in the product's own voice.
+**The type system, stated for the series:** three fonts, one job each. Serif = Lindsay's voice = the chassis, constant across episodes (pick pending). Mono = the system, in both surfaces (chassis values line, T/NN mark, product chips and system lines), constant. Sans = the product, inside the stage, changes by material. Sameness comes from the mono thread and the constant chassis; differentiation is the sans. On LinkedIn the chassis is invisible (record mode), so the serif only lives on the site.
