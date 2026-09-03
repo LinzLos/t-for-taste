@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 // Two modes. Fluid (default): the stage IS the host, the episode lays itself out responsively,
 // and the social frame is whatever you resize the window to. Record (?record): a fixed 1080 × 1350
 // stage scaled to fit, so a recording from any machine is the same picture.
-export const STAGE = { w: 1080, h: 1350 } as const
+import { STAGE } from './stage-size'
 
 export function Stage({ children, record }: { children: ReactNode; record?: boolean }) {
   const host = useRef<HTMLDivElement>(null)
@@ -12,8 +12,7 @@ export function Stage({ children, record }: { children: ReactNode; record?: bool
   const [wide, setWide] = useState(() => window.innerWidth >= 900)
   useEffect(() => {
     const on = () => setWide(document.body.clientWidth >= 1000)
-    on()
-    const ro = new ResizeObserver(on); ro.observe(document.body)
+    const ro = new ResizeObserver(on); ro.observe(document.body) // fires once on observe
     window.addEventListener('resize', on)
     return () => { ro.disconnect(); window.removeEventListener('resize', on) }
   }, [])
@@ -28,8 +27,7 @@ export function Stage({ children, record }: { children: ReactNode; record?: bool
       const height = el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
       setScale(Math.max(0.1, Math.min(width / STAGE.w, height / STAGE.h, 1)))
     }
-    fit()
-    const ro = new ResizeObserver(fit)
+    const ro = new ResizeObserver(fit) // fires once on observe
     ro.observe(el)
     return () => ro.disconnect()
   }, [fluid])

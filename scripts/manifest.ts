@@ -10,8 +10,8 @@ const pad = (n: number) => String(n).padStart(2, '0')
 const entries: ManifestEntry[] = metas
   .filter(m => m.status === 'live')
   .sort((a, b) => b.number - a.number)
-  .map(({ status: _status, ...m }) => ({
-    ...m,
+  .map(m => ({
+    ...Object.fromEntries(Object.entries(m).filter(([k]) => k !== 'status')) as Omit<typeof m, 'status'>,
     url: `${SITE}/#/${pad(m.number)}`,
     poster: `${SITE}/posters/${pad(m.number)}.png`,
   }))

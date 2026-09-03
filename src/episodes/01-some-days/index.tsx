@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import gsap from 'gsap'
-import { useReducedMotion } from '../../chassis/reduced-motion'
-import { useRegisterBeats } from '../../chassis/beats'
-import { meta } from './meta'
-import { ATTEMPT, CHIP, CLOCK_START, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, fmtClock, placeholderFor, type Beat, type NodeSpec } from './story'
-import './builder.css'
 
-export { meta }
+// Dev-only handles for tuning from the console (`__auto`, `__tl`, `__pulse`, `__recv`). Stripped from production builds.
+const debug = (handles: Record<string, unknown>) => { if (import.meta.env.DEV) Object.assign(window, handles) }
+import { useReducedMotion } from '../../chassis/use-reduced-motion'
+import { useRegisterBeats } from '../../chassis/use-beats'
+import { ATTEMPT, CHIP, CLOCK_START, DRAG_ENABLED, EDGES, LOG, NODES, OFFER, RAGE, REVIEW, fmtClock, placeholderFor, type Beat, type NodeSpec } from './story'
+import './builder.css'
 
 const BEATS: Beat[] = ['calm', 'threshold', 'pressed', 'review']
 
@@ -40,7 +40,7 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
     e.currentTarget.setPointerCapture(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const d = drag.current; if (!d) return
+    const d = drag.current; if (!d || !DRAG_ENABLED) return
     const dx = (e.clientX - d.sx) / d.k, dy = (e.clientY - d.sy) / d.k
     if (!d.moved && Math.hypot(dx, dy) < DRAG_THRESHOLD) return
     if (!d.moved) { d.moved = true; setDragging(true) }
@@ -57,7 +57,7 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
   const onClick = () => { if (handledByPointer.current) return; onPress?.() }
   return (
     <div
-      className={`node node--${state}${n.dashed ? ' node--dashed' : ''}${dragging ? ' node--dragging' : ''}`}
+      className={`node node--${state}${n.dashed ? ' node--dashed' : ''}${dragging ? ' node--dragging' : ''}${DRAG_ENABLED ? ' node--draggable' : ''}`}
       style={{ left: pos.x, top: pos.y }}
       data-node={n.id}
       onPointerDown={onPointerDown}
@@ -78,28 +78,29 @@ function Node({ n, beat, pos, onPress, onMove }: { n: NodeSpec; beat: Beat; pos:
 }
 
 function Connectors({ host, beat, stateOf, layoutKey }: { host: React.RefObject<HTMLDivElement>; beat: Beat; stateOf: (id: string) => string; layoutKey: string }) {
-  const [d, setD] = useState<{ d: string; dashed: boolean; id: string; from: string }[]>([])
+  const svg = useRef<SVGSVGElement>(null)
   const [tick, setTick] = useState(0)
   useEffect(() => { const el = host.current; if (!el) return; const ro = new ResizeObserver(() => setTick(t => t + 1)); ro.observe(el); return () => ro.disconnect() }, [host])
+  // Measure the cards and write the wires straight into the SVG. No state: the wires are derived from layout, not from React.
   useLayoutEffect(() => {
-    const el = host.current; if (!el) return
+    const el = host.current, root = svg.current; if (!el || !root) return
     const box = el.getBoundingClientRect()
     const k = box.width / el.offsetWidth // any transform scale (record mode); 1 when fluid
     const r = (id: string) => { const b = el.querySelector<HTMLElement>(`[data-node="${id}"]`)!.getBoundingClientRect(); const l = (b.left - box.left) / k, t = (b.top - box.top) / k, w = b.width / k, h = b.height / k; return { l, r: l + w, t, b: t + h, cx: l + w / 2, cy: t + h / 2 } }
-    setD(EDGES.map(([a, b, dashed]) => {
+    for (const [a, b] of EDGES) {
       const A = r(a), B = r(b)
-      const id = `edge-${a}-${b}`
-      if (b === 'summarize') return { id, from: a, dashed, d: `M ${A.r} ${A.cy} C ${A.r + 60} ${A.cy} ${B.l - 60} ${B.cy} ${B.l} ${B.cy}` }
-      const sx = A.cx + 40
-      return { id, from: a, dashed, d: `M ${sx} ${A.b} C ${sx} ${A.b + 70} ${B.cx} ${B.t - 70} ${B.cx} ${B.t}` }
-    }))
+      const d = b === 'summarize'
+        ? `M ${A.r} ${A.cy} C ${A.r + 60} ${A.cy} ${B.l - 60} ${B.cy} ${B.l} ${B.cy}`
+        : `M ${A.cx + 40} ${A.b} C ${A.cx + 40} ${A.b + 70} ${B.cx} ${B.t - 70} ${B.cx} ${B.t}`
+      root.querySelector<SVGPathElement>(`#edge-${a}-${b}`)?.setAttribute('d', d)
+    }
   }, [host, beat, tick, layoutKey])
   return (
-    <svg className="edges" aria-hidden>
-      {d.map(e => {
-        const st = e.dashed ? 'control' : stateOf(e.from) // control wires (dashed) never carry flow
-        const cls = ['edge', e.dashed ? 'edge--dashed' : '', st === 'trying' ? 'edge--flow' : st === 'stuck' ? 'edge--stuck' : 'edge--idle'].join(' ')
-        return <path key={e.id} id={e.id} d={e.d} className={cls} />
+    <svg className="edges" ref={svg} aria-hidden>
+      {EDGES.map(([a, b, dashed]) => {
+        const st = dashed ? 'control' : stateOf(a) // control wires (dashed) never carry flow
+        const cls = ['edge', dashed ? 'edge--dashed' : '', st === 'trying' ? 'edge--flow' : st === 'stuck' ? 'edge--stuck' : 'edge--idle'].join(' ')
+        return <path key={`${a}-${b}`} id={`edge-${a}-${b}`} className={cls} />
       })}
       <circle className="pulse" r={7} />
     </svg>
@@ -168,7 +169,7 @@ export default function SomeDays() {
   useEffect(() => {
     const el = canvas.current; if (!el) return
     const fit = () => setSceneScale(Math.max(0.2, Math.min(el.clientWidth / 1008, el.clientHeight / 800)))
-    fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect()
+    const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect() // observers fire once on observe
   }, [beat])
 
   const rage = useRage(() => setBeat(b => (b === 'calm' ? 'threshold' : b)))
@@ -183,7 +184,8 @@ export default function SomeDays() {
     setFlash(n); window.clearTimeout(flashTimer.current); flashTimer.current = window.setTimeout(() => setFlash(null), 650)
     rage()
   }
-  const pressRef = useRef(pressReconnect); pressRef.current = pressReconnect
+  const pressRef = useRef(pressReconnect)
+  useEffect(() => { pressRef.current = pressReconnect })
   const cursorEl = useRef<HTMLDivElement>(null)
   const [playing, setPlaying] = useState(false)
   const [params] = useSearchParams()
@@ -210,12 +212,17 @@ export default function SomeDays() {
       .to(c, { scale: 0.85, duration: 0.06, yoyo: true, repeat: 1 }, t + 2.2)
       .call(() => setBeat(b => (b === 'threshold' ? 'pressed' : b)), [], t + 2.2)
       .to(c, { autoAlpha: 0, duration: 0.4 }, t + 2.8)
-    if (import.meta.env.DEV) Object.assign(window, { __auto: tl })
+    debug({ __auto: tl })
     return () => tl.kill()
   }, [playing, reduced])
 
   // Record mode plays itself after a beat, so a recording needs no hands.
-  useEffect(() => { if (params.has('record') && !params.has('hold')) { const t = setTimeout(play, 800); return () => clearTimeout(t) } }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const autoplayed = useRef(false)
+  useEffect(() => {
+    if (autoplayed.current || !params.has('record') || params.has('hold')) return
+    autoplayed.current = true
+    const t = setTimeout(play, 800); return () => clearTimeout(t)
+  }, [params, play])
 
   // The pulse: something leaves Lotion, travels the wire, reaches Summarize, and the card does not react. That is the story.
   const pulse = useCallback((hot = false) => {
@@ -231,7 +238,7 @@ export default function SomeDays() {
       gsap.killTweensOf(target)
       const amp = hot ? 6 : 3
       const rt = gsap.timeline()
-      if (import.meta.env.DEV) Object.assign(window, { __recv: rt })
+      debug({ __recv: rt })
       rt
         .to(target, { x: amp, duration: 0.05, ease: 'none' })
         .to(target, { x: -amp, duration: 0.05, ease: 'none', repeat: 3, yoyo: true })
@@ -248,7 +255,7 @@ export default function SomeDays() {
       gsap.set(dot, { attr: { cx: p.x, cy: p.y } })
     }
     const pt = gsap.timeline()
-    if (import.meta.env.DEV) Object.assign(window, { __pulse: pt })
+    debug({ __pulse: pt })
     pt.set(ride, { t: 0 }).call(place)
       .set(dot, { autoAlpha: 1, scale: 1, transformOrigin: '50% 50%', attr: { class: hot ? 'pulse pulse--hot' : 'pulse' } })
       .to(ride, { t: 1, duration: 0.9, ease: 'power1.inOut', onUpdate: place })
@@ -273,7 +280,7 @@ export default function SomeDays() {
       .to(cards, { borderRadius: 48, duration: 0.35, ease: 'power2.out', stagger: 0.04 })
       .to(cards, { y: () => el.clientHeight + 260, rotation: () => (Math.random() - 0.5) * 8, duration: 1.35, ease: 'power2.in', stagger: 0.06 }, '+=0.15')
       .to(logRef.current, { y: () => (logRef.current?.clientHeight ?? 400) + 120, autoAlpha: 0, duration: 1.0, ease: 'power2.in' }, '<0.2')
-    if (import.meta.env.DEV) Object.assign(window, { __tl: tl, __gsap: gsap })
+    debug({ __tl: tl, __gsap: gsap })
     return () => { tl.kill() }
   }, [beat, reduced])
 

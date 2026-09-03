@@ -1,8 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import { ReducedMotionContext as Ctx } from './reduced-motion-context'
 
-// One source of truth for "should this move?". Combines the OS preference with
-// the chassis toggle, so every episode has its reduced-motion twin for free.
-const Ctx = createContext<{ reduced: boolean; toggle: () => void }>({ reduced: false, toggle: () => {} })
 
 export function ReducedMotionProvider({ children }: { children: ReactNode }) {
   const [system, setSystem] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -21,4 +19,3 @@ export function ReducedMotionProvider({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={{ reduced, toggle: () => setOverride(v => !(v ?? system)) }}>{children}</Ctx.Provider>
 }
 
-export const useReducedMotion = () => useContext(Ctx)

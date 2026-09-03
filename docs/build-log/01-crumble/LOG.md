@@ -352,3 +352,17 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 ## The clock tells the truth (2026-09-02, Lindsay: "a timer on connecting? and does Keep trying reset it, or is that work for nothing")
 **Worth it, in the honest version.** The Lotion pill now counts live while calm ("connecting · 14s, 15s…", minutes after 60). Starts at 14s so the first frame matches the Figma frames. The jump to "still trying · 9 min" at the threshold stays a jump cut (a 30s recording can't earn nine real minutes). **Keep trying never resets anything:** the clock resumes from where it was, the try count keeps climbing (cap 9), the log keeps its history. The choice to keep trying visibly buys nothing, which is the point. Only a full reset (Fix all four, play, or the beat strip's calm) restarts the clock.
 **Press fallback:** dragging moved presses onto pointer events, which would have made Reconnect unreachable for anything that activates with a plain click (assistive tech, synthetic clicks). A click fallback now fires only when no pointer press already counted, so a real press counts once and a click-only activation still counts.
+
+## Audit + park the cart (2026-09-02, end of day)
+**Lindsay's call:** dragging and dropping may be the horse before the cart; it looked buggy. **Parked, not deleted:** `DRAG_ENABLED = false` in `story.ts` turns it off; flip it when the fundamentals are nailed. Presses, wires, pulses and the clock are unaffected.
+**Audit results:** `npm audit` 0 vulnerabilities · no innerHTML / eval / dangerouslySetInnerHTML · no secrets · nothing tracked that shouldn't be · Pages workflow has least-privilege permissions · no `any`, no `@ts-ignore`, no TODOs.
+**ESLint added** (typescript-eslint + react-hooks + react-refresh; `npm run lint`). Its findings, all fixed properly rather than silenced: wires are now written straight into the SVG in a layout effect (no setState in effects), the press ref updates in an effect not during render, resize observers do their own first measurement, hooks live in their own files (`use-beats.ts`, `use-reduced-motion.ts`, contexts in `*-context.ts`), `STAGE` lives in `stage-size.ts`, the episode file exports only its component, the one `eslint-disable` is gone, and the four scattered dev `window` handles go through one `debug()` helper that production strips.
+**Known: `Mark.tsx` is unused** (the stage mark was removed at Lindsay's request); kept for a future episode.
+
+## State of play for tomorrow
+- **Runs:** `npm run dev` in `~/Dev/active/t-for-taste` (or the `t-for-taste` preview from the portfolio session). Chassis + story at `/#/01`, recording view at `/#/01?record` (auto-plays; add `&hold` to stop that).
+- **Works:** four beats, rage detector, the offer, live clock, wires with pulses and reception, animated ellipsis, transport row, autoplay cursor, fluid desktop / scaled phone / fixed record, footer, rolling period with the olive.
+- **Placeholders:** the melt (soften + slide), no live typing yet.
+- **Parked:** drag and drop (`DRAG_ENABLED`).
+- **Her open calls:** "Had enough?" with fresh eyes · melt frames for beat three · caption pass · wrapper pass · social-legibility type pass · "the rundown" name · pink heart or ink.
+- **Next build in order:** live typing + cursor tempo (plan above) → melt from her frames → record.

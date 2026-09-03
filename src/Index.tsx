@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { episodes } from './episodes'
-import { useReducedMotion } from './chassis/reduced-motion'
+import { useReducedMotion } from './chassis/use-reduced-motion'
 import { Footer } from './chassis/Footer'
 
 // The period rolls out of the e. Two ideas: a GATE (an overflow-hidden window that starts at the

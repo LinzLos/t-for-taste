@@ -5,6 +5,9 @@ export type NodeState = 'soft' | 'trying' | 'set' | 'stuck'
 
 export const RAGE = { presses: 5, windowMs: 1500 } as const
 
+// Dragging cards is built but parked until the fundamentals are nailed. Flip to true to try it.
+export const DRAG_ENABLED = false
+
 export interface NodeSpec {
   id: string
   type: string

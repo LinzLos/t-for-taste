@@ -3,8 +3,9 @@ import { Link, useSearchParams } from 'react-router-dom'
 import type { EpisodeMeta } from '../episodes/types'
 import { Stage } from './Stage'
 import { Caption } from './Caption'
-import { useReducedMotion } from './reduced-motion'
-import { BeatsProvider, useBeats } from './beats'
+import { useReducedMotion } from './use-reduced-motion'
+import { BeatsProvider } from './beats'
+import { useBeats } from './use-beats'
 import { Footer } from './Footer'
 
 // Everything around an episode. `?record` strips it down to the bare stage
