@@ -367,3 +367,21 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 - **Her open calls:** "Had enough?" with fresh eyes · melt frames for beat three · caption pass · wrapper pass · social-legibility type pass · "the rundown" name · pink heart or ink.
 - **Next build in order:** live typing + cursor tempo (plan above) → melt from her frames → record.
 **Post-audit check:** two console errors showed on a hidden-tab reload (wires with NaN coordinates, and a GSAP error downstream of them). Cause: measuring wires before the scene has a size. Guarded: the wire pass returns early when the scene has no width and lets the resize observer call again. Replayed every step with an error trap: tap, pulse, reception, play, autoplay, melt. Zero errors.
+
+## Believability audit (2026-09-02, Lindsay on a big screen: "this looks bad, we need to tool this")
+**Bug fixed first:** the scene had no ceiling, so on a large window it scaled to ~1.9× and the cards became billboards. Real builders never scale nodes with the viewport. The scene now caps at 1:1 and centres; a bigger window means more canvas, not bigger cards.
+
+**What real node builders share** (n8n, Gumloop, Dify, Flowise/LangFlow, Make, OpenAI Agent Builder — most are React Flow underneath, which is why the conventions rhyme):
+1. **A dot or line grid** on the canvas. Nearly universal. Ours is flat, which is the first thing that reads as "illustration, not tool".
+2. **Ports.** Small handles on the node edges; wires attach to ports, never to arbitrary card edges. This is the biggest single tell in our build.
+3. **Zoom controls and a percentage**, usually bottom-left, with fit-to-view. Often a minimap in the opposite corner.
+4. **Node anatomy:** an app icon beside the title, a config summary line, a status badge. We have everything but the icon.
+5. **Constant node width** (200–320px; ours is 350) and a selection ring on click.
+6. **The canvas pans and zooms; nodes never reflow.**
+7. **A run state that animates the wire** during execution — which is exactly our pulse, so that part is already right.
+
+**What we already have that reads true:** when / then / try again grammar, status pills, the chip row (branch, model, run state), the animated wire, the left rail.
+
+**The taste position:** be conventional in the bones (grid, ports, zoom, icons) and distinctive in the skin (her palette, Fredoka, radius-as-state, the pulse and the receiver knock). Copying n8n exactly would be believable and forgettable; the point of the series is fundamentals right, then a call that is hers.
+
+**Next:** Lindsay collects reference screens of real builders into Figma; we pattern from those rather than from memory.
