@@ -50,7 +50,7 @@ html[data-reduced="true"] .builder .rage { animation: none; }
 
 /* canvas */
 .canvas { position: relative; flex: 1 1 auto; min-height: 0; height: 62%; overflow: hidden; }
-.scene { position: absolute; left: 0; top: 0; width: 1008px; height: 800px; transform-origin: top left; }
+.scene { position: absolute; left: 50%; top: 50%; width: 1008px; height: 800px; transform-origin: center; translate: -50% -50%; }
 .edges { position: absolute; inset: 0; width: 1008px; height: 800px; pointer-events: none; }
 .edge { fill: none; stroke: var(--line-strong); stroke-width: 3; stroke-linecap: round; } .edge--dashed { stroke-dasharray: 10 10; }
 /* edges carry state: listening marches, stuck goes hot and stops, idle stays dim */

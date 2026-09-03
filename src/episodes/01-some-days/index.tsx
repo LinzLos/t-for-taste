@@ -169,7 +169,8 @@ export default function SomeDays() {
   const [sceneScale, setSceneScale] = useState(1)
   useEffect(() => {
     const el = canvas.current; if (!el) return
-    const fit = () => setSceneScale(Math.max(0.2, Math.min(el.clientWidth / 1008, el.clientHeight / 800)))
+    // Never scale UP. Real builders keep node size constant and give you more canvas, not bigger cards.
+    const fit = () => setSceneScale(Math.max(0.2, Math.min(1, el.clientWidth / 1008, el.clientHeight / 800)))
     const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect() // observers fire once on observe
   }, [beat])
 
