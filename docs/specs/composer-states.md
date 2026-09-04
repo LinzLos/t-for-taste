@@ -151,19 +151,28 @@ The principle is that a name it cannot resolve should look exactly as unfinished
 
 **Its own episode, not a footnote in this one.** T/01 already gestures at it: the node subtitle reads "Slack · #growers", which is the same abstract-to-specific move.
 
-## 11 · What the kinds actually mean
+## 11 · Three states, each more concrete than the last
 
-The chip kinds were decoration until they carried rules. Now the row answers "what can apply right now", which is the same principle as connection: **what is missing from the row is information.**
+| | is | appears |
+|---|---|---|
+| **Chip** | what is connected and available | changes only when you type, or when your connections change |
+| **Token** | what you have committed | the instant you take a chip or press enter |
+| **Node** | what the token became | a beat after the token: skeleton first, then the specifics |
 
-| Kind | Rule |
-|---|---|
-| `when` | a workflow has one trigger, so once you have one, no more are offered |
-| `then` | many, in order |
-| `only` | a condition needs something to guard, so it is not offered until a step is in front of it, and never straight after another condition |
-| `yours` | always available; it is a request, not a claim |
+Available, committed, real.
 
-**A condition is not a peer.** In the field it rides the token in front of it: smaller, muted, outlined, tucked against it rather than sitting in the row as an equal. Same reason it lands on the wire instead of becoming a box.
+## 12 · Absence only means "not connected"
 
-**Removing.** Click any token to remove it. Removing a step takes its trailing conditions with it, because a condition with nothing to guard is not something to leave lying around. Backspace on an empty field still removes the last one.
+A first pass filtered the chip row by sequence rules — one trigger only, no filter until there is a step. It read worse, and the reason is worth keeping.
+
+**Hiding a chip because it is not connected is legible.** It was never there, and its absence is the truth about your setup.
+
+**Hiding a chip because of a grammar rule is not.** You saw it a second ago, you committed something else, and it vanished with no reason on screen. The row stops being a stable picture of what you have, so you stop reading it as one.
+
+So the row shows what is connected, filtered only by what you type. Sequence belongs to the canvas, which can show structure rather than only remove things.
+
+**What survives from that pass**, because it is about meaning rather than availability:
+- A condition is not a peer. In the field it rides the token in front of it: smaller, muted, outlined, tucked against it. Same reason it lands on a wire instead of becoming a box.
+- Click any token to remove it. Removing a step takes its trailing conditions with it, because a condition with nothing to guard is not something to leave lying around.
 
 Checked without a browser: `npm run check:rules`.
