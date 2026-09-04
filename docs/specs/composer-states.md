@@ -100,3 +100,15 @@ No stagger, no travel, no reflow tween. Chips appear and disappear. The token la
 ## What this spec is claiming
 
 Most composers animate the send. The craft here is everywhere else: how the options are offered, how they leave, how one travels into the field, and what the emptiness looks like when nothing matches.
+
+---
+
+## Build notes (2026-09-03)
+
+**Typed chips (Lindsay's addition).** Enter on something nothing can do commits it anyway as a `yours` chip: outlined instead of filled, so a built workflow shows at a glance which of its steps are real and which are requests. Committed phrases join the suggestion list, marked as hers, so the set grows from use without ever pretending a request is a capability. The empty state's button is now "Ask for it anyway".
+
+**Handle and field are one shape** (from her frames): at rest the handle carries a bottom edge only; when open the handle takes the top and sides and the field takes the bottom, and only that bottom edge turns orange. Grip dots are ink, not orange.
+
+**Travel is measured, not shared-layout.** A `layoutId` shared between the chip and the token makes motion run a shared-layout transition and an exit animation on the same element, and the chip gets stuck. The token now measures where the chip stood and animates home from there, which also gives exact control over the landing.
+
+**⚑ Unverified: chip exit and reflow.** Neither of the agent's automated browsers can confirm it. The in-app pane reports itself hidden, so animation frames never fire; headless Chrome with a virtual time budget freezes mid-animation. In both, exiting chips appear stuck, which is an artifact of the harness rather than evidence about the code. **This needs eyes on localhost.** What to look for: type until nothing matches and confirm the chips leave rather than pile up, and that the survivors slide into the gap rather than jumping.
