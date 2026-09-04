@@ -30,6 +30,16 @@
 /* ink at rest; orange the moment you are typing into it. Colour follows the modality, like the handle. */
 .grip i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); transition: background 140ms ease-out; }
 .composer--on .grip i { background: var(--active); }
+/* the grid rearranges into a face for voice: two dots stay as eyes, three become a mouth, four leave.
+   Same nine elements, so it reads as one thing changing rather than a swap. */
+.grip i { transition: background 140ms ease-out, opacity 260ms ease-out, transform 260ms cubic-bezier(.33,1,.68,1); }
+.grip--face i { background: var(--active); }
+.grip--face i[data-dot='1'], .grip--face i[data-dot='3'],
+.grip--face i[data-dot='4'], .grip--face i[data-dot='5'] { opacity: 0; transform: scale(.4); }
+.grip--face i[data-dot='0'], .grip--face i[data-dot='2'] { transform: translateY(-1px) scale(1.15); }
+.grip--face i[data-dot='6'] { transform: translate(2px, 2px); }
+.grip--face i[data-dot='8'] { transform: translate(-2px, 2px); }
+html[data-reduced='true'] .grip i { transition: none; }
 
 /* the field */
 .field { display: flex; align-items: flex-start; gap: 16px; background: var(--field);
@@ -42,9 +52,20 @@
 .input { flex: 1 1 12ch; min-width: 12ch; font: 26px/34px var(--sans); color: var(--ink); background: none; border: 0; outline: none; resize: none; overflow-y: auto; padding: 0;
   /* growth is never eased: the box follows the text */ transition: none; }
 .input::placeholder { color: var(--muted); }
-.send { width: 0; height: 0; margin-top: 6px; border-left: 30px solid var(--muted); border-top: 15px solid transparent; border-bottom: 15px solid transparent; }
+.mic { width: 34px; height: 34px; margin-top: 4px; border: 2px solid var(--muted); border-radius: 999px; display: grid; place-items: center; transition: border-color 140ms ease-out; }
+.mic i { width: 10px; height: 16px; border-radius: 999px; background: var(--muted); transition: background 140ms ease-out; }
+.mic--on { border-color: var(--active); }
+.mic--on i { background: var(--active); }
+.send { width: 0; height: 0; margin-top: 6px; border-left: 30px solid var(--muted); border-top: 15px solid transparent; border-bottom: 15px solid transparent;
+  transition: border-left-color 140ms ease-out; }
+.send:disabled { opacity: .35; cursor: default; }
+.send:not(:disabled) { border-left-color: var(--active); }
 
 /* the chips */
+.keys { margin: -4px 0 0; font-family: var(--mono); font-size: 18px; color: var(--muted); opacity: .7; }
+.keys b { font-weight: 700; color: var(--ink); opacity: .8; }
+.built { margin: 0; font-family: var(--mono); font-size: 20px; color: var(--live); }
+.built-warn { color: var(--active); }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; min-height: 52px; align-content: flex-start; }
 .chip { font-size: 22px; line-height: 1; padding: 12px 16px; border: 2px solid var(--line-strong); border-radius: 999px; color: var(--ink); white-space: nowrap; transition: background 140ms ease-out, border-color 140ms ease-out; }
 .chip:hover { background: var(--field); border-color: var(--muted); }
