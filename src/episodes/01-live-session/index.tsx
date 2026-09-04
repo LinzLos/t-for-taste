@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
-import { CAPABILITIES, SCRIPT, applicable, asYours, match, type Capability } from './capabilities'
+import { CAPABILITIES, SCRIPT, asYours, match, type Capability } from './capabilities'
 import './composer.css'
 
 const MAX_LINES = 5
@@ -30,9 +30,10 @@ export default function LiveSession() {
   const [params] = useSearchParams()
 
   const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
-  const chips = useMemo(
-    () => applicable(match(query, learned), tokens).filter(c => !taken.has(c.id)),
-    [query, taken, learned, tokens])
+  // The row shows what is connected, filtered only by what you type. Hiding a chip because of a
+  // sequence rule is the interface being clever at you: you saw it a second ago and it vanished
+  // with no reason on screen. Absence only means something when it means "not connected".
+  const chips = useMemo(() => match(query, learned).filter(c => !taken.has(c.id)), [query, taken, learned])
   const empty = focused && chips.length === 0
 
   // The help arrives after the emptiness has registered, never with it — and never while
