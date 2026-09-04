@@ -142,3 +142,11 @@ The placeholder reads "Listening" and the hint becomes "listening · tap the mic
 ## Components
 
 The built pieces are mirrored in Figma as variant sets with their reasoning in the descriptions: **Composer components · as built** (Grip rest/typing/listening, Chip by kind plus hover, Token capability/yours, Field rest/typing).
+
+## Not in this episode: resolving a person
+
+Typing a person's name bundles two unknowns — who, and how to reach them. The rule, for whenever it gets built: a name resolves only through a connected channel, the same bound as capabilities. One match and the token shows how it resolved ("Marike · Slack"), generic in and specific out. Several and it picks, marks the pick, and lets you change it inline rather than asking first. No match and it becomes a `yours` token: unresolved, outlined, and flagged in the built workflow as a step pointing at nobody.
+
+The principle is that a name it cannot resolve should look exactly as unfinished as a capability it does not have, instead of confidently inventing an address.
+
+**Its own episode, not a footnote in this one.** T/01 already gestures at it: the node subtitle reads "Slack · #growers", which is the same abstract-to-specific move.
