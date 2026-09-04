@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
-import { CAPABILITIES, SCRIPT, asYours, match, type Capability } from './capabilities'
+import { CAPABILITIES, SCRIPT, applicable, asYours, match, type Capability } from './capabilities'
 import './composer.css'
 
 const MAX_LINES = 5
@@ -30,7 +30,9 @@ export default function LiveSession() {
   const [params] = useSearchParams()
 
   const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
-  const chips = useMemo(() => match(query, learned).filter(c => !taken.has(c.id)), [query, taken, learned])
+  const chips = useMemo(
+    () => applicable(match(query, learned), tokens).filter(c => !taken.has(c.id)),
+    [query, taken, learned, tokens])
   const empty = focused && chips.length === 0
 
   // The help arrives after the emptiness has registered, never with it — and never while
@@ -50,6 +52,18 @@ export default function LiveSession() {
     el.style.height = `${Math.min(el.scrollHeight, line * MAX_LINES)}px`
   }, [])
   useEffect(grow, [query, tokens, grow])
+
+  // Clicking a token removes it. A step takes its trailing conditions with it, because a
+  // condition with nothing to guard is not a thing you can leave lying around.
+  const drop = useCallback((i: number) => {
+    setTokens(t => {
+      const next = t.slice()
+      let end = i + 1
+      if (next[i].kind !== 'only') while (end < next.length && next[end].kind === 'only') end++
+      next.splice(i, end - i)
+      return next
+    })
+  }, [])
 
   const take = useCallback((c: Capability, rect?: DOMRect) => {
     from.current = rect ?? null
@@ -126,7 +140,7 @@ export default function LiveSession() {
   // While listening, the mouth moves because something is being said, not on a timer.
   // Simulated for the demo; in a real product this is microphone amplitude.
   useEffect(() => {
-    if (!voice || reduced) { setLevel(0); return }
+    if (!voice || reduced) return // level is read as 0 when not listening, so nothing to reset
     let raf = 0, target = 0, cur = 0, next = 0
     const tick = (t: number) => {
       if (t > next) { target = Math.random() ** 1.6; next = t + 90 + Math.random() * 120 }
@@ -179,7 +193,7 @@ export default function LiveSession() {
           onClick={e => { e.stopPropagation(); setOpen(o => !o); if (open) setVoice(false) }}
         >
           {Array.from({ length: 9 }, (_, i) => (
-            <i key={i} data-dot={i} style={voice && i === 7 ? { transform: `translateY(${(level * 5).toFixed(1)}px)` } : undefined} />
+            <i key={i} data-dot={i} style={voice && i === 7 ? { transform: `translateY(${(voice ? level * 5 : 0).toFixed(1)}px)` } : undefined} />
           ))}
         </button>
 
@@ -187,17 +201,21 @@ export default function LiveSession() {
         <div className={`field${focused ? ' field--on' : ''}`}>
           <div className="field-inner">
             <AnimatePresence initial={false}>
-              {tokens.map(t => (
-                <motion.span
+              {tokens.map((t, i) => (
+                <motion.button
+                  type="button"
                   key={t.id}
                   data-token={t.id}
                   layout={!reduced}
                   className={`token token--${t.kind}`}
                   transition={spring}
                   exit={{ opacity: 0, scale: 0.92 }}
+                  aria-label={`remove ${t.label}`}
+                  onMouseDown={e => e.preventDefault()}
+                  onClick={e => { e.stopPropagation(); drop(i) }}
                 >
                   {t.label}
-                </motion.span>
+                </motion.button>
               ))}
             </AnimatePresence>
             <textarea

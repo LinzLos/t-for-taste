@@ -36,3 +36,16 @@ export const asYours = (label: string): Capability => ({
   label,
   kind: 'yours',
 })
+
+// What can apply right now. A workflow has one trigger, and a filter has nothing to guard
+// until there is a step in front of it. Chips that cannot apply are not offered, which is the
+// same rule as connection: what is missing from the row is information.
+export const applicable = (all: Capability[], tokens: Capability[]) => {
+  const hasWhen = tokens.some(t => t.kind === 'when')
+  const lastIsStep = tokens.length > 0 && tokens[tokens.length - 1].kind !== 'only'
+  return all.filter(c => {
+    if (c.kind === 'when') return !hasWhen
+    if (c.kind === 'only') return lastIsStep
+    return true
+  })
+}
