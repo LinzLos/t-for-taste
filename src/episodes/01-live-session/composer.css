@@ -81,8 +81,11 @@ html[data-reduced='true'] .grip i { transition: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; min-height: 52px; align-content: flex-start; }
 .chip { font-size: 20px; line-height: 1; padding: 12px 16px; border: 2px solid var(--line-strong); border-radius: 999px; color: var(--ink); white-space: nowrap; transition: background 140ms ease-out, border-color 140ms ease-out; }
 .chip:hover { background: var(--field); border-color: var(--muted); }
-.chip--when { border-color: var(--live); color: var(--live); }
-.chip--only { border-style: dashed; }
+/* Kind is carried by the words and by position, not by colour. "When a page is saved" already
+   says it is a trigger; "Only if it mentions pricing" already says it is a condition, and a dashed
+   border only made it read as disabled. A condition proves itself structurally instead: it rides
+   its step in the field and sits on the wire on the canvas.
+   Colour is left to mean STATE — available, taken, the top match, yours — one meaning each. */
 .chip--offer { border-color: var(--active); color: var(--active); }
 .chip--yours { border-color: var(--active); color: var(--active); }
 .empty { display: flex; align-items: center; gap: 16px; }

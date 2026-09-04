@@ -204,3 +204,34 @@ A navigator-lens critique, run against the question **how will any of this be kn
 **Still open** — kept deliberately or not yet worth the code: the beat strip's single "rest" entry does not restore the resting state and silently clears; the grip says drag in three places and is a click toggle; tab order puts the chips after mic and send; `user-select: none` may block text selection in the field on some engines (one drag on localhost settles it).
 
 **The structural note worth keeping:** three of the four highest-cost findings lived at the seam between the episode and the chassis, not inside the composer. The answer to "how will this be known" was being decided by the frame around it.
+
+## 13 · Kind is words and position. Colour is state.
+
+FLOWIE's sharpest finding was about the chip states, and the fix was subtraction.
+
+Kind was encoded in border treatment with no legend: teal for triggers, dashed for conditions, plain for actions, dashed orange for requests. Three of those were redundant with the label and one was actively misleading.
+
+- **"When a page is saved" already says it is a trigger.** The teal added nothing and contradicted the colour rule, where teal means the system is alive.
+- **"Only if it mentions pricing" already says it is a condition.** And dashed universally reads as *disabled*, so the chip carrying the best structural idea looked like the one you could not click.
+- **"Curate it to my taste" does not say nothing can do it.** That meaning is not in the words, so it is the one kind that still earns a mark.
+
+So kind is carried by the words, and by position where it matters: a condition proves itself structurally, riding its step in the field and sitting on the wire on the canvas. Those are stronger signals than a border style, and they are the ones this episode invented.
+
+Colour is left to mean **state**, one meaning each:
+
+| | |
+|---|---|
+| available | default |
+| taken | dimmed, disabled, still in the row |
+| top match | ink border on the field ground, while you are typing |
+| yours | orange outline — a request, not a capability |
+
+## 14 · No tooltips on the chips
+
+**The test:** a tooltip is where you put the thing you could not design. If the chip needs explaining, the label is wrong.
+
+Kind does not need a tip — the words carry it. The one thing a chip genuinely cannot say in a short label is its **binding**: which workspace, which channel. But that arrives one step later on the node, which is exactly the abstract-to-specific move the canvas exists for.
+
+**Where binding is ambiguous, put it in the label, not a tip.** If two Slack workspaces are connected, the chip reads "Post to Slack · #growers". If that makes labels unwieldy, the unwieldiness is real information about how many near-identical capabilities you have.
+
+Same reason the keyboard hint came off: nothing on this surface explains itself in prose.
