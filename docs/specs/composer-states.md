@@ -77,14 +77,19 @@ The chip **travels** from the row into the field and becomes a token. It does no
 
 Input clears, tokens leave, the thing gets built on the canvas. The hand-off to the connection interaction lives here.
 
-## 8 · The handle's active state ⚑ open
+## 8 · The handle: grid for typing, face for voice
 
-Lindsay's "fun happy face when the user is typing or talking into it". Not yet specified. Options:
-- The grip dots rearrange into a face while typing and back to a grid at rest.
-- The grid stays and one dot behaves (blinks, drifts).
-- The face only appears for voice, and typing keeps the grid.
+**Decided (Lindsay):** the affordance matches the modality. A grip is for something you drag; a face is for something you talk to.
 
-Needs her call. The risk is cuteness overriding the tool-not-a-person rule; the safest read is that the face is the *product's* branding being cheerful, not the agent claiming feelings.
+| Mode | Handle |
+|---|---|
+| Rest | grip dots, muted |
+| Typing | grip dots, orange. **No face.** |
+| Voice | the dots become a face |
+
+Consequence: the authoring episode never needs the face, because its whole path is typing. The face is a later flourish, not a blocker, and the dot arrangement stays open.
+
+When it is built: the face should be driven by actual input amplitude, not a loop. Listening, not performing. A face that animates on a timer while you are silent is the thing that would break the tool-not-a-person rule; one that moves because you are moving air does not.
 
 ---
 
