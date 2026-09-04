@@ -261,7 +261,7 @@ export default function LiveSession() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.22, ease: [0.33, 1, 0.68, 1] }}
           >
-            <span>Nothing connected can do that yet</span>
+            <span>No match. Nothing connected does that yet.</span>
             <button type="button" className="chip chip--offer"
               onMouseDown={e => e.preventDefault()} onClick={askAnyway}>Ask for it anyway</button>
           </motion.div>

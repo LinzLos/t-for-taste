@@ -176,3 +176,31 @@ So the row shows what is connected, filtered only by what you type. Sequence bel
 - Click any token to remove it. Removing a step takes its trailing conditions with it, because a condition with nothing to guard is not something to leave lying around.
 
 Checked without a browser: `npm run check:rules`.
+
+---
+
+## FLOWIE pass (2026-09-03)
+
+A navigator-lens critique, run against the question **how will any of this be known to the user?** Seventeen findings. The headline: it would not be. The resting state was an unlabelled handle and every affordance sat behind guessing it.
+
+**Fixed**
+
+| | Was | Now |
+|---|---|---|
+| Discovery | everything gated behind a 56×48 unlabelled rectangle; the transport hint named a field that was not on screen | the session is open by default. The grip closes it. Closed is a beat, not the front door. |
+| Building | two Enters in a row built and wiped the composition, with no undo | building keeps your tokens. It is not a way to lose your work. |
+| The empty line | "Nothing connected can do that yet" fired on any non-match, so a typo made the interface lie about your setup | "No match. Nothing connected does that yet." — the symptom first, the claim second |
+| Focus | `focused` had no `onBlur`, so every orange signal latched on forever | focus is a state again, and orange means what the colour rule says it means |
+| Absence | a taken chip vanished exactly like a disconnected one, giving absence three meanings | taken chips stay in the row, dimmed and disabled. Absence means "not connected", singular. |
+| The top match | Enter took `chips[0]` with nothing marking it | the target carries a cue while you are typing |
+| The result | the built line self-destructed after 2600ms, taking the "not connected" flag with it | it persists |
+| The morph | `.grip i` was declared twice at equal specificity; the second silently dropped the position transitions, so the face **snapped** | one declaration. The morph is a morph again. |
+| The gap | `.chips:empty { min-height: 0 }` cancelled the row's reservation at exactly the moment it existed for, so §4's deliberate pause was a layout jump | the row holds its height |
+| Voice | a simulated envelope moved the mouth while the user was silent — the exact thing §8 forbids | no envelope. The face appearing IS the state; it does not perform. |
+| Dashed | meant both "this is a condition" and "this is a request" | dashed is only ever a condition |
+| Removal | tokens were clickable with no hover | they respond |
+| The scripted run | ended with a dead-end string in the field | clears, so the first hands-on moment is one you can act from |
+
+**Still open** — kept deliberately or not yet worth the code: the beat strip's single "rest" entry does not restore the resting state and silently clears; the grip says drag in three places and is a click toggle; tab order puts the chips after mic and send; `user-select: none` may block text selection in the field on some engines (one drag on localhost settles it).
+
+**The structural note worth keeping:** three of the four highest-cost findings lived at the seam between the episode and the chassis, not inside the composer. The answer to "how will this be known" was being decided by the frame around it.
