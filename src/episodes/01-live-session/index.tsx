@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
 import { CAPABILITIES, SCRIPT, match, type Capability } from './capabilities'
@@ -18,6 +18,8 @@ export default function LiveSession() {
   const [helpFor, setHelpFor] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
   const field = useRef<HTMLTextAreaElement>(null)
+  const [scope, animate] = useAnimate()
+  const from = useRef<DOMRect | null>(null) // where the chip was standing when it was taken
   const cancel = useRef(false)
   const [params] = useSearchParams()
 
@@ -43,11 +45,27 @@ export default function LiveSession() {
   }, [])
   useEffect(grow, [query, tokens, grow])
 
-  const take = useCallback((c: Capability) => {
+  const take = useCallback((c: Capability, rect?: DOMRect) => {
+    from.current = rect ?? null
     setTokens(t => [...t, c])
     setQuery('')
     field.current?.focus()
   }, [])
+
+  // The travel: measure where the chip stood, put the new token there, and let it move home.
+  // Explicit rather than a shared-layout id, so the chip's exit and the token's arrival never fight.
+  useEffect(() => {
+    const rect = from.current; from.current = null
+    const last = tokens[tokens.length - 1]
+    if (!rect || !last || reduced) return
+    const root = scope.current as HTMLElement | null
+    const el = root?.querySelector(`[data-token="${last.id}"]`) as HTMLElement | null
+    if (!el) return
+    const now = el.getBoundingClientRect()
+    void animate(el,
+      { x: [rect.left - now.left, 0], y: [rect.top - now.top, 0], scale: [1, 1.04, 1] },
+      { duration: 0.32, ease: [0.33, 1, 0.68, 1], times: [0, 1] })
+  }, [tokens, reduced, animate, scope])
 
   // Types like a person, so a recording needs no hands.
   const play = useCallback(() => {
@@ -101,7 +119,7 @@ export default function LiveSession() {
   const spring = reduced ? { duration: 0 } : { type: 'spring' as const, stiffness: 520, damping: 34, mass: 0.7 }
 
   return (
-    <div className="session" onClick={() => field.current?.focus()}>
+    <div className="session" ref={scope} onClick={() => field.current?.focus()}>
       <header className="bar">
         <span className="nav" aria-hidden><i /></span>
         <span className="project">some days are better than others</span>
@@ -120,7 +138,7 @@ export default function LiveSession() {
               {tokens.map(t => (
                 <motion.span
                   key={t.id}
-                  layoutId={reduced ? undefined : t.id}
+                  data-token={t.id}
                   layout={!reduced}
                   className="token"
                   transition={spring}
@@ -150,14 +168,13 @@ export default function LiveSession() {
               <motion.button
                 key={c.id}
                 type="button"
-                layoutId={reduced ? undefined : c.id}
                 layout={!reduced}
                 className={`chip chip--${c.kind}`}
                 initial={reduced ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92, transition: { duration: 0.14, ease: [0.32, 0, 0.67, 0] } }}
                 transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: [0.33, 1, 0.68, 1] }}
-                onClick={e => { e.stopPropagation(); take(c) }}
+                onClick={e => { e.stopPropagation(); take(c, e.currentTarget.getBoundingClientRect()) }}
               >
                 {c.label}
               </motion.button>
