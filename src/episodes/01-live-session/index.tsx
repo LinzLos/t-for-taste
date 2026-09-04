@@ -221,10 +221,6 @@ export default function LiveSession() {
             onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); submit() }} />
         </div>
 
-        <p className="keys" aria-hidden>
-          {voice ? <><b>listening</b><span> · tap the mic to stop</span></> : <><b>enter</b> {query.trim() ? (chips[0] ? 'to add ' + chips[0].label : 'to ask for it anyway') : 'to build it'}
-          <span> · </span><b>shift enter</b> for a new line</>}
-        </p>
 
         <div className="chips">
           <AnimatePresence mode="popLayout" initial={false}>
