@@ -27,7 +27,9 @@
   background: var(--field); border: 0; border-bottom: 2px solid var(--line); }
 /* open: the handle and the field are one shape — handle takes the top and sides, field takes the bottom */
 .composer--on .grip { border-bottom: 0; border-top: 2px solid var(--line); border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
-.grip i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+/* ink at rest; orange the moment you are typing into it. Colour follows the modality, like the handle. */
+.grip i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); transition: background 140ms ease-out; }
+.composer--on .grip i { background: var(--active); }
 
 /* the field */
 .field { display: flex; align-items: flex-start; gap: 16px; background: var(--field);
