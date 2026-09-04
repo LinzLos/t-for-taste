@@ -1,0 +1,183 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
+import { useReducedMotion } from '../../chassis/use-reduced-motion'
+import { useRegisterBeats } from '../../chassis/use-beats'
+import { CAPABILITIES, SCRIPT, match, type Capability } from './capabilities'
+import './composer.css'
+
+const MAX_LINES = 5
+const EMPTY_HELP_DELAY = 220 // the gap is the message
+const TYPE_MS = 55
+
+export default function LiveSession() {
+  const { reduced } = useReducedMotion()
+  const [query, setQuery] = useState('')
+  const [tokens, setTokens] = useState<Capability[]>([])
+  const [focused, setFocused] = useState(false)
+  const [helpFor, setHelpFor] = useState<string | null>(null)
+  const [playing, setPlaying] = useState(false)
+  const field = useRef<HTMLTextAreaElement>(null)
+  const cancel = useRef(false)
+  const [params] = useSearchParams()
+
+  const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
+  const chips = useMemo(() => match(query).filter(c => !taken.has(c.id)), [query, taken])
+  const empty = focused && chips.length === 0
+
+  // The help arrives after the emptiness has registered, never with it — and never while
+  // they are still typing, since the timer restarts on every keystroke.
+  useEffect(() => {
+    if (!empty) return
+    const t = setTimeout(() => setHelpFor(query), EMPTY_HELP_DELAY)
+    return () => clearTimeout(t)
+  }, [empty, query])
+  const showHelp = empty && helpFor === query
+
+  // Growth: the box follows the text. Never eased — an eased height makes typing feel laggy.
+  const grow = useCallback(() => {
+    const el = field.current; if (!el) return
+    el.style.height = 'auto'
+    const line = parseFloat(getComputedStyle(el).lineHeight) || 34
+    el.style.height = `${Math.min(el.scrollHeight, line * MAX_LINES)}px`
+  }, [])
+  useEffect(grow, [query, tokens, grow])
+
+  const take = useCallback((c: Capability) => {
+    setTokens(t => [...t, c])
+    setQuery('')
+    field.current?.focus()
+  }, [])
+
+  // Types like a person, so a recording needs no hands.
+  const play = useCallback(() => {
+    if (playing) return
+    cancel.current = false
+    setPlaying(true); setTokens([]); setQuery(''); setFocused(true)
+    const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
+    const run = async () => {
+      await wait(600)
+      for (const step of SCRIPT) {
+        for (let i = 1; i <= step.type.length; i++) {
+          if (cancel.current) return
+          setQuery(step.type.slice(0, i))
+          await wait(TYPE_MS + Math.random() * 40)
+        }
+        await wait(700)
+        if (cancel.current) return
+        if (step.pick) {
+          const c = CAPABILITIES.find(x => x.id === step.pick)!
+          take(c)
+          await wait(600)
+        } else {
+          await wait(1600) // let the empty state land
+        }
+      }
+      setPlaying(false)
+    }
+    void run()
+  }, [playing, take])
+
+  useEffect(() => () => { cancel.current = true }, [])
+
+  // Record mode plays itself, so a recording needs no hands. `&hold` stops that.
+  const started = useRef(false)
+  useEffect(() => {
+    if (started.current || !params.has('record') || params.has('hold')) return
+    started.current = true
+    const t = setTimeout(play, 700); return () => clearTimeout(t)
+  }, [params, play])
+
+  const controls = useMemo(() => ({
+    beats: ['rest'] as const,
+    index: 0,
+    go: () => { cancel.current = true; setPlaying(false); setTokens([]); setQuery(''); setFocused(false) },
+    play,
+    playing,
+    hint: 'or type in it yourself',
+  }), [play, playing])
+  useRegisterBeats(controls)
+
+  const spring = reduced ? { duration: 0 } : { type: 'spring' as const, stiffness: 520, damping: 34, mass: 0.7 }
+
+  return (
+    <div className="session" onClick={() => field.current?.focus()}>
+      <header className="bar">
+        <span className="nav" aria-hidden><i /></span>
+        <span className="project">some days are better than others</span>
+        <span className="agent">Ms. Fun Agent</span>
+      </header>
+
+      <div className="composer">
+        {/* grip for something you drag; a face would be for something you talk to */}
+        <div className="handle" aria-hidden>
+          <span className="grip">{Array.from({ length: 9 }, (_, i) => <i key={i} />)}</span>
+        </div>
+
+        <div className={`field${focused ? ' field--on' : ''}`}>
+          <div className="field-inner">
+            <AnimatePresence initial={false}>
+              {tokens.map(t => (
+                <motion.span
+                  key={t.id}
+                  layoutId={reduced ? undefined : t.id}
+                  layout={!reduced}
+                  className="token"
+                  transition={spring}
+                  exit={{ opacity: 0, scale: 0.92 }}
+                >
+                  {t.label}
+                </motion.span>
+              ))}
+            </AnimatePresence>
+            <textarea
+              ref={field}
+              className="input"
+              rows={1}
+              value={query}
+              placeholder={tokens.length ? 'and then…' : 'Describe what you want to build'}
+              onFocus={() => setFocused(true)}
+              onChange={e => setQuery(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1)) }}
+            />
+          </div>
+          <button type="button" className="send" aria-label="send" />
+        </div>
+
+        <div className="chips">
+          <AnimatePresence initial={false}>
+            {chips.map((c, i) => (
+              <motion.button
+                key={c.id}
+                type="button"
+                layoutId={reduced ? undefined : c.id}
+                layout={!reduced}
+                className={`chip chip--${c.kind}`}
+                initial={reduced ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92, transition: { duration: 0.14, ease: [0.32, 0, 0.67, 0] } }}
+                transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: [0.33, 1, 0.68, 1] }}
+                onClick={e => { e.stopPropagation(); take(c) }}
+              >
+                {c.label}
+              </motion.button>
+            ))}
+          </AnimatePresence>
+
+        </div>
+
+        {empty && showHelp && (
+          <motion.div
+            className="empty"
+            initial={reduced ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: [0.33, 1, 0.68, 1] }}
+          >
+            <span>Nothing connected can do that yet</span>
+            <button type="button" className="chip chip--offer">Connect something</button>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  )
+}

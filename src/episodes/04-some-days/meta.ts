@@ -1,9 +1,10 @@
 import type { EpisodeMeta } from '../types'
 
 export const meta: EpisodeMeta = {
-  number: 1,
+  number: 4,
   slug: 'some-days',
   title: 'Some days are better than others',
+  // Held for later: leading the series with a failure would make it a complaints column.
   material: 'a cute little builder',
   library: 'gsap',
   caption: {
