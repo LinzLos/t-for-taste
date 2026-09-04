@@ -136,7 +136,7 @@ export default function LiveSession() {
         <span className="agent">Ms. Fun Agent</span>
       </header>
 
-      <div className="composer">
+      <div className={`composer${focused ? ' composer--on' : ''}`}>
         {/* grip for something you drag; a face would be for something you talk to */}
         <div className="handle" aria-hidden>
           <span className="grip">{Array.from({ length: 9 }, (_, i) => <i key={i} />)}</span>
@@ -176,7 +176,7 @@ export default function LiveSession() {
         </div>
 
         <div className="chips">
-          <AnimatePresence initial={false}>
+          <AnimatePresence mode="popLayout" initial={false}>
             {chips.map((c, i) => (
               <motion.button
                 key={c.id}
@@ -185,7 +185,7 @@ export default function LiveSession() {
                 className={`chip chip--${c.kind}`}
                 initial={reduced ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92, transition: { duration: 0.14, ease: [0.32, 0, 0.67, 0] } }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9, transition: { duration: 0.1, ease: [0.32, 0, 0.67, 0] } }}
                 transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: [0.33, 1, 0.68, 1] }}
                 onClick={e => { e.stopPropagation(); take(c, e.currentTarget.getBoundingClientRect()) }}
               >

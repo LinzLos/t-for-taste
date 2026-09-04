@@ -22,12 +22,17 @@
 
 /* the handle: a grip is for something you drag */
 .handle { display: flex; }
-.grip { display: grid; grid-template-columns: repeat(3, 6px); gap: 5px; padding: 10px 14px; background: var(--field); border: 0; border-bottom: 2px solid var(--active); }
+.composer { align-items: stretch; }
+.grip { display: grid; grid-template-columns: repeat(3, 6px); gap: 5px; padding: 10px 14px;
+  background: var(--field); border: 0; border-bottom: 2px solid var(--line); }
+/* open: the handle and the field are one shape — handle takes the top and sides, field takes the bottom */
+.composer--on .grip { border-bottom: 0; border-top: 2px solid var(--line); border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
 .grip i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
 
 /* the field */
-.field { display: flex; align-items: flex-start; gap: 16px; background: var(--field); border: 2px solid var(--line); padding: 16px 18px; transition: border-color 120ms ease-out; }
-.field--on { border-color: var(--active); }
+.field { display: flex; align-items: flex-start; gap: 16px; background: var(--field);
+  border: 0; border-bottom: 2px solid var(--line); padding: 16px 18px; transition: border-color 120ms ease-out; }
+.field--on { border-bottom-color: var(--active); }
 .field-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
 /* a request, not a capability: outlined, so a built workflow shows which of its steps are real */
 .token--yours { background: none; color: var(--active); box-shadow: inset 0 0 0 2px var(--active); }
