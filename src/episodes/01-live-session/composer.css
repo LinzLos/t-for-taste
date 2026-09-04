@@ -23,22 +23,28 @@
 /* the handle: a grip is for something you drag */
 .handle { display: flex; }
 .composer { align-items: stretch; }
-.grip { display: grid; grid-template-columns: repeat(3, 6px); gap: 5px; padding: 10px 14px;
-  background: var(--field); border: 0; border-bottom: 2px solid var(--line); }
+.grip { position: relative; width: 56px; height: 48px; padding: 0; align-self: flex-start;
+  background: var(--field); border: 0; border-bottom: 2px solid var(--line); cursor: pointer; }
+/* nine dots, absolutely placed, so the grid and the face are two positions of one set */
+.grip i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--ink);
+  transition: background 140ms ease-out, opacity 220ms ease-out, left 260ms cubic-bezier(.33,1,.68,1), top 260ms cubic-bezier(.33,1,.68,1), transform 120ms linear; }
+.grip i[data-dot='0'] { left: 14px; top: 14px } .grip i[data-dot='1'] { left: 25px; top: 14px } .grip i[data-dot='2'] { left: 36px; top: 14px }
+.grip i[data-dot='3'] { left: 14px; top: 21px } .grip i[data-dot='4'] { left: 25px; top: 21px } .grip i[data-dot='5'] { left: 36px; top: 21px }
+.grip i[data-dot='6'] { left: 14px; top: 28px } .grip i[data-dot='7'] { left: 25px; top: 28px } .grip i[data-dot='8'] { left: 36px; top: 28px }
 /* open: the handle and the field are one shape — handle takes the top and sides, field takes the bottom */
-.composer--on .grip { border-bottom: 0; border-top: 2px solid var(--line); border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
+.composer--open .grip { border-bottom: 0; border-top: 2px solid var(--line); border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
 /* ink at rest; orange the moment you are typing into it. Colour follows the modality, like the handle. */
 .grip i { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); transition: background 140ms ease-out; }
 .composer--on .grip i { background: var(--active); }
+.grip:hover i { background: var(--active); }
 /* the grid rearranges into a face for voice: two dots stay as eyes, three become a mouth, four leave.
    Same nine elements, so it reads as one thing changing rather than a swap. */
-.grip i { transition: background 140ms ease-out, opacity 260ms ease-out, transform 260ms cubic-bezier(.33,1,.68,1); }
+/* the face is compact: the dots pull together rather than staying on the grid */
 .grip--face i { background: var(--active); }
 .grip--face i[data-dot='1'], .grip--face i[data-dot='3'],
-.grip--face i[data-dot='4'], .grip--face i[data-dot='5'] { opacity: 0; transform: scale(.4); }
-.grip--face i[data-dot='0'], .grip--face i[data-dot='2'] { transform: translateY(-1px) scale(1.15); }
-.grip--face i[data-dot='6'] { transform: translate(2px, 2px); }
-.grip--face i[data-dot='8'] { transform: translate(-2px, 2px); }
+.grip--face i[data-dot='4'], .grip--face i[data-dot='5'] { opacity: 0; left: 25px; top: 21px; }
+.grip--face i[data-dot='0'] { left: 19px; top: 16px } .grip--face i[data-dot='2'] { left: 31px; top: 16px }
+.grip--face i[data-dot='6'] { left: 19px; top: 28px } .grip--face i[data-dot='7'] { left: 25px; top: 30px } .grip--face i[data-dot='8'] { left: 31px; top: 28px }
 html[data-reduced='true'] .grip i { transition: none; }
 
 /* the field */

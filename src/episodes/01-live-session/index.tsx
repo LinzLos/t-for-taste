@@ -17,6 +17,7 @@ export default function LiveSession() {
   // Phrases the user has committed. They come back as suggestions, marked as theirs, never as capability.
   const [learned, setLearned] = useState<Capability[]>([])
   const [built, setBuilt] = useState<Capability[] | null>(null)
+  const [open, setOpen] = useState(false) // the grip's job: pull it and the session is there
   const [voice, setVoice] = useState(false)
   const [level, setLevel] = useState(0) // speech envelope; simulated here, amplitude in a real product
   const [focused, setFocused] = useState(false)
@@ -97,7 +98,7 @@ export default function LiveSession() {
   const play = useCallback(() => {
     if (playing) return
     cancel.current = false
-    setPlaying(true); setTokens([]); setQuery(''); setFocused(true)
+    setPlaying(true); setTokens([]); setQuery(''); setOpen(true); setFocused(true)
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
     const run = async () => {
       await wait(600)
@@ -167,16 +168,22 @@ export default function LiveSession() {
         <span className="agent">Ms. Fun Agent</span>
       </header>
 
-      <div className={`composer${focused ? ' composer--on' : ''}`}>
+      <div className={`composer${focused ? ' composer--on' : ''}${open ? ' composer--open' : ''}`}>
         {/* grip for something you drag; a face would be for something you talk to */}
-        <div className="handle" aria-hidden>
-          <span className={`grip${voice ? ' grip--face' : ''}`}>
-            {Array.from({ length: 9 }, (_, i) => (
-              <i key={i} data-dot={i} style={voice && i === 7 ? { transform: `translateY(${(2 + level * 7).toFixed(1)}px)` } : undefined} />
-            ))}
-          </span>
-        </div>
+        <button
+          type="button"
+          className={`grip${voice ? ' grip--face' : ''}`}
+          aria-expanded={open}
+          aria-label={open ? 'hide the session' : 'show the session'}
+          onMouseDown={e => e.preventDefault()}
+          onClick={e => { e.stopPropagation(); setOpen(o => !o); if (open) setVoice(false) }}
+        >
+          {Array.from({ length: 9 }, (_, i) => (
+            <i key={i} data-dot={i} style={voice && i === 7 ? { transform: `translateY(${(level * 5).toFixed(1)}px)` } : undefined} />
+          ))}
+        </button>
 
+        {open && <>
         <div className={`field${focused ? ' field--on' : ''}`}>
           <div className="field-inner">
             <AnimatePresence initial={false}>
@@ -252,6 +259,8 @@ export default function LiveSession() {
               onMouseDown={e => e.preventDefault()} onClick={askAnyway}>Ask for it anyway</button>
           </motion.div>
         )}
+
+        </>}
 
         {built && (
           <motion.p className="built" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
