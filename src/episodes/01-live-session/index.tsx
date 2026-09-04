@@ -17,9 +17,8 @@ export default function LiveSession() {
   // Phrases the user has committed. They come back as suggestions, marked as theirs, never as capability.
   const [learned, setLearned] = useState<Capability[]>([])
   const [built, setBuilt] = useState<Capability[] | null>(null)
-  const [open, setOpen] = useState(false) // the grip's job: pull it and the session is there
+  const [open, setOpen] = useState(true) // the session is the subject; the grip closes it, it does not gate it
   const [voice, setVoice] = useState(false)
-  const [level, setLevel] = useState(0) // speech envelope; simulated here, amplitude in a real product
   const [focused, setFocused] = useState(false)
   const [helpFor, setHelpFor] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -33,7 +32,8 @@ export default function LiveSession() {
   // The row shows what is connected, filtered only by what you type. Hiding a chip because of a
   // sequence rule is the interface being clever at you: you saw it a second ago and it vanished
   // with no reason on screen. Absence only means something when it means "not connected".
-  const chips = useMemo(() => match(query, learned).filter(c => !taken.has(c.id)), [query, taken, learned])
+  const chips = useMemo(() => match(query, learned), [query, learned])
+  const offer = useMemo(() => chips.filter(c => !taken.has(c.id)), [chips, taken])
   const empty = focused && chips.length === 0
 
   // The help arrives after the emptiness has registered, never with it — and never while
@@ -85,14 +85,14 @@ export default function LiveSession() {
   // With nothing typed it submits, so Enter always means "commit the thing in front of me".
   const submit = useCallback(() => {
     if (!tokens.length) return
-    setBuilt(tokens); setTokens([]); setQuery('')
+    setBuilt(tokens); setQuery('') // the tokens stay: building is not a way to lose your work
   }, [tokens])
   const commit = useCallback(() => {
     if (!query.trim()) { submit(); return }
-    const top = chips[0]
+    const top = offer[0]
     if (top) { take(top); return }
     askAnyway()
-  }, [query, chips, take, askAnyway, submit])
+  }, [query, offer, take, askAnyway, submit])
 
   // The travel: measure where the chip stood, put the new token there, and let it move home.
   // Explicit rather than a shared-layout id, so the chip's exit and the token's arrival never fight.
@@ -130,7 +130,9 @@ export default function LiveSession() {
           take(c)
           await wait(600)
         } else {
-          await wait(1600) // let the empty state land
+          await wait(2200) // let the empty state land, then hand back something they can act from
+          if (cancel.current) return
+          setQuery('')
         }
       }
       setPlaying(false)
@@ -138,20 +140,8 @@ export default function LiveSession() {
     void run()
   }, [playing, take])
 
-  // While listening, the mouth moves because something is being said, not on a timer.
-  // Simulated for the demo; in a real product this is microphone amplitude.
-  useEffect(() => {
-    if (!voice || reduced) return // level is read as 0 when not listening, so nothing to reset
-    let raf = 0, target = 0, cur = 0, next = 0
-    const tick = (t: number) => {
-      if (t > next) { target = Math.random() ** 1.6; next = t + 90 + Math.random() * 120 }
-      cur += (target - cur) * 0.18
-      setLevel(cur)
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [voice, reduced])
+  // No simulated envelope: a face that moves while you are silent is exactly the thing the
+  // tool-not-a-person rule forbids. The face appearing IS the state; it does not perform.
 
   useEffect(() => () => { cancel.current = true }, [])
 
@@ -194,7 +184,7 @@ export default function LiveSession() {
           onClick={e => { e.stopPropagation(); setOpen(o => !o); if (open) setVoice(false) }}
         >
           {Array.from({ length: 9 }, (_, i) => (
-            <i key={i} data-dot={i} style={voice && i === 7 ? { transform: `translateY(${(voice ? level * 5 : 0).toFixed(1)}px)` } : undefined} />
+            <i key={i} data-dot={i} />
           ))}
         </button>
 
@@ -226,6 +216,7 @@ export default function LiveSession() {
               value={query}
               placeholder={voice ? 'Listening' : tokens.length ? 'and then…' : 'Describe what you want to build'}
               onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => {
                 if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
@@ -248,11 +239,12 @@ export default function LiveSession() {
                 key={c.id}
                 type="button"
                 layout={!reduced}
-                className={`chip chip--${c.kind}`}
+                className={`chip chip--${c.kind}${taken.has(c.id) ? ' chip--taken' : ''}${!taken.has(c.id) && c.id === offer[0]?.id && query.trim() ? ' chip--top' : ''}`}
                 initial={reduced ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9, transition: { duration: 0.1, ease: [0.32, 0, 0.67, 0] } }}
                 transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: [0.33, 1, 0.68, 1] }}
+                disabled={taken.has(c.id)}
                 onClick={e => { e.stopPropagation(); take(c, e.currentTarget.getBoundingClientRect()) }}
               >
                 {c.label}
@@ -278,8 +270,7 @@ export default function LiveSession() {
         </>}
 
         {built && (
-          <motion.p className="built" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            onAnimationComplete={() => setTimeout(() => setBuilt(null), 2600)}>
+          <motion.p className="built" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             Built: {built.map(b => b.label).join(' → ')}
             {built.some(b => b.kind === 'yours') && <span className="built-warn"> · one step is not connected yet</span>}
           </motion.p>
