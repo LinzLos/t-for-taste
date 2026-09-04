@@ -112,3 +112,28 @@ Most composers animate the send. The craft here is everywhere else: how the opti
 **Travel is measured, not shared-layout.** A `layoutId` shared between the chip and the token makes motion run a shared-layout transition and an exit animation on the same element, and the chip gets stuck. The token now measures where the chip stood and animates home from there, which also gives exact control over the landing.
 
 **⚑ Unverified: chip exit and reflow.** Neither of the agent's automated browsers can confirm it. The in-app pane reports itself hidden, so animation frames never fire; headless Chrome with a virtual time budget freezes mid-animation. In both, exiting chips appear stuck, which is an artifact of the harness rather than evidence about the code. **This needs eyes on localhost.** What to look for: type until nothing matches and confirm the chips leave rather than pile up, and that the survivors slide into the gap rather than jumping.
+
+## 9 · Committing
+
+Enter was making newlines, which meant there was no way to commit anything.
+
+| Key | Does |
+|---|---|
+| `Enter` with text and a match | takes the top match |
+| `Enter` with text and no match | commits it as yours |
+| `Enter` with nothing typed | builds what you have |
+| `Shift` + `Enter` | a new line |
+
+So Enter always means "commit the thing in front of me", which is one rule rather than three. A mono hint under the field names the current meaning as it changes, which also teaches the interaction to a viewer who cannot see the keyboard. The send arrow is the same submit, and it is dim until there is something to build.
+
+On build, a mono line states what was made, and flags in orange if any step is a request rather than a capability.
+
+## 10 · Voice
+
+The mic sits beside send: two ways in, one row. Pressing it turns the grid into a face, per §8.
+
+**The morph uses the same nine dots.** Two stay as eyes and grow slightly, three become a mouth, four fade and shrink. Nothing is swapped out, so it reads as one thing changing rather than one thing replacing another. 260ms on the settle curve.
+
+**The mouth moves because something is being said.** A speech envelope drives the centre dot's vertical offset. In this build the envelope is simulated, because asking for a microphone in a demo is the wrong trade; in a real product it is amplitude. It is deliberately not a loop: the value re-targets at irregular intervals and eases toward it, so it never finds a rhythm.
+
+The placeholder reads "Listening" and the hint becomes "listening · tap the mic to stop". Reduced motion holds the face still.
