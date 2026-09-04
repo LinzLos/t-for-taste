@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
-import { CAPABILITIES, SCRIPT, match, type Capability } from './capabilities'
+import { CAPABILITIES, SCRIPT, asYours, match, type Capability } from './capabilities'
 import './composer.css'
 
 const MAX_LINES = 5
@@ -14,6 +14,8 @@ export default function LiveSession() {
   const { reduced } = useReducedMotion()
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
+  // Phrases the user has committed. They come back as suggestions, marked as theirs, never as capability.
+  const [learned, setLearned] = useState<Capability[]>([])
   const [focused, setFocused] = useState(false)
   const [helpFor, setHelpFor] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -24,7 +26,7 @@ export default function LiveSession() {
   const [params] = useSearchParams()
 
   const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
-  const chips = useMemo(() => match(query).filter(c => !taken.has(c.id)), [query, taken])
+  const chips = useMemo(() => match(query, learned).filter(c => !taken.has(c.id)), [query, taken, learned])
   const empty = focused && chips.length === 0
 
   // The help arrives after the emptiness has registered, never with it — and never while
@@ -51,6 +53,14 @@ export default function LiveSession() {
     setQuery('')
     field.current?.focus()
   }, [])
+
+  // Enter on something nothing can do commits it anyway, as yours.
+  const askAnyway = useCallback(() => {
+    const label = query.trim(); if (!label) return
+    const c = asYours(label)
+    setLearned(l => (l.some(x => x.id === c.id) ? l : [...l, c]))
+    take(c)
+  }, [query, take])
 
   // The travel: measure where the chip stood, put the new token there, and let it move home.
   // Explicit rather than a shared-layout id, so the chip's exit and the token's arrival never fight.
@@ -140,7 +150,7 @@ export default function LiveSession() {
                   key={t.id}
                   data-token={t.id}
                   layout={!reduced}
-                  className="token"
+                  className={`token token--${t.kind}`}
                   transition={spring}
                   exit={{ opacity: 0, scale: 0.92 }}
                 >
@@ -156,7 +166,10 @@ export default function LiveSession() {
               placeholder={tokens.length ? 'and then…' : 'Describe what you want to build'}
               onFocus={() => setFocused(true)}
               onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1)) }}
+              onKeyDown={e => {
+                if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
+                if (e.key === 'Enter' && query.trim() && chips.length === 0) { e.preventDefault(); askAnyway() }
+              }}
             />
           </div>
           <button type="button" className="send" aria-label="send" />
@@ -191,7 +204,8 @@ export default function LiveSession() {
             transition={{ duration: 0.22, ease: [0.33, 1, 0.68, 1] }}
           >
             <span>Nothing connected can do that yet</span>
-            <button type="button" className="chip chip--offer">Connect something</button>
+            <button type="button" className="chip chip--offer"
+              onMouseDown={e => e.preventDefault()} onClick={askAnyway}>Ask for it anyway</button>
           </motion.div>
         )}
       </div>

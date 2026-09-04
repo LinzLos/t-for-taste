@@ -1,5 +1,7 @@
 // The chips are drawn from what is actually connected, so what is not offered is information.
-export interface Capability { id: string; label: string; kind: 'when' | 'then' | 'only' }
+// 'yours' is a phrase the user typed that nothing connected can do. It is a request, not a
+// capability, and it never pretends otherwise.
+export interface Capability { id: string; label: string; kind: 'when' | 'then' | 'only' | 'yours' }
 
 export const CAPABILITIES: Capability[] = [
   { id: 'page-saved', label: 'When a page is saved', kind: 'when' },
@@ -14,10 +16,11 @@ export const CAPABILITIES: Capability[] = [
 ]
 
 // Substring, not fuzzy. Fuzzy is unpredictable on camera.
-export const match = (q: string) => {
+export const match = (q: string, extra: Capability[] = []) => {
+  const all = [...CAPABILITIES, ...extra]
   const t = q.trim().toLowerCase()
-  if (!t) return CAPABILITIES
-  return CAPABILITIES.filter(c => c.label.toLowerCase().includes(t))
+  if (!t) return all
+  return all.filter(c => c.label.toLowerCase().includes(t))
 }
 
 // The scripted run, for recording and for the transport's play button.
@@ -27,3 +30,9 @@ export const SCRIPT = [
   { type: 'summ', pick: 'summarize' },
   { type: 'curate it to my taste', pick: null },
 ] as const
+
+export const asYours = (label: string): Capability => ({
+  id: 'yours-' + label.toLowerCase().replace(/\W+/g, '-'),
+  label,
+  kind: 'yours',
+})
