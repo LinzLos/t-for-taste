@@ -150,3 +150,20 @@ Typing a person's name bundles two unknowns — who, and how to reach them. The 
 The principle is that a name it cannot resolve should look exactly as unfinished as a capability it does not have, instead of confidently inventing an address.
 
 **Its own episode, not a footnote in this one.** T/01 already gestures at it: the node subtitle reads "Slack · #growers", which is the same abstract-to-specific move.
+
+## 11 · What the kinds actually mean
+
+The chip kinds were decoration until they carried rules. Now the row answers "what can apply right now", which is the same principle as connection: **what is missing from the row is information.**
+
+| Kind | Rule |
+|---|---|
+| `when` | a workflow has one trigger, so once you have one, no more are offered |
+| `then` | many, in order |
+| `only` | a condition needs something to guard, so it is not offered until a step is in front of it, and never straight after another condition |
+| `yours` | always available; it is a request, not a claim |
+
+**A condition is not a peer.** In the field it rides the token in front of it: smaller, muted, outlined, tucked against it rather than sitting in the row as an equal. Same reason it lands on the wire instead of becoming a box.
+
+**Removing.** Click any token to remove it. Removing a step takes its trailing conditions with it, because a condition with nothing to guard is not something to leave lying around. Backspace on an empty field still removes the last one.
+
+Checked without a browser: `npm run check:rules`.

@@ -9,7 +9,8 @@
     "prebuild": "npm run manifest",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "check:rules": "tsx scripts/check-rules.ts"
   },
   "dependencies": {
     "@fontsource/courier-prime": "^5.3.0",
