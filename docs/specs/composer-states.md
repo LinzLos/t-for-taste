@@ -124,7 +124,7 @@ Enter was making newlines, which meant there was no way to commit anything.
 | `Enter` with nothing typed | builds what you have |
 | `Shift` + `Enter` | a new line |
 
-So Enter always means "commit the thing in front of me", which is one rule rather than three. A mono hint under the field names the current meaning as it changes, which also teaches the interaction to a viewer who cannot see the keyboard. The send arrow is the same submit, and it is dim until there is something to build.
+So Enter always means "commit the thing in front of me", which is one rule rather than three. **No keyboard hint on the surface** (Lindsay, 2026-09-03): instructions on a demo read as a manual, and the interaction has to hold up without being narrated. The behaviour stays; the caption can carry it. The send arrow is the same submit, and it is dim until there is something to build.
 
 On build, a mono line states what was made, and flags in orange if any step is a request rather than a capability.
 
@@ -137,3 +137,8 @@ The mic sits beside send: two ways in, one row. Pressing it turns the grid into 
 **The mouth moves because something is being said.** A speech envelope drives the centre dot's vertical offset. In this build the envelope is simulated, because asking for a microphone in a demo is the wrong trade; in a real product it is amplitude. It is deliberately not a loop: the value re-targets at irregular intervals and eases toward it, so it never finds a rhythm.
 
 The placeholder reads "Listening" and the hint becomes "listening · tap the mic to stop". Reduced motion holds the face still.
+
+
+## Components
+
+The built pieces are mirrored in Figma as variant sets with their reasoning in the descriptions: **Composer components · as built** (Grip rest/typing/listening, Chip by kind plus hover, Token capability/yours, Field rest/typing).
