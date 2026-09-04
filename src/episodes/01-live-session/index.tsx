@@ -175,6 +175,7 @@ export default function LiveSession() {
 
       <div className={`composer${focused ? ' composer--on' : ''}${open ? ' composer--open' : ''}`}>
         {/* grip for something you drag; a face would be for something you talk to */}
+        <div className="handle">
         <button
           type="button"
           className={`grip${voice ? ' grip--face' : ''}`}
@@ -187,6 +188,15 @@ export default function LiveSession() {
             <i key={i} data-dot={i} />
           ))}
         </button>
+
+        {built && (
+          <motion.p className="built" initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.24, ease: [0.33, 1, 0.68, 1] }}>
+            {built.map(b => b.label).join(' → ')}
+            {built.some(b => b.kind === 'yours') && <span className="built-warn"> · one step is not connected yet</span>}
+          </motion.p>
+        )}
+        </div>
 
         {open && <>
         <div className={`field${focused ? ' field--on' : ''}`}>
@@ -269,12 +279,6 @@ export default function LiveSession() {
 
         </>}
 
-        {built && (
-          <motion.p className="built" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            Built: {built.map(b => b.label).join(' → ')}
-            {built.some(b => b.kind === 'yours') && <span className="built-warn"> · one step is not connected yet</span>}
-          </motion.p>
-        )}
       </div>
     </div>
   )
