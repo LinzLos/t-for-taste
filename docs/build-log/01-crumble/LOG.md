@@ -385,3 +385,11 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **The taste position:** be conventional in the bones (grid, ports, zoom, icons) and distinctive in the skin (her palette, Fredoka, radius-as-state, the pulse and the receiver knock). Copying n8n exactly would be believable and forgettable; the point of the series is fundamentals right, then a call that is hers.
 
 **Next:** Lindsay collects reference screens of real builders into Figma; we pattern from those rather than from memory.
+
+## 2026-09-05 · voice, real — and the layout from her four screens
+
+**Lindsay:** four new Figma screens (186:5323, 186:6373, 186:6398, 201:6571) — select a project first, then the composer sits in the middle of a dot-grid canvas with the mic inside the field, and the gripper is a floating widget top right. Her call: *build the voice real with the animation, then build off that.* Her gripper redesign (119×64: rigid 3×3 grid + status dot above, a slot that becomes a smile below) replaces the nine-dots-become-a-face morph. Her question — how does real mic input work, is it complicated, does the user have to agree — answered in spec §15.
+
+**Agent:** `use-mic.ts` (Web Audio, three bands, gesture-safe context, releases on stop, denied as a state); `Gripper.tsx` (one SVG, hand-tweened quadratic mouth, bottom-anchored meter written to the DOM); the re-layout (project picker with search, bindings in the bar, centred composer, dot grid, mic glyph, send arrow removed per her screens); composer entrance as CSS so it honours reduced motion and survives the screenshot harness. Caught and fixed from the pane: buttons don't inherit font-size (the picker rendered tiny); `.session button` outranked `.pick` so the picker wasn't mono; `motion.path` wrote `d="undefined"` for a frame. Verified: denied path in the Browser pane (mic blocked → salmon dot, flat mouth, `voice` false); rest / picker / typing captured headless.
+
+**Her eyes still needed:** the mic with a real permission grant (no automated browser here can grant it), whether the three-column meter reads at 22px, and the smile timing.

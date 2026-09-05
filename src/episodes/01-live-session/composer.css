@@ -3,91 +3,85 @@
 .session {
   --canvas: #241f27; --panel: #220633; --field: #352c3c;
   --line: #3f3547; --line-strong: #4f4459;
-  --ink: #eaefd3; --muted: #98978f; --live: #1b998b; --active: #ff6a1f;
+  --ink: #eaefd3; --muted: #98978f; --live: #1b998b; --active: #ff6a1f; --hot: #ff9b71;
   --sans: "Fredoka", "Nunito", system-ui, sans-serif;
   --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
-  position: absolute; inset: 0; background: var(--canvas); color: var(--ink);
+  position: absolute; inset: 0; color: var(--ink);
   font-family: var(--sans); overflow: hidden; user-select: none;
+  /* the canvas is a dot grid: a place things will land, not an empty room */
+  background: var(--canvas) radial-gradient(var(--line) 1px, transparent 1.3px) 8px 8px / 16px 16px;
 }
-.session button { font-family: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.session button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; } /* buttons do not inherit font-size on their own */
 
-/* top bar — texture, not content */
-.bar { display: flex; align-items: center; gap: 24px; padding: 24px 32px; border-bottom: 2px solid var(--line); }
-.nav { width: 60px; height: 60px; border: 2px solid var(--muted); border-radius: 12px; display: grid; place-items: center; }
-.nav i { width: 22px; height: 22px; border: 2.5px solid var(--live); border-radius: 50% 8px 50% 8px; }
-.project { flex: 1; font-size: 26px; }
-.agent { font-size: 26px; font-weight: 600; color: var(--live); }
+/* top bar: where you are, in the system's voice */
+.bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; height: 94px; padding: 0 32px;
+  background: var(--canvas); border-bottom: 2px solid var(--line); }
+.agent { margin-left: auto; font-size: 26px; font-weight: 600; color: var(--live); }
+.folder { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
+.session .pick, .tag, .session .change { font-family: var(--mono); font-size: 22px; line-height: 1; }
+.pick { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 2px solid var(--line-strong); color: var(--muted); transition: border-color 140ms ease-out, color 140ms ease-out; }
+.pick:hover, .pick[aria-expanded='true'] { border-color: var(--muted); color: var(--ink); }
+.change { padding: 8px 6px 8px 0; color: var(--muted); }
+.change:hover, .change[aria-expanded='true'] { color: var(--ink); }
+/* rectangles, on purpose: these are the session's bindings, not choices */
+.tag { padding: 9px 12px; border: 2px solid var(--line-strong); color: var(--muted); }
+.tag--status { border-color: var(--muted); color: var(--ink); }
 
-.composer { padding: 40px 32px; display: flex; flex-direction: column; gap: 16px; }
+/* the project menu: search first, because the list is not the point */
+.menu { position: absolute; z-index: 3; left: 32px; top: 94px; width: 350px; display: flex; flex-direction: column;
+  background: var(--field); border: 2px solid var(--line); border-top: 0; font-family: var(--mono); font-size: 22px; }
+.menu-search { padding: 11px 12px; font: inherit; color: var(--ink); background: none; border: 0; border-bottom: 2px solid var(--active); outline: none; }
+.menu-search::placeholder { color: var(--muted); }
+.menu-item { padding: 11px 12px; text-align: left; color: var(--muted); border-bottom: 2px solid var(--line); transition: color 120ms ease-out, background 120ms ease-out; }
+.menu-item:last-child { border-bottom: 0; }
+.menu-item:hover, .menu-item:focus-visible, .menu-item--on { color: var(--ink); background: var(--panel); outline: none; }
 
-/* the handle: a grip is for something you drag */
-.handle { display: flex; align-items: flex-end; gap: 20px; }
-.composer { align-items: stretch; }
-.grip { position: relative; width: 56px; height: 48px; padding: 0; align-self: flex-start;
-  background: var(--field); border: 0; border-bottom: 2px solid var(--line); cursor: pointer; }
-/* nine dots, absolutely placed, so the grid and the face are two positions of one set */
-.grip i[data-dot='0'] { left: 14px; top: 10px } .grip i[data-dot='1'] { left: 25px; top: 10px } .grip i[data-dot='2'] { left: 36px; top: 10px }
-.grip i[data-dot='3'] { left: 14px; top: 21px } .grip i[data-dot='4'] { left: 25px; top: 21px } .grip i[data-dot='5'] { left: 36px; top: 21px }
-.grip i[data-dot='6'] { left: 14px; top: 32px } .grip i[data-dot='7'] { left: 25px; top: 32px } .grip i[data-dot='8'] { left: 36px; top: 32px }
-/* open: the handle and the field are one shape — handle takes the top and sides, field takes the bottom */
-.composer--open .grip { border-bottom: 0; border-top: 2px solid var(--line); border-left: 2px solid var(--line); border-right: 2px solid var(--line); }
-/* ink at rest; orange the moment you are typing into it. One declaration only: a second one at the
-   same specificity silently resets the shorthand and the morph stops being a morph. */
-.grip i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--ink);
-  transition: background 140ms ease-out, opacity 220ms ease-out,
-    left 260ms cubic-bezier(.33,1,.68,1), top 260ms cubic-bezier(.33,1,.68,1); }
-.composer--on .grip i { background: var(--active); }
-.grip:hover i { background: var(--active); }
-/* the grid rearranges into a face for voice: two dots stay as eyes, three become a mouth, four leave.
-   Same nine elements, so it reads as one thing changing rather than a swap. */
-/* the face is compact: the dots pull together rather than staying on the grid */
-.grip--face i { background: var(--active); }
-.grip--face i[data-dot='1'], .grip--face i[data-dot='3'],
-.grip--face i[data-dot='4'], .grip--face i[data-dot='5'] { opacity: 0; left: 25px; top: 21px; }
-.grip--face i[data-dot='0'] { left: 19px; top: 14px } .grip--face i[data-dot='2'] { left: 31px; top: 14px }
-.grip--face i[data-dot='6'] { left: 18px; top: 29px } .grip--face i[data-dot='7'] { left: 25px; top: 32px } .grip--face i[data-dot='8'] { left: 32px; top: 29px }
-html[data-reduced='true'] .grip i { transition: none; }
+/* the gripper: a rigid grid and one soft mouth. Docked under the bar, top right, always there. */
+.gripper { position: absolute; z-index: 2; right: 30px; top: 94px; overflow: visible; }
+.gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
+.gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 120ms linear; }
+.gripper--typing .gripper-dot, .gripper--typing .gripper-status,
+.gripper--listening .gripper-dot, .gripper--listening .gripper-status { fill: var(--active); }
+.gripper--denied .gripper-status { fill: var(--hot); }
+.gripper-mouth { fill: none; stroke: var(--canvas); stroke-width: 12; stroke-linecap: round; }
 
-/* the field */
-.field { display: flex; align-items: flex-start; gap: 16px; background: var(--field);
-  border: 0; border-bottom: 2px solid var(--line); padding: 16px 18px; transition: border-color 120ms ease-out; }
+/* the composer sits in the middle of the canvas, like a thing you address */
+.composer { position: absolute; left: 50%; top: 235px; width: 880px; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 25px;
+  animation: rise 260ms cubic-bezier(.33,1,.68,1) both; }
+@keyframes rise { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
+html[data-reduced='true'] .composer { animation: none; }
+.built { width: 740px; margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
+.built-warn { color: var(--active); }
+
+/* the field: no box, a fill and a bottom edge, and only that edge goes active */
+.field { width: 740px; box-sizing: border-box; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
+  border: 0; border-bottom: 2px solid var(--line); padding: 14px 18px; transition: border-color 120ms ease-out; }
 .field--on { border-bottom-color: var(--active); }
 .field-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
-/* a request, not a capability: outlined, so a built workflow shows which of its steps are real */
-/* a condition is not a step: it rides the token in front of it rather than standing as a peer */
-.token:hover { box-shadow: inset 0 0 0 2px var(--ink); }
-.token--only { background: none; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line-strong);
-  font-size: 19px; padding: 6px 12px; margin-left: -4px; }
-.token--yours { background: none; color: var(--active); box-shadow: inset 0 0 0 2px var(--active); }
-/* already in the workflow: still in the row, so absence keeps one meaning */
-.chip--taken { opacity: .38; }
-.chip--top { border-color: var(--ink); background: var(--field); }
-.token { cursor: pointer; font-size: 24px; line-height: 1; padding: 9px 14px; border-radius: 999px; background: var(--active); color: var(--canvas); white-space: nowrap; }
 .input { flex: 1 1 12ch; min-width: 12ch; font: 26px/34px var(--sans); color: var(--ink); background: none; border: 0; outline: none; resize: none; overflow-y: auto; padding: 0;
   /* growth is never eased: the box follows the text */ transition: none; }
 .input::placeholder { color: var(--muted); }
-.mic { width: 34px; height: 34px; margin-top: 4px; border: 2px solid var(--muted); border-radius: 999px; display: grid; place-items: center; transition: border-color 140ms ease-out; }
-.mic i { width: 10px; height: 16px; border-radius: 999px; background: var(--muted); transition: background 140ms ease-out; }
-.mic--on { border-color: var(--active); }
-.mic--on i { background: var(--active); }
-.send { width: 0; height: 0; margin-top: 6px; border-left: 30px solid var(--muted); border-top: 15px solid transparent; border-bottom: 15px solid transparent;
-  transition: border-left-color 140ms ease-out; }
-.send:disabled { opacity: .35; cursor: default; }
-.send:not(:disabled) { border-left-color: var(--active); }
+.token { cursor: pointer; font-size: 24px; line-height: 1; padding: 9px 14px; border-radius: 999px; background: var(--active); color: var(--canvas); white-space: nowrap; }
+.token:hover { box-shadow: inset 0 0 0 2px var(--ink); }
+/* a condition is not a step: it rides the token in front of it rather than standing as a peer */
+.token--only { background: none; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line-strong);
+  font-size: 19px; padding: 6px 12px; margin-left: -4px; }
+/* a request, not a capability: outlined, so a built workflow shows which of its steps are real */
+.token--yours { background: none; color: var(--active); box-shadow: inset 0 0 0 2px var(--active); }
+.mic { width: 34px; height: 34px; margin-top: 2px; padding: 0; display: grid; place-items: center; color: var(--muted); transition: color 140ms ease-out; }
+.mic svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.mic:hover { color: var(--ink); }
+.mic--on { color: var(--active); }
+.mic--denied { color: var(--hot); }
 
-/* the chips */
-/* the result sits beside the grip, on the same line as the thing that made it — not stranded below */
-.built { margin: 0 0 12px; font-family: var(--mono); font-size: 18px; color: var(--live); }
-.built-warn { color: var(--active); }
-.chips { display: flex; flex-wrap: wrap; gap: 10px; min-height: 52px; align-content: flex-start; }
-.chip { font-size: 20px; line-height: 1; padding: 12px 16px; border: 2px solid var(--line-strong); border-radius: 999px; color: var(--ink); white-space: nowrap; transition: background 140ms ease-out, border-color 140ms ease-out; }
-.chip:hover { background: var(--field); border-color: var(--muted); }
-/* Kind is carried by the words and by position, not by colour. "When a page is saved" already
-   says it is a trigger; "Only if it mentions pricing" already says it is a condition, and a dashed
-   border only made it read as disabled. A condition proves itself structurally instead: it rides
-   its step in the field and sits on the wire on the canvas.
-   Colour is left to mean STATE — available, taken, the top match, yours — one meaning each. */
+/* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; min-height: 52px; align-content: flex-start; }
+.chip { font-size: 20px; line-height: 1; padding: 12px 16px; border: 2px solid transparent; border-radius: 999px; color: var(--ink); white-space: nowrap; transition: background 140ms ease-out, border-color 140ms ease-out; }
+.chip:hover { background: var(--field); }
+.chip--taken { opacity: .38; }
+.chip--top { border-color: var(--ink); background: var(--field); }
 .chip--offer { border-color: var(--active); color: var(--active); }
-.chip--yours { border-color: var(--active); color: var(--active); }
+.chip--yours { color: var(--active); }
 .empty { display: flex; align-items: center; gap: 16px; }
 .empty span { font-family: var(--mono); font-size: 20px; color: var(--muted); }

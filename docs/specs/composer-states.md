@@ -235,3 +235,40 @@ Kind does not need a tip — the words carry it. The one thing a chip genuinely 
 **Where binding is ambiguous, put it in the label, not a tip.** If two Slack workspaces are connected, the chip reads "Post to Slack · #growers". If that makes labels unwieldy, the unwieldiness is real information about how many near-identical capabilities you have.
 
 Same reason the keyboard hint came off: nothing on this surface explains itself in prose.
+
+---
+
+## 15 · Voice, real (2026-09-05)
+
+Lindsay's call: build the voice real, with the animation, and grow from there. So the face is driven by the microphone and nothing else.
+
+**Pipeline.** `getUserMedia({ audio })` → `AudioContext` → `AnalyserNode` (fftSize 256, smoothing 0.75) → one `requestAnimationFrame` loop reading `getByteFrequencyData` → three band averages (≈0–375 Hz · 375–2 kHz · 2–6 kHz), floored at 0.12 and gained 1.6, clamped to 0–1. Levels are read and thrown away sixty times a second. Nothing is recorded, uploaded or transcribed. `src/episodes/01-live-session/use-mic.ts`, ~50 lines, no library.
+
+**Consent is the browser's and it is not optional.** The context is created inside the click (iOS will not start audio otherwise), the permission prompt is the browser's own, and the browser shows its mic indicator the whole time. Toggling voice off releases the tracks and closes the context in the same tick, so that indicator disappears with it. Leaving the mic open after the face has gone would be a trust failure.
+
+**Denied is a state, not an error.** If the user refuses, or the page is in a browser that blocks capture (in-app browsers, LinkedIn's included), `voice` goes back to false, the face never appears, and both the mic button and the gripper's status dot go salmon — trouble, in the colour rule. No prose. Verified in the Browser pane, which blocks the mic: the gripper reports "microphone not allowed" and the mouth stays flat.
+
+**It resolves the FLOWIE finding.** A face on a timer performed while you were silent. A face on the microphone cannot perform: it has nothing to perform with.
+
+## 16 · The gripper (her 119×64 redesign)
+
+One inline SVG, `viewBox 0 0 119 64`, so it is the same drawing at any rendered size. Two plates: the top carries the 3×3 grid (6px dots on an 8px pitch) and a single status dot at the far right; the bottom carries the mouth.
+
+- **The grid is rigid; the mouth is soft.** That contrast is the "organic yet roboty". Dots stay on an integer grid with 140ms colour changes and no easing wobble. All the organic quality goes to the mouth.
+- **The mouth is one quadratic.** Flat `M 14 50 Q 59.5 50 105 50` (a 12px round-capped stroke in the canvas colour, which reads as the slot) → smile `M 20 45 Q 59.5 67 99 45`. Tweened by hand over 260ms on the settle curve and written straight to the `d` attribute. (A `motion.path` with an animated `d` reads its start from the DOM and can land on `"undefined"` for a frame — the console said so.) Reduced motion: it snaps.
+- **The meter, while listening.** Bottom row always lit, so it is still a grip. Middle and top rows brighten per column with the three bands; at silence they sit at 0.22, dimmed but present. Levels write to the DOM directly — sixty updates a second is not a React render.
+- **Colour is state.** Ink at rest, orange while typing or listening (you are doing something), status dot salmon when the mic is refused.
+- **It is a widget now, not a handle.** Docked under the bar, top right, always there. It no longer gates the session; the composer is on the canvas once a project is chosen.
+
+Open, for her eyes: whether three columns at 22px read as a meter or a flicker. The bottom-row anchor is the bet.
+
+**Preview flag:** `#/01?face` holds the listening face without a microphone, for tuning and for recording. The mouth is a `MotionValue` driven by `animate(value, to)` — never `animate(string, …)`, which treats the string as a CSS selector and throws.
+
+## 17 · The layout, from her four screens (2026-09-05)
+
+1. **Rest.** Bar with `select project` (mono, outlined, folder glyph) and `friendly agent composer` (Fredoka, teal). Empty dot-grid canvas — a place things will land, not an empty room. Gripper top right.
+2. **Picking.** A 350px menu under the bar: search first (orange underline), then projects in mono. Enter takes the first match; Escape closes; clicking anywhere else closes.
+3. **Project chosen.** The bar becomes bindings: folder glyph, `main`, `tuliptech-docs`, and a status tag that reads `drafting` until a build, then `standing by`. The composer rises onto the canvas (260ms CSS, none under reduced motion): a 740px field, `Describe your workflow`, mic glyph inside it at the right, chips centred beneath in an 880px row.
+4. **Typing.** The field's bottom edge and the gripper's dots go orange together.
+
+The send arrow is gone; her screens have only the mic, and Enter with nothing typed builds. The built line sits above the field.
