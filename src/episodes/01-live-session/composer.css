@@ -39,7 +39,7 @@
 /* the gripper: a rigid grid and one soft mouth. Docked under the bar, top right, always there. */
 .gripper { position: absolute; z-index: 2; right: 30px; top: 94px; overflow: visible; }
 .gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
-.gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 120ms linear; }
+.gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 80ms ease-out; } /* on/off is crisp, not fuzzy */
 .gripper--typing .gripper-dot, .gripper--typing .gripper-status,
 .gripper--listening .gripper-dot, .gripper--listening .gripper-status { fill: var(--active); }
 .gripper--denied .gripper-status { fill: var(--hot); }

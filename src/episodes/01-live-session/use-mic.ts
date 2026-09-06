@@ -2,11 +2,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Real sound, nothing else. The analyser sits on the mic stream and hands back levels sixty
 // times a second; nothing is recorded, uploaded or transcribed.
-// Nine bands for the nine columns of the meter, spaced roughly log so speech spreads across them.
-// Bins at 48k / fftSize 256 are ~187Hz wide; the last band runs to ~6k.
-const BANDS: [number, number][] = [[0, 1], [1, 2], [2, 3], [3, 5], [5, 7], [7, 10], [10, 14], [14, 20], [20, 33]]
-const FLOOR = 0.12 // room noise sits under this and the grip stays still
-const GAIN = 1.6
+// Nine bands for the nine columns, log-spaced from ~80Hz to ~6k so speech spreads across them
+// instead of piling into the low end. Bins at 48k / fftSize 1024 are ~47Hz wide.
+const BANDS: [number, number][] = [[2, 3], [3, 5], [5, 7], [7, 12], [12, 19], [19, 31], [31, 49], [49, 79], [79, 128]]
+const FLOOR = 0.10 // room noise sits under this and the meter stays still
+const GAIN = 1.8
+const TILT = 0.15 // voice rolls off with frequency; lift the high columns so they get a say
+// Meter ballistics, the thing that makes it read as motion rather than static: a bar rises
+// almost at once and falls slowly. Time constants, so it is the same at any frame rate.
+const ATTACK = 25, RELEASE = 180
 
 export function useMic(onLevels: (levels: number[]) => void) {
   const [denied, setDenied] = useState(false)
@@ -37,15 +41,25 @@ export function useMic(onLevels: (levels: number[]) => void) {
     if (ctx.current !== ac) { ms.getTracks().forEach(t => t.stop()); return false } // stopped while we waited
     setDenied(false)
     stream.current = ms
-    const an = ac.createAnalyser(); an.fftSize = 256; an.smoothingTimeConstant = 0.75
+    const an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.5
     ac.createMediaStreamSource(ms).connect(an)
     const data = new Uint8Array(an.frequencyBinCount)
-    const tick = () => {
+    const cur = new Array(BANDS.length).fill(0)
+    let last = performance.now()
+    const tick = (now: number) => {
+      const dt = Math.min(50, now - last); last = now
       an.getByteFrequencyData(data)
-      cb.current(BANDS.map(([a, b]) => {
+      const raw = BANDS.map(([a, b], c) => {
         let s = 0; for (let i = a; i < b; i++) s += data[i]
-        return Math.max(0, Math.min(1, (s / (b - a) / 255 - FLOOR) * GAIN))
-      }))
+        return Math.max(0, Math.min(1, (s / (b - a) / 255 - FLOOR) * GAIN * (1 + c * TILT)))
+      })
+      // neighbours lean on each other a little, so adjacent columns move as a wave, not as noise
+      const out = raw.map((v, c) => 0.2 * (raw[c - 1] ?? v) + 0.6 * v + 0.2 * (raw[c + 1] ?? v))
+      for (let c = 0; c < cur.length; c++) {
+        const k = 1 - Math.exp(-dt / (out[c] > cur[c] ? ATTACK : RELEASE))
+        cur[c] += (out[c] - cur[c]) * k
+      }
+      cb.current(cur.slice())
       raf.current = requestAnimationFrame(tick)
     }
     raf.current = requestAnimationFrame(tick)

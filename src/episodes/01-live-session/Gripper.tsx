@@ -15,7 +15,7 @@ const METER_X = (c: number) => 11 + c * 12 // the 9×3 while listening: 12px pit
 const restX = (c: number) => GRIP_X[Math.min(c, 2)] // extra columns wait, hidden, on the third
 const FLAT = 'M 14 50 Q 59.5 50 105 50'
 const SMILE = 'M 20 45 Q 59.5 67 99 45'
-const QUIET = 0.22 // upper rows while listening to silence: dimmed, never gone, still a meter
+const PEAK_HOLD = 450, PEAK_FALL = 120 // ms: how long a peak sits, then how fast it falls per row
 const EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
 
 export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: boolean }>(
@@ -25,23 +25,34 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
     const status = useRef<SVGCircleElement>(null)
     const mouth = useRef<SVGPathElement>(null)
     const listening = mode === 'listening'
+    const spread = useMotionValue(0) // 0 = the 3×3 grip, 1 = the 9×3 meter
 
     // Levels write straight to the DOM: sixty updates a second is not a React render.
-    // Bottom row is always lit, so it is a meter rising out of a grip, not dots blinking.
+    // Every dot is on or off — no faded dots, which is what made the first pass read as static.
+    // A column is a bar of one to three, bottom always lit so it is still a grip, plus a peak
+    // that holds for a beat and then falls a row at a time: the LED-meter idiom.
+    const peak = useRef(Array.from({ length: COLS }, () => ({ row: 1, t: 0 })))
     useImperativeHandle(ref, () => ({
       setLevels(levels) {
+        if (spread.get() < 1) return // not until the meter has unrolled
+        const now = performance.now()
         for (let c = 0; c < COLS; c++) {
           const l = levels[c] ?? 0
-          const top = dots.current[c], mid = dots.current[COLS + c]
-          if (mid) mid.style.opacity = String(QUIET + (1 - QUIET) * Math.min(1, l * 1.6))
-          if (top) top.style.opacity = String(QUIET + (1 - QUIET) * Math.max(0, Math.min(1, l * 1.6 - 0.6)))
+          const bar = l < 0.12 ? 1 : l < 0.5 ? 2 : 3
+          const pk = peak.current[c]
+          if (bar >= pk.row) { pk.row = bar; pk.t = now }
+          else if (now - pk.t > PEAK_HOLD) { pk.row = Math.max(bar, pk.row - 1); pk.t = now - (PEAK_HOLD - PEAK_FALL) }
+          for (let r = 0; r < 3; r++) {
+            const fromBottom = 3 - r
+            const d = dots.current[r * COLS + c]; if (!d) continue
+            d.style.opacity = fromBottom <= bar || fromBottom === pk.row ? '1' : '0'
+          }
         }
       },
-    }), [])
+    }), [spread])
 
     // The unroll: one progress value drives every column's x and the new columns' arrival, so the
     // grid reads as one thing spreading rather than dots appearing. Columns lag by a few percent each.
-    const spread = useMotionValue(0)
     useEffect(() => spread.on('change', p => {
       for (let c = 0; c < COLS; c++) {
         const t = Math.max(0, Math.min(1, p * 1.25 - c * 0.04))
@@ -51,7 +62,8 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
         for (let r = 0; r < 3; r++) {
           const d = dots.current[r * COLS + c]; if (!d) continue
           d.setAttribute('cx', x.toFixed(2))
-          if (c >= 3) d.style.opacity = String(arrive * (r === 2 || p < 1 ? 1 : QUIET))
+          // grid → line → meter: the grip's upper rows go out as it spreads, new columns arrive bottom-only
+          d.style.opacity = r === 2 ? String(c < 3 ? 1 : arrive) : String(c < 3 ? 1 - p : 0)
         }
       }
       if (status.current) status.current.style.opacity = String(1 - p) // the meter is the status now
@@ -62,12 +74,6 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
       const ctrl = animate(spread, to, { duration: 0.32, ease: EASE })
       return () => ctrl.stop()
     }, [listening, reduced, spread])
-
-    // Once unrolled, the upper rows settle to the quiet floor until sound lifts them.
-    useEffect(() => {
-      const quiet = listening ? String(QUIET) : ''
-      for (let c = 0; c < 3; c++) for (let r = 0; r < 2; r++) { const d = dots.current[r * COLS + c]; if (d) d.style.opacity = quiet }
-    }, [listening])
 
     // The mouth is a MotionValue tweened by hand and written straight to the attribute.
     // Not motion.path (it reads its start from the DOM and lands on "undefined" for a frame), and
