@@ -393,3 +393,9 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Agent:** `use-mic.ts` (Web Audio, three bands, gesture-safe context, releases on stop, denied as a state); `Gripper.tsx` (one SVG, hand-tweened quadratic mouth, bottom-anchored meter written to the DOM); the re-layout (project picker with search, bindings in the bar, centred composer, dot grid, mic glyph, send arrow removed per her screens); composer entrance as CSS so it honours reduced motion and survives the screenshot harness. Caught and fixed from the pane: buttons don't inherit font-size (the picker rendered tiny); `.session button` outranked `.pick` so the picker wasn't mono; `motion.path` wrote `d="undefined"` for a frame. Verified: denied path in the Browser pane (mic blocked → salmon dot, flat mouth, `voice` false); rest / picker / typing captured headless.
 
 **Her eyes still needed:** the mic with a real permission grant (no automated browser here can grant it), whether the three-column meter reads at 22px, and the smile timing.
+
+## 2026-09-06 · the unroll
+
+**Lindsay:** voice-active gripper frame (212:6988): the grid becomes 9 columns × 3 rows across the whole plate, so the meter is real and recognisable. Asked whether spoken words should appear in the field.
+
+**Agent:** the unroll — one progress MotionValue drives every column's x and the new columns' arrival (320ms, staggered), status dot fades as the meter takes over, rolls back on stop; nine log-spaced bands in `use-mic.ts`. Transcription: recommended against for this slice (Chrome ships audio to Google; absent in Firefox and in-app browsers); the field's "Listening" state does the telling. Captured typing / listening (tweened and reduced) headless; all three match her frames.

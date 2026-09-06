@@ -256,11 +256,12 @@ One inline SVG, `viewBox 0 0 119 64`, so it is the same drawing at any rendered 
 
 - **The grid is rigid; the mouth is soft.** That contrast is the "organic yet roboty". Dots stay on an integer grid with 140ms colour changes and no easing wobble. All the organic quality goes to the mouth.
 - **The mouth is one quadratic.** Flat `M 14 50 Q 59.5 50 105 50` (a 12px round-capped stroke in the canvas colour, which reads as the slot) → smile `M 20 45 Q 59.5 67 99 45`. Tweened by hand over 260ms on the settle curve and written straight to the `d` attribute. (A `motion.path` with an animated `d` reads its start from the DOM and can land on `"undefined"` for a frame — the console said so.) Reduced motion: it snaps.
-- **The meter, while listening.** Bottom row always lit, so it is still a grip. Middle and top rows brighten per column with the three bands; at silence they sit at 0.22, dimmed but present. Levels write to the DOM directly — sixty updates a second is not a React render.
+- **The unroll (her frame 212:6988, 2026-09-06).** On voice the 3×3 spreads sideways into a **9×3 meter across the whole plate**: the three grip columns move from an 8px pitch to a 12px one, and six new columns emerge from the third and slide into place, each a few percent behind the last, 320ms on the settle curve. One progress value drives every column's x and arrival, so it reads as one thing unrolling rather than dots appearing. The status dot fades out as it goes — the meter is the status now. It rolls back the same way when voice stops.
+- **The meter, while listening.** Nine frequency bands, spaced roughly log so speech spreads across them. Bottom row always lit, so it is still a grip. Middle and top rows brighten per column with level; at silence they sit at 0.22, dimmed but present. Levels write to the DOM directly — sixty updates a second is not a React render.
 - **Colour is state.** Ink at rest, orange while typing or listening (you are doing something), status dot salmon when the mic is refused.
 - **It is a widget now, not a handle.** Docked under the bar, top right, always there. It no longer gates the session; the composer is on the canvas once a project is chosen.
 
-Open, for her eyes: whether three columns at 22px read as a meter or a flicker. The bottom-row anchor is the bet.
+Open, for her eyes: the unroll timing, and whether nine columns respond legibly to speech. The bottom-row anchor is the bet.
 
 **Preview flag:** `#/01?face` holds the listening face without a microphone, for tuning and for recording. The mouth is a `MotionValue` driven by `animate(value, to)` — never `animate(string, …)`, which treats the string as a CSS selector and throws.
 
@@ -272,3 +273,5 @@ Open, for her eyes: whether three columns at 22px read as a meter or a flicker. 
 4. **Typing.** The field's bottom edge and the gripper's dots go orange together.
 
 The send arrow is gone; her screens have only the mic, and Enter with nothing typed builds. The built line sits above the field.
+
+**On transcription (2026-09-06).** Lindsay asked whether words should appear in the field as she talks. Decision: not in this slice. The browser speech API is small, but in Chrome it sends audio to Google, which breaks the nothing-leaves-this-device claim; it does not exist in Firefox or in-app browsers. Words for some viewers with a privacy asterisk is a second feature with its own decisions. Instead the field states it: placeholder "Listening", orange edge, the meter alive. The caption carries the rest.

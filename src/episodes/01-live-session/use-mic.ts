@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 // Real sound, nothing else. The analyser sits on the mic stream and hands back levels sixty
-// times a second; nothing is recorded, uploaded or transcribed. Three bands, so the three
-// columns of the grip can read as a meter rather than a flicker.
-// Bins at 48k / fftSize 256 are ~187Hz wide: low 0–375 · mid 375–2k · high 2k–6k.
-const BANDS: [number, number][] = [[0, 2], [2, 11], [11, 33]]
+// times a second; nothing is recorded, uploaded or transcribed.
+// Nine bands for the nine columns of the meter, spaced roughly log so speech spreads across them.
+// Bins at 48k / fftSize 256 are ~187Hz wide; the last band runs to ~6k.
+const BANDS: [number, number][] = [[0, 1], [1, 2], [2, 3], [3, 5], [5, 7], [7, 10], [10, 14], [14, 20], [20, 33]]
 const FLOOR = 0.12 // room noise sits under this and the grip stays still
 const GAIN = 1.6
 
@@ -22,7 +22,7 @@ export function useMic(onLevels: (levels: number[]) => void) {
     cancelAnimationFrame(raf.current); raf.current = 0
     stream.current?.getTracks().forEach(t => t.stop()); stream.current = null
     void ctx.current?.close(); ctx.current = null
-    cb.current([0, 0, 0])
+    cb.current(new Array(BANDS.length).fill(0))
   }, [])
 
   // Call this from the click itself: on iOS the audio context has to be born inside a gesture.
