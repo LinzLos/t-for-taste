@@ -44,6 +44,7 @@ export default function LiveSession() {
   const [playing, setPlaying] = useState(false)
   const field = useRef<HTMLTextAreaElement>(null)
   const grip = useRef<GripperHandle>(null)
+  const gripButton = useRef<HTMLButtonElement>(null)
   const [scope, animate] = useAnimate()
   const from = useRef<DOMRect | null>(null) // where the chip was standing when it was taken
   const cancel = useRef(false)
@@ -63,7 +64,10 @@ export default function LiveSession() {
   }, [mic, listening])
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
-  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null) }, [mic])
+  const close = useCallback(() => {
+    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null)
+    gripButton.current?.focus() // focus goes back to the handle, not off the page
+  }, [mic])
   // The grip is a drawer handle: one press opens the composer already listening (the mic starts inside
   // the same click, which is what iOS needs), the next closes it. Stopping the mic is the mic glyph's job,
   // so no control has two meanings and nobody has to remember where they are in a cycle.
@@ -267,6 +271,9 @@ export default function LiveSession() {
   // While it listens (or has just stopped) the field is a sentence, not a text box: nothing to type into,
   // nothing to read but what is happening. The keyboard is the fallback when the mic cannot be used.
   const voiceMode = phase === 'pending' || phase === 'listening' || phase === 'stopped'
+  // When the mic cannot be used the text box is the fallback: put the keyboard there, do not make them find it.
+  const fallback = phase === 'denied' || phase === 'unsupported' || phase === 'lost' || phase === 'cancelled'
+  useEffect(() => { if (fallback) field.current?.focus() }, [fallback])
   const edge = phase === 'denied' || phase === 'unsupported' || phase === 'lost' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
 
   return (
@@ -304,7 +311,7 @@ export default function LiveSession() {
       )}
 
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
-      <button type="button" className="grip" aria-expanded={open} aria-label={gripLabel}
+      <button type="button" className="grip" ref={gripButton} aria-expanded={open} aria-label={gripLabel}
         onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); press() }}>
         <Gripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported' || phase === 'lost'} />
       </button>
