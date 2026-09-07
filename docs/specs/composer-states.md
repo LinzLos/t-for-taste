@@ -317,4 +317,6 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 
 **▶ play enters through the grip.** On this slice the transport's play opens the composer listening and then waits for you; the typing script belongs to the chips story (`?chips`).
 
+**Position (her frame, 2026-09-06, position only).** The composer sits in the grip's row, docked under the bar: grip at the left, a 20px gap, the field running to the right edge at the grip's height (64px). The two read as one instrument. Under 640px of composer width the field drops beneath the grip, full width.
+
 **Every device.** The episode declares a square frame (`stage: 1080×1080`) and `fluidMin: 0`, so it lays itself out at any width instead of being scaled: under 640px of composer width a container query brings the bar to 64px, the type down with `cqw` clamps, and the grip stays a 119×64 tap target. The record frame is the square.

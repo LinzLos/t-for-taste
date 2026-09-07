@@ -59,17 +59,18 @@
 .gripper--listening .gripper-dot, .gripper--listening .gripper-status { fill: var(--active); }
 .gripper-mouth { fill: none; stroke: var(--canvas); stroke-width: 12; stroke-linecap: round; }
 
-/* the composer sits in the middle of the canvas, like a thing you address */
-.composer { position: absolute; left: 50%; top: calc(var(--bar-h) + 141px); width: min(880px, calc(100% - 2 * var(--pad))); transform: translateX(-50%);
-  display: flex; flex-direction: column; align-items: center; gap: 25px;
+/* the composer sits in the grip's row, docked under the bar, and the field runs the rest of the width
+   (her frame, 2026-09-06, position only): the grip and the field read as one instrument */
+.composer { position: absolute; top: var(--bar-h); left: calc(var(--pad) + 119px + 20px); right: var(--pad);
+  display: flex; flex-direction: column; align-items: stretch; gap: 16px;
   animation: rise 260ms cubic-bezier(.33,1,.68,1) both; }
 @keyframes rise { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
 html[data-reduced='true'] .composer { animation: none; }
-.built { width: min(740px, 100%); margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
+.built { width: 100%; margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
 .built-warn { color: var(--active); }
 
 /* the field: no box, a fill and a bottom edge, and only that edge goes active */
-.field { width: min(740px, 100%); box-sizing: border-box; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
+.field { width: 100%; box-sizing: border-box; min-height: 64px; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
   border: 0; border-bottom: 2px solid var(--line); padding: 14px 18px; transition: border-color 120ms ease-out; }
 .field--on { border-bottom-color: var(--active); }
 .field--denied { border-bottom-color: var(--hot); }
@@ -105,7 +106,7 @@ html[data-reduced='true'] .composer { animation: none; }
 .chip--top { border-color: var(--ink); background: var(--field); }
 .chip--offer { border-color: var(--active); color: var(--active); }
 .chip--yours { color: var(--active); border-color: var(--active); } /* a request: outlined, per the state table */
-.note { width: min(740px, 100%); margin: -8px 0 0; font-family: var(--mono); font-size: 18px; color: var(--muted); }
+.note { width: 100%; margin: -8px 0 0; font-family: var(--mono); font-size: 18px; color: var(--muted); }
 .empty { display: flex; align-items: center; gap: 16px; }
 .empty span { font-family: var(--mono); font-size: 20px; color: var(--muted); }
 
@@ -117,7 +118,8 @@ html[data-reduced='true'] .composer { animation: none; }
   .agent { font-size: clamp(15px, 4.8cqw, 26px); white-space: nowrap; }
   .pick, .tag, .change { font-size: clamp(13px, 3.6cqw, 22px); }
   .tag { padding: 7px 9px; }
-  .composer { top: calc(var(--bar-h) + 96px); gap: 16px; }
+  /* under the grip, full width: beside it there is no room */
+  .composer { top: calc(var(--bar-h) + 64px + 12px); left: var(--pad); gap: 12px; }
   .field { padding: 10px 12px; gap: 10px; }
   .input { font-size: clamp(17px, 4.6cqw, 26px); line-height: 1.3; }
   .token { font-size: clamp(15px, 4cqw, 24px); padding: 7px 11px; }

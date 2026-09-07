@@ -419,3 +419,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06:** "the double click is weird, might be non-intuitive." **Agent:** agreed — a three-way cycle on one icon was a patch; grip = open/close (drawer handle), glyph = start/stop (the mic), `done` closes. One meaning per control.
 
 **Lindsay, 2026-09-06:** "to stop and then another click to close?? odd." **Agent:** stopping is the end — sentence shows, glyph is a mic again, no `done`, closing is optional via the grip.
+
+**Lindsay, 2026-09-06 (frame):** scope down; use this frame for position only — grip and field in one row under the bar. **Agent:** composer docked in the grip's row, field to the right edge at grip height; drops beneath on narrow widths. Verified at 375px (field 311 wide under the grip).
