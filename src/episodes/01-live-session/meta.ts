@@ -10,8 +10,8 @@ export const meta: EpisodeMeta = {
   caption: {
     default: "A voice button shows a wiggling line whether or not you're talking.",
     change: 'Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it.',
-    // The reason is for the thing, not against slop (Lindsay, 2026-09-06): memorable because you can feel it.
-    reason: 'A thing you press, that answers only you. Tactile beats sprayed-on, and tactile is what you remember.',
+    // For the thing, and only the fact: no claim about what anyone will feel or remember (Lindsay, 2026-09-06).
+    reason: 'A thing you press, that answers only you.',
   },
   // The numbers table is cut: a number without the decision it serves is trivia, and it drifts.
   // The spec in docs/ is the "if you're stealing this".
