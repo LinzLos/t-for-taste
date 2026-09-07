@@ -431,3 +431,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06:** the caption panel — short, small but accessible; the "deets" table is bland, unread, says nothing of consequence; is "stealing this" even up to date; ELI5 audit it and cut the table. **Agent:** three one-sentence lines with no look-up words (waveform → wiggling line; performs → moves); table cut, chassis renders a single reading column when an episode has no values.
 
 **Lindsay, 2026-09-06:** the Reason line argued against slop, not for the thing — the series is about memorable, tactile AI interactions; did we check keyboard? **Agent:** Reason rewritten ("A thing you press, that answers only you. Tactile beats sprayed-on, and tactile is what you remember."); keys-only pass run and recorded; author-time/run-time rule written into the spec.
+
+**Lindsay, 2026-09-06:** "It only moves when you do" is opaque as a name; the landing should list only this episode; a fun-but-pro tagline under the product name for context. **Agent:** title → "The grip that listens"; registry lists T/01 only (T/04 parked in place); tagline "Press, talk, keep it." under the name.

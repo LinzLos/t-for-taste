@@ -294,7 +294,10 @@ export default function LiveSession() {
     <div className="session" ref={scope} onClick={() => setPicking(false)}
       onKeyDown={e => { if (e.key === 'Escape') { e.preventDefault(); if (picking) setPicking(false); else if (listening) mic.stop(); else if (open) close() } }}>
       <header className="bar">
-        <span className="agent">friendly voice composer</span>
+        <span className="brand">
+          <span className="agent">friendly voice composer</span>
+          <span className="tagline">Press, talk, keep it.</span>
+        </span>
         <span className="scope">
           {project ? (
             <>

@@ -3,7 +3,7 @@ import type { EpisodeMeta } from '../types'
 export const meta: EpisodeMeta = {
   number: 1,
   slug: 'live-session',
-  title: 'It only moves when you do',
+  title: 'The grip that listens', // says what it is (Lindsay: "it only moves when you do" was opaque as a name)
   material: 'an LED meter on a grip',
   library: 'motion',
   // ELI5 pass (Lindsay, 2026-09-06): nothing a person outside the tool must look up. One sentence each.
