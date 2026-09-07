@@ -56,8 +56,9 @@ export default function LiveSession() {
   const mic = useMic(levels => grip.current?.setLevels(levels))
   const listening = mic.state === 'on' || mic.state === 'pending'
   const toggleVoice = useCallback(() => { if (listening) mic.stop(); else void mic.start() }, [mic, listening])
-  // Closing keeps your tokens; only the beat strip's reset wipes them. Closing always releases the mic.
-  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false) }, [mic])
+  // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
+  // It always releases the mic.
+  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null) }, [mic])
   // The grip is the way in, and the way through: press → the composer appears already listening
   // (the mic starts inside the same click, which is what iOS needs); press → it stops, the composer
   // stays so you can read what you got; press → it closes.
@@ -68,12 +69,13 @@ export default function LiveSession() {
   }, [mic, open, listening, close])
   // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
   // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
-  type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported'
+  type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported' | 'lost'
   const phase: Phase = face || mic.state === 'on' ? 'listening'
     : !open ? 'closed'
     : mic.state === 'pending' ? 'pending'
     : mic.state === 'denied' ? 'denied'
     : mic.state === 'unsupported' ? 'unsupported'
+    : mic.state === 'lost' ? 'lost'
     : (mic.state === 'stopped' || mic.state === 'cancelled') && !query ? mic.state
     : focused ? 'typing' : 'rest'
 
@@ -138,7 +140,7 @@ export default function LiveSession() {
     setBuilt(tokens); setQuery('') // the tokens stay: building is not a way to lose your work
   }, [tokens])
   const commit = useCallback(() => {
-    if (!query.trim()) { submit(); return }
+    if (!query.trim()) { if (chipsOn) submit(); return } // building belongs to the chips story
     const top = chipsOn ? offer[0] : undefined // nothing visible to match against when the chips are off
     if (top) { take(top); return }
     askAnyway()
@@ -241,7 +243,7 @@ export default function LiveSession() {
   const projects = PROJECTS.filter(p => p.includes(pickQuery.trim().toLowerCase()))
   // Every surface reads the phase. Adding a phase without all of these is the regression.
   const status = ({ closed: 'idle', rest: built ? 'standing by' : 'drafting', typing: 'drafting', pending: 'asking',
-    listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone' } as const)[phase]
+    listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone', lost: 'no microphone' } as const)[phase]
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
   const placeholder = phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
@@ -249,13 +251,14 @@ export default function LiveSession() {
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Try again, or type.'
     : phase === 'unsupported' ? 'No microphone in this browser. Try Safari or Chrome, or type.'
+    : phase === 'lost' ? 'The microphone went away. Press the mic to try again, or type.'
     : tokens.length ? 'and then…' : 'Describe your workflow'
-  const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser'
+  const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser' : phase === 'lost' ? 'microphone lost, try again'
     : listening ? 'stop listening' : 'speak'
   // A three-way cycle is not a toggle: the grip's name is its next effect.
   const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
-  const edge = phase === 'denied' || phase === 'unsupported' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
+  const edge = phase === 'denied' || phase === 'unsupported' || phase === 'lost' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
 
   return (
     <div className="session" ref={scope} onClick={() => setPicking(false)}
@@ -294,13 +297,13 @@ export default function LiveSession() {
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
       <button type="button" className="grip" aria-expanded={open} aria-label={gripLabel}
         onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); press() }}>
-        <Gripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported'} />
+        <Gripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported' || phase === 'lost'} />
       </button>
 
       {project && open && (
         <div className="composer">
 
-          {built && (
+          {chipsOn && built && (
             <motion.p className="built" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.24, ease: EASE }}>
               {built.map(b => b.label).join(' → ')}

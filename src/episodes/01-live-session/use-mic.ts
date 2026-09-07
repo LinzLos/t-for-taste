@@ -24,7 +24,9 @@ const SPAN_MIN = 0.12 // the ceiling never sits closer than this to the floor
 const ATTACK = 20, RELEASE = 260
 
 // `stopped` and `cancelled` are what just happened, so the field can say so; `dismiss()` clears them.
-export type MicState = 'off' | 'pending' | 'on' | 'stopped' | 'cancelled' | 'denied' | 'unsupported'
+// `lost` is the microphone going away mid-sentence (a headset drops, a tab comes back suspended and will
+// not resume): the one way the face could otherwise lie, so it is a state with its own sentence.
+export type MicState = 'off' | 'pending' | 'on' | 'stopped' | 'cancelled' | 'denied' | 'unsupported' | 'lost'
 
 export function useMic(onLevels: (levels: readonly number[]) => void) {
   // One state, not three booleans, so every surface reads the same answer.
@@ -33,18 +35,24 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
   const ctx = useRef<AudioContext | null>(null)
   const stream = useRef<MediaStream | null>(null)
   const raf = useRef(0)
+  const unlisten = useRef<() => void>(() => {})
   const cb = useRef(onLevels)
   useEffect(() => { cb.current = onLevels })
   const zeros = useMemo(() => new Array<number>(N).fill(0), [])
 
   // Release everything the moment voice is off, so the browser's mic indicator goes with it.
-  const stop = useCallback(() => {
+  // `release` tears the audio down; `stop` is release plus the honest state.
+  const release = useCallback(() => {
     cancelAnimationFrame(raf.current); raf.current = 0
+    unlisten.current(); unlisten.current = () => {}
     stream.current?.getTracks().forEach(t => t.stop()); stream.current = null
     void ctx.current?.close().catch(() => {}); ctx.current = null
     cb.current(zeros)
-    setState(s => (s === 'on' ? 'stopped' : s === 'pending' ? 'cancelled' : s))
   }, [zeros])
+  const stop = useCallback(() => {
+    release()
+    setState(s => (s === 'on' ? 'stopped' : s === 'pending' ? 'cancelled' : s))
+  }, [release])
 
   // Acknowledged: the next keystroke, or a close, puts the field back to plain.
   const dismiss = useCallback(() => setState(s => (s === 'stopped' || s === 'cancelled' ? 'off' : s)), [])
@@ -67,6 +75,15 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
     stream.current = ms
     const an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.5
     ac.createMediaStreamSource(ms).connect(an)
+    // The mic can go away without you: a headset disconnects, or the tab comes back from the background
+    // with the context suspended (iOS does this). Try to come back; if it will not, say so.
+    const lost = () => { if (ctx.current !== ac) return; release(); ctx.current = null; setState('lost') }
+    const revive = () => { if (ctx.current === ac && ac.state !== 'running') ac.resume().catch(lost) }
+    ms.getTracks().forEach(t => { t.onended = lost })
+    ac.onstatechange = () => { if (ac.state === 'closed') return; if (ac.state !== 'running') revive() }
+    const onVisible = () => { if (document.visibilityState === 'visible') revive() }
+    document.addEventListener('visibilitychange', onVisible)
+    unlisten.current = () => { document.removeEventListener('visibilitychange', onVisible); ac.onstatechange = null; ms.getTracks().forEach(t => { t.onended = null }) }
     // Everything the tick touches is allocated once: sixty frames a second is no place for garbage.
     const data = new Uint8Array(an.frequencyBinCount)
     const raw = new Float32Array(N), out = new Float32Array(N), floor = new Float32Array(N).fill(1), ceil = new Float32Array(N)
@@ -94,7 +111,7 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
     raf.current = requestAnimationFrame(tick)
     setState('on')
     return true
-  }, [supported, stop])
+  }, [supported, stop, release])
 
   useEffect(() => stop, [stop])
   return useMemo(() => ({ start, stop, dismiss, state, supported }), [start, stop, dismiss, state, supported])

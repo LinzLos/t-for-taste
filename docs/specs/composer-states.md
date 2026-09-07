@@ -288,7 +288,7 @@ Eight-angle code review, verified. Fixed: the beat-strip reset and replay left t
 
 Clicking anywhere used to focus the field, which misled: it suggested the surface was a text box you address. For a voice demo the entry is the grip and nothing else.
 
-**One phase, nine values, every surface reads it.** `closed · rest · typing · pending · listening · stopped · cancelled · denied · unsupported`, derived once from the mic hook's own state (`off · pending · on · stopped · cancelled · denied · unsupported`) plus `open` and focus. Listening comes from the hook, never from the click, so a refusal can never flash a face. Adding a phase without all six columns below is the regression.
+**One phase, ten values, every surface reads it.** `closed · rest · typing · pending · listening · stopped · cancelled · denied · unsupported · lost`, derived once from the mic hook's own state (`off · pending · on · stopped · cancelled · denied · unsupported · lost`) plus `open` and focus. Listening comes from the hook, never from the click, so a refusal can never flash a face. Adding a phase without all six columns below is the regression.
 
 | phase | grip (dots · status dot · label) | field edge | placeholder | status tag |
 |---|---|---|---|---|
@@ -301,12 +301,17 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 | cancelled | ink · teal | plain | Stopped asking for the microphone. | drafting |
 | denied | ink · **salmon** · *close the composer* | salmon | Microphone not allowed. Try again, or type. | no microphone |
 | unsupported | ink · salmon | salmon | No microphone in this browser. Try Safari or Chrome, or type. | no microphone |
+| lost | ink · salmon · *close the composer* | salmon | The microphone went away. Press the mic to try again, or type. | no microphone |
 
-**The press cycle.** `closed → open + listening` (the mic starts inside the same click, which is what iOS needs) · `pending | listening → stop` (the composer stays so you can read what you got) · `any other open phase → close`. Closing keeps your tokens and always releases the mic; only the beat strip's reset wipes tokens. A three-way cycle is not a toggle, so the grip's accessible name is its next effect, never a state. The mic glyph in the field starts and stops listening once the composer is open; *start from open* has that one trigger, *stop* has two, *close* has one.
+**The press cycle.** `closed → open + listening` (the mic starts inside the same click, which is what iOS needs) · `pending | listening → stop` (the composer stays so you can read what you got) · `any other open phase → close`. Closing is a clean slate — the field and any requests go with it (Lindsay: "the type persists!!"; it must not, when the sentence is *nothing was kept*) — and it always releases the mic. A three-way cycle is not a toggle, so the grip's accessible name is its next effect, never a state. The mic glyph in the field starts and stops listening once the composer is open; *start from open* has that one trigger, *stop* has two, *close* has one.
 
 **Pressable without a pointer.** The teal status dot at rest is the cue; hover lights the dots orange only where hover exists (`@media (hover: hover)`, so a phone tap does not stick); the keyboard ring lights them the same way. Escape stops listening, else closes.
 
 **Copy names what changed and where the action is.** "The browser is asking" points at the prompt. "Stopped listening. Nothing was kept." states the two facts a viewer needs when nothing is transcribed. Refused and unsupported are different states with different sentences; refused offers the retry.
+
+**Lost.** The one way the face could lie: a headset drops, or the tab comes back from the background with the audio context suspended (iOS). The track's `ended` and the context's `statechange` are watched; on return to the foreground the context is asked to resume, and if it will not, the phase is `lost` with its own sentence. Never a flat meter that still claims to listen.
+
+**The typing door.** Typing exists because the refused, unsupported and lost sentences offer it, so it has to go somewhere true. In this slice a typed sentence becomes one request pill on Enter, and that is all: no build, no built line, no "not connected" warning. Those are the chips story's vocabulary (`?chips`). Backspace takes a request back.
 
 **▶ play enters through the grip.** On this slice the transport's play opens the composer listening and then waits for you; the typing script belongs to the chips story (`?chips`).
 
