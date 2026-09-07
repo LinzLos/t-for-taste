@@ -288,7 +288,7 @@ Eight-angle code review, verified. Fixed: the beat-strip reset and replay left t
 
 Clicking anywhere used to focus the field, which misled: it suggested the surface was a text box you address. For a voice demo the entry is the grip and nothing else.
 
-**One phase, ten values, every surface reads it.** `closed · rest · typing · pending · listening · stopped · cancelled · denied · unsupported · lost`, derived once from the mic hook's own state (`off · pending · on · stopped · cancelled · denied · unsupported · lost`) plus `open` and focus. Listening comes from the hook, never from the click, so a refusal can never flash a face. Adding a phase without all six columns below is the regression.
+**One phase, eleven values, every surface reads it.** `closed · rest · typing · pending · listening · stopped · cancelled · denied · unsupported · lost · leaving`, derived once from the mic hook's own state (`off · pending · on · stopped · cancelled · denied · unsupported · lost`) plus `open` and focus. Listening comes from the hook, never from the click, so a refusal can never flash a face. Adding a phase without all six columns below is the regression.
 
 | phase | grip (dots · status dot · label) | field edge | placeholder | status tag |
 |---|---|---|---|---|
@@ -302,10 +302,13 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 | denied | ink · **salmon** · *close the composer* | salmon | Microphone not allowed. Try again, or type. | no microphone |
 | unsupported | ink · salmon | salmon | No microphone in this browser. Try Safari or Chrome, or type. | no microphone |
 | lost | ink · salmon · *close the composer* | salmon | The microphone went away. Press the mic to try again, or type. | no microphone |
+| leaving | quiet dots · teal | plain | You were talking. Keep going, or close? · You have a request here. Keep it, or close? | stopped — glyph replaced by `keep going`/`keep it` · `close` |
 
 **One meaning per control (Lindsay, 2026-09-06: the double press "is weird, might be non-intuitive" — it was).** The grip is a drawer handle: press → the composer opens already listening (the mic starts inside the same click, which is what iOS needs); press → it closes, releasing the mic, clean slate. The mic glyph is the mic: orange while listening, press to stop, and then it is a mic again. **Stopping is a complete action** (Lindsay: "to stop and then another click to close?? odd") — the sentence shows, nothing asks you to close; the grip closes the drawer when you want the resting frame, never as a required step. A `done` tag was tried and removed: it was the obligation. Nothing cycles; the grip's accessible name is *open the composer and listen* / *close the composer*. Pressing the grip mid-sentence closes rather than pauses, and closing stops the mic, so that is fine. *Start listening* ← grip (from closed), glyph (from a text phase). *Stop* ← glyph only. *Close* ← grip, Escape.
 
 **Keyboard.** Tab reaches everything in reading order: grip → pills → text box → mic glyph. Enter on the grip opens-and-listens or closes; on the glyph starts or stops; in the text box makes a request pill if it looks like words (Shift+Enter is a new line; Backspace on an empty box removes the last pill); on a pill removes it. Escape stops listening, else closes. Focus follows the state: when the mic cannot be used the text box takes focus, and closing returns focus to the grip.
+
+**Leaving (Lindsay, 2026-09-06: "there is no recognition… then offer a continue or quit").** Closing is the one move that throws something away, so it asks first — only when there is something, and only once; the second press is the answer. Mid-sentence: the mic pauses and the field says "You were talking. Keep going, or close?" With a typed request or words: "You have a request here. Keep it, or close?" Already stopped with the glyph, or empty: it just closes — you ended it, there is nothing to ask. Answers are two mono tags where the glyph was, in your voice: `keep going` / `keep it`, and `close`. Phase `leaving`; the status tag reads `stopped`.
 
 **Pressable without a pointer.** The teal status dot at rest is the cue; hover lights the dots orange only where hover exists (`@media (hover: hover)`, so a phone tap does not stick); the keyboard ring lights them the same way. Escape stops listening, else closes.
 

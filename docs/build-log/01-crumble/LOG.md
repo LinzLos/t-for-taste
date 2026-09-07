@@ -421,3 +421,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06:** "to stop and then another click to close?? odd." **Agent:** stopping is the end — sentence shows, glyph is a mic again, no `done`, closing is optional via the grip.
 
 **Lindsay, 2026-09-06 (frame):** scope down; use this frame for position only — grip and field in one row under the bar. **Agent:** composer docked in the grip's row, field to the right edge at grip height; drops beneath on narrow widths. Verified at 375px (field 311 wide under the grip).
+
+**Lindsay, 2026-09-06:** closing after a session has no recognition; offer continue or quit; "let's think thru this logic so we land it." **Agent:** the leaving table (ask once, only mid-session or with a request; stopped/empty just close; second press answers); `leaving` phase with `keep going`/`keep it` · `close` mono tags; copy "You were talking. Keep going, or close?"

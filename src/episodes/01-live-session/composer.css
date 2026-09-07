@@ -97,6 +97,12 @@ html[data-reduced='true'] .composer { animation: none; }
 .mic--pending, .mic--listening { color: var(--active); }
 .mic--denied { color: var(--hot); }
 /* after listening the glyph is simply a mic again: stopping is a complete action, nothing asks you to close */
+/* closing with something there asks first: the question in the field, the answers in your voice, mono tags */
+.answers { display: flex; gap: 8px; align-self: center; }
+.answer { padding: 6px 10px; border: 2px solid var(--line-strong); color: var(--muted); font-family: var(--mono); font-size: 18px; line-height: 1; transition: color 120ms ease-out, border-color 120ms ease-out; }
+.answer:where(:hover), .answer:focus-visible { color: var(--ink); border-color: var(--muted); outline: none; }
+.answer--keep { color: var(--ink); border-color: var(--live); }
+.note--ask { color: var(--ink); }
 
 /* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; min-height: 52px; align-content: flex-start; }

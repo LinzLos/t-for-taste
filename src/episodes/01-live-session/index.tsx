@@ -33,6 +33,7 @@ export default function LiveSession() {
   const [picking, setPicking] = useState(false)
   const [open, setOpen] = useState(false) // the grip opens the composer; nothing else does
   const [note, setNote] = useState<string | null>(null) // one line under the field when a request could not be made
+  const [leaving, setLeaving] = useState<null | 'voice' | 'text'>(null) // a close was asked for while something was there
   const [pickQuery, setPickQuery] = useState('')
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
@@ -60,14 +61,26 @@ export default function LiveSession() {
   // Listening always begins from empty: the field is either voice or text, never both.
   const toggleVoice = useCallback(() => {
     if (listening) { mic.stop(); return }
-    setQuery(''); setTokens([]); setNote(null); void mic.start()
+    setQuery(''); setTokens([]); setNote(null); setLeaving(null); void mic.start()
   }, [mic, listening])
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
-  const close = useCallback(() => {
-    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null)
+  const shut = useCallback(() => {
+    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null); setLeaving(null)
     gripButton.current?.focus() // focus goes back to the handle, not off the page
   }, [mic])
+  // Closing is the one move that throws something away, so it asks first when there is something:
+  // a session you were speaking into, or a request you typed. An untouched composer just closes.
+  const close = useCallback(() => {
+    if (leaving) { shut(); return } // asked once already: the second press is the answer
+    if (listening) { mic.stop(); setLeaving('voice'); return } // stopped already: you ended it, nothing to ask
+    if (query.trim() || tokens.length) { setLeaving('text'); return }
+    shut()
+  }, [leaving, listening, mic, query, tokens.length, shut])
+  const keepGoing = useCallback(() => {
+    const was = leaving; setLeaving(null)
+    if (was === 'voice') { mic.dismiss(); void mic.start() } else field.current?.focus()
+  }, [leaving, mic])
   // The grip is a drawer handle: one press opens the composer already listening (the mic starts inside
   // the same click, which is what iOS needs), the next closes it. Stopping the mic is the mic glyph's job,
   // so no control has two meanings and nobody has to remember where they are in a cycle.
@@ -77,9 +90,10 @@ export default function LiveSession() {
   }, [mic, open, close])
   // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
   // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
-  type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported' | 'lost'
+  type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported' | 'lost' | 'leaving'
   const phase: Phase = face || mic.state === 'on' ? 'listening'
     : !open ? 'closed'
+    : leaving ? 'leaving'
     : mic.state === 'pending' ? 'pending'
     : mic.state === 'denied' ? 'denied'
     : mic.state === 'unsupported' ? 'unsupported'
@@ -253,9 +267,10 @@ export default function LiveSession() {
   const projects = PROJECTS.filter(p => p.includes(pickQuery.trim().toLowerCase()))
   // Every surface reads the phase. Adding a phase without all of these is the regression.
   const status = ({ closed: 'idle', rest: built ? 'standing by' : 'drafting', typing: 'drafting', pending: 'asking',
-    listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone', lost: 'no microphone' } as const)[phase]
+    listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone', lost: 'no microphone', leaving: 'stopped' } as const)[phase]
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
-  const placeholder = phase === 'pending' ? 'The browser is asking for the microphone.'
+  const placeholder = phase === 'leaving' ? (leaving === 'voice' ? 'You were talking. Keep going, or close?' : 'You have a request here. Keep it, or close?')
+    : phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
     : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
@@ -270,7 +285,7 @@ export default function LiveSession() {
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
   // While it listens (or has just stopped) the field is a sentence, not a text box: nothing to type into,
   // nothing to read but what is happening. The keyboard is the fallback when the mic cannot be used.
-  const voiceMode = phase === 'pending' || phase === 'listening' || phase === 'stopped'
+  const voiceMode = phase === 'pending' || phase === 'listening' || phase === 'stopped' || (phase === 'leaving' && leaving === 'voice')
   // When the mic cannot be used the text box is the fallback: put the keyboard there, do not make them find it.
   const fallback = phase === 'denied' || phase === 'unsupported' || phase === 'lost' || phase === 'cancelled'
   useEffect(() => { if (fallback) field.current?.focus() }, [fallback])
@@ -366,13 +381,21 @@ export default function LiveSession() {
               />
             </div>
             )}
+            {phase === 'leaving' ? (
+              <span className="answers">
+                <button type="button" className="answer answer--keep" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepGoing() }}>{leaving === 'voice' ? 'keep going' : 'keep it'}</button>
+                <button type="button" className="answer" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); shut() }}>close</button>
+              </span>
+            ) : (
             <button type="button" className={`mic mic--${phase}`}
               aria-label={micLabel}
               aria-pressed={listening} onMouseDown={e => e.preventDefault()}
               onClick={e => { e.stopPropagation(); toggleVoice() }}><MicGlyph /></button>
+            )}
           </div>
 
           {note && <p className="note">{note}</p>}
+          {phase === 'leaving' && leaving === 'text' && <p className="note note--ask">{placeholder}</p>}
 
           {chipsOn && <div className="chips">
             <AnimatePresence mode="popLayout" initial={false}>
