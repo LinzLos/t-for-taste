@@ -297,7 +297,7 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 | typing | orange · orange | orange | (your text) | drafting |
 | pending | orange · orange · *stop listening* | orange | The browser is asking for the microphone. | asking |
 | listening | 9×3 meter + smile · *stop listening* | orange | Listening. Say what it should do. | listening |
-| stopped | quiet dots · teal · *close the composer* | plain | Stopped listening. Nothing was kept: this one listens, it does not transcribe. | stopped — and the mic glyph becomes a teal **check** (*done*) that closes |
+| stopped | quiet dots · teal · *close the composer* | plain | Stopped listening. Nothing you said was saved. | stopped — and the mic glyph becomes a teal **check** (*done*) that closes |
 | cancelled | ink · teal | plain | Stopped asking for the microphone. | drafting |
 | denied | ink · **salmon** · *close the composer* | salmon | Microphone not allowed. Try again, or type. | no microphone |
 | unsupported | ink · salmon | salmon | No microphone in this browser. Try Safari or Chrome, or type. | no microphone |
@@ -307,7 +307,7 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 
 **Pressable without a pointer.** The teal status dot at rest is the cue; hover lights the dots orange only where hover exists (`@media (hover: hover)`, so a phone tap does not stick); the keyboard ring lights them the same way. Escape stops listening, else closes.
 
-**Copy names what changed and where the action is.** "The browser is asking" points at the prompt. "Stopped listening. Nothing was kept." states the two facts a viewer needs when nothing is transcribed. Refused and unsupported are different states with different sentences; refused offers the retry.
+**Copy names what changed and where the action is.** "The browser is asking" points at the prompt. "Stopped listening. Nothing you said was saved." states the two facts a viewer needs, in words a person outside the tool has (Lindsay: ELI5 it; "kept" and "transcribe" were abstract). Refused and unsupported are different states with different sentences; refused offers the retry.
 
 **Lost.** The one way the face could lie: a headset drops, or the tab comes back from the background with the audio context suspended (iOS). The track's `ended` and the context's `statechange` are watched; on return to the foreground the context is asked to resume, and if it will not, the phase is `lost` with its own sentence. Never a flat meter that still claims to listen.
 

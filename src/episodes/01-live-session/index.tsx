@@ -252,7 +252,7 @@ export default function LiveSession() {
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
   const placeholder = phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
-    : phase === 'stopped' ? 'Stopped listening. Nothing was kept: this one listens, it does not transcribe.'
+    : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Try again, or type.'
     : phase === 'unsupported' ? 'No microphone in this browser. Try Safari or Chrome, or type.'
