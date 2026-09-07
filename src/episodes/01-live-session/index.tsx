@@ -54,18 +54,28 @@ export default function LiveSession() {
 
   // Real sound drives the grip. It cannot perform, because it has nothing to perform with.
   const mic = useMic(levels => grip.current?.setLevels(levels))
-  const toggleVoice = useCallback(() => {
-    if (mic.state === 'on' || mic.state === 'pending') mic.stop(); else void mic.start()
-  }, [mic])
-  // The grip is the way in: press it and the composer appears already listening. The mic starts
-  // inside the same click, which is what iOS needs. Press again to stop; the composer stays.
+  const listening = mic.state === 'on' || mic.state === 'pending'
+  const toggleVoice = useCallback(() => { if (listening) mic.stop(); else void mic.start() }, [mic, listening])
+  // Closing keeps your tokens; only the beat strip's reset wipes them. Closing always releases the mic.
+  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false) }, [mic])
+  // The grip is the way in, and the way through: press → the composer appears already listening
+  // (the mic starts inside the same click, which is what iOS needs); press → it stops, the composer
+  // stays so you can read what you got; press → it closes.
   const press = useCallback(() => {
-    if (mic.state === 'on' || mic.state === 'pending') { mic.stop(); return }
-    setOpen(true); void mic.start()
-  }, [mic])
+    if (!open) { setOpen(true); void mic.start(); return }
+    if (listening) { mic.stop(); return }
+    close()
+  }, [mic, open, listening, close])
   // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
   // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
-  const phase = face || mic.state === 'on' ? 'listening' : mic.state === 'pending' ? 'pending' : mic.state === 'denied' ? 'denied' : focused ? 'typing' : 'rest'
+  type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported'
+  const phase: Phase = face || mic.state === 'on' ? 'listening'
+    : !open ? 'closed'
+    : mic.state === 'pending' ? 'pending'
+    : mic.state === 'denied' ? 'denied'
+    : mic.state === 'unsupported' ? 'unsupported'
+    : (mic.state === 'stopped' || mic.state === 'cancelled') && !query ? mic.state
+    : focused ? 'typing' : 'rest'
 
   const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
   // The row shows what is connected, filtered only by what you type. Hiding a chip because of a
@@ -158,7 +168,11 @@ export default function LiveSession() {
 
   const play = useCallback(() => {
     if (playing) return
-    reset(); cancel.current = false; setPlaying(true)
+    reset(); cancel.current = false
+    // The voice slice enters the way a person does: through the grip. ▶ is a click, so the mic may
+    // start inside it; the script then waits for you. The typing script belongs to the chips story.
+    if (!chipsOn) { setOpen(true); void mic.start(); return }
+    setPlaying(true)
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
     const run = async () => {
       await wait(700); if (cancel.current) return
@@ -201,7 +215,7 @@ export default function LiveSession() {
       setPlaying(false)
     }
     void run()
-  }, [playing, take, reset, chipsOn, pickOn])
+  }, [playing, take, reset, chipsOn, pickOn, mic])
 
   useEffect(() => () => { cancel.current = true }, [])
 
@@ -225,16 +239,27 @@ export default function LiveSession() {
 
   const spring = reduced ? { duration: 0 } : { type: 'spring' as const, stiffness: 520, damping: 34, mass: 0.7 }
   const projects = PROJECTS.filter(p => p.includes(pickQuery.trim().toLowerCase()))
-  const status = phase === 'listening' ? 'listening' : built ? 'standing by' : 'drafting'
-  // The field says what is happening, in the tool's voice: it reports, it never asks you to feel anything.
-  const placeholder = phase === 'denied' ? 'Microphone not allowed. Type instead.'
-    : phase === 'pending' ? 'Waiting for the microphone'
+  // Every surface reads the phase. Adding a phase without all of these is the regression.
+  const status = ({ closed: 'idle', rest: built ? 'standing by' : 'drafting', typing: 'drafting', pending: 'asking',
+    listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone' } as const)[phase]
+  // The field says what is happening, in the tool's voice: it reports, and says where the action is.
+  const placeholder = phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
+    : phase === 'stopped' ? 'Stopped listening. Nothing was kept.'
+    : phase === 'cancelled' ? 'Stopped asking for the microphone.'
+    : phase === 'denied' ? 'Microphone not allowed. Try again, or type.'
+    : phase === 'unsupported' ? 'No microphone in this browser. Try Safari or Chrome, or type.'
     : tokens.length ? 'and then…' : 'Describe your workflow'
-  const micLabel = phase === 'denied' ? 'microphone not allowed' : phase === 'listening' || phase === 'pending' ? 'stop listening' : 'speak'
+  const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser'
+    : listening ? 'stop listening' : 'speak'
+  // A three-way cycle is not a toggle: the grip's name is its next effect.
+  const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
+  const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
+  const edge = phase === 'denied' || phase === 'unsupported' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
 
   return (
-    <div className="session" ref={scope} onClick={() => setPicking(false)}>
+    <div className="session" ref={scope} onClick={() => setPicking(false)}
+      onKeyDown={e => { if (e.key === 'Escape') { e.preventDefault(); if (picking) setPicking(false); else if (listening) mic.stop(); else if (open) close() } }}>
       <header className="bar">
         <span className="agent">friendly voice composer</span>
         <span className="scope">
@@ -267,9 +292,9 @@ export default function LiveSession() {
       )}
 
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
-      <button type="button" className="grip" aria-pressed={phase === 'listening' || phase === 'pending'} aria-label={micLabel}
+      <button type="button" className="grip" aria-expanded={open} aria-label={gripLabel}
         onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); press() }}>
-        <Gripper ref={grip} mode={phase === 'listening' ? 'listening' : phase === 'pending' || focused ? 'typing' : 'rest'} denied={phase === 'denied'} />
+        <Gripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported'} />
       </button>
 
       {project && open && (
@@ -283,7 +308,7 @@ export default function LiveSession() {
             </motion.p>
           )}
 
-          <div className={`field${focused ? ' field--on' : ''}`}>
+          <div className={`field${edge}`}>
             <div className="field-inner">
               <AnimatePresence initial={false}>
                 {tokens.map((t, i) => (
@@ -311,7 +336,7 @@ export default function LiveSession() {
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                onChange={e => setQuery(e.target.value)}
+                onChange={e => { setQuery(e.target.value); mic.dismiss() }}
                 onKeyDown={e => {
                   if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
                   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit() }
@@ -320,7 +345,7 @@ export default function LiveSession() {
             </div>
             <button type="button" className={`mic mic--${phase}`}
               aria-label={micLabel}
-              aria-pressed={phase === 'listening' || phase === 'pending'} onMouseDown={e => e.preventDefault()}
+              aria-pressed={listening} onMouseDown={e => e.preventDefault()}
               onClick={e => { e.stopPropagation(); toggleVoice() }}><MicGlyph /></button>
           </div>
 

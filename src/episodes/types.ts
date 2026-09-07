@@ -27,6 +27,10 @@ export interface EpisodeMeta {
   status: 'draft' | 'live'
   /** ISO date the episode went live. */
   published?: string
+  /** The social frame for this episode. Defaults to 4:5 (1080×1350); square when the story is short. */
+  stage?: { w: number; h: number }
+  /** Body width from which the episode lays itself out fluidly instead of being scaled. Default 1000; 0 = always. */
+  fluidMin?: number
 }
 
 /** What lands in public/episodes.json. Everything the portfolio card needs, nothing else. */

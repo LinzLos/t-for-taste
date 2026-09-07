@@ -104,6 +104,8 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }
+  .stage-host.stage-host--fluid { height: auto; min-height: 0; }
+  .stage-box--fluid { height: auto; } /* aspect-ratio from the episode's frame takes over */
   .transport { padding: 8px 14px; gap: 10px; font-size: 13px; }
   .caption { padding: 16px 14px; gap: 20px; }
   .caption dl { grid-template-columns: 7ch 1fr; }

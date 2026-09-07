@@ -6,7 +6,7 @@ import { EASE } from './motion'
 // One SVG, one viewBox, so it is the same drawing at 56px on a desktop and 44px on a phone.
 // The grid is rigid and stays a grid; all the organic quality goes to the mouth, which is a
 // single quadratic — only the pull point moves between the flat bar and the smile.
-export type GripperMode = 'rest' | 'typing' | 'listening'
+export type GripperMode = 'rest' | 'open' | 'typing' | 'listening'
 export interface GripperHandle { setLevels: (levels: readonly number[]) => void }
 
 const ROWS = [11, 19, 27] // top, mid, bottom
@@ -38,7 +38,7 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
         const drawn = spread.get() >= 1 // the unroll owns the dots until it lands; the bookkeeping never waits
         for (let c = 0; c < COLS; c++) {
           const l = levels[c] ?? 0
-          const bar = l < 0.12 ? 1 : l < 0.5 ? 2 : 3
+          const bar = l < 0.22 ? 1 : l < 0.62 ? 2 : 3 // against the adaptive ceiling, so the top row is earned
           const pk = peak.current[c]
           if (bar >= pk.row) { pk.row = bar; pk.t = now }
           else if (now - pk.t > PEAK_HOLD) { pk.row = Math.max(bar, pk.row - 1); pk.t = now - (PEAK_HOLD - PEAK_FALL) }
@@ -88,7 +88,7 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
       return () => ctrl.stop()
     }, [listening, reduced, d])
 
-    const label = denied ? 'microphone not allowed' : listening ? 'listening' : mode === 'typing' ? 'typing' : 'idle'
+    const label = denied ? 'microphone not allowed' : listening ? 'listening' : mode === 'typing' ? 'typing' : mode === 'open' ? 'open' : 'idle'
     return (
       <svg className={`gripper gripper--${mode}${denied ? ' gripper--denied' : ''}`}
         viewBox="0 0 119 64" width="119" height="64" role="img" aria-label={label}>

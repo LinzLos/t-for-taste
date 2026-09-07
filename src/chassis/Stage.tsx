@@ -5,17 +5,17 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 // stage scaled to fit, so a recording from any machine is the same picture.
 import { STAGE } from './stage-size'
 
-export function Stage({ children, record }: { children: ReactNode; record?: boolean }) {
+export function Stage({ children, record, size = STAGE, fluidMin = 1000 }: { children: ReactNode; record?: boolean; size?: { w: number; h: number }; fluidMin?: number }) {
   const host = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
   // Fluid needs room. Under 900px wide (phones, narrow tablets) the scaled 4:5 stage reads better.
-  const [wide, setWide] = useState(() => window.innerWidth >= 900)
+  const [wide, setWide] = useState(() => window.innerWidth >= fluidMin)
   useEffect(() => {
-    const on = () => setWide(document.body.clientWidth >= 1000)
+    const on = () => setWide(document.body.clientWidth >= fluidMin)
     const ro = new ResizeObserver(on); ro.observe(document.body) // fires once on observe
     window.addEventListener('resize', on)
     return () => { ro.disconnect(); window.removeEventListener('resize', on) }
-  }, [])
+  }, [fluidMin])
   const fluid = !record && wide
 
   useEffect(() => {
@@ -25,17 +25,18 @@ export function Stage({ children, record }: { children: ReactNode; record?: bool
       const cs = getComputedStyle(el)
       const width = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
       const height = el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
-      setScale(Math.max(0.1, Math.min(width / STAGE.w, height / STAGE.h, 1)))
+      setScale(Math.max(0.1, Math.min(width / size.w, height / size.h, 1)))
     }
     const ro = new ResizeObserver(fit) // fires once on observe
     ro.observe(el)
     return () => ro.disconnect()
-  }, [fluid])
+  }, [fluid, size.w, size.h])
 
   if (fluid) {
     return (
       <div className="stage-host stage-host--fluid" ref={host}>
-        <div className="stage-box stage-box--fluid">
+        {/* the aspect only bites when the host has no fixed height (phones): the box keeps the social frame's shape */}
+        <div className="stage-box stage-box--fluid" style={{ aspectRatio: `${size.w} / ${size.h}` }}>
           <div className="stage stage--fluid">{children}</div>
         </div>
       </div>
@@ -43,8 +44,8 @@ export function Stage({ children, record }: { children: ReactNode; record?: bool
   }
   return (
     <div className="stage-host" ref={host}>
-      <div className="stage-box" style={{ width: STAGE.w * scale, height: STAGE.h * scale }}>
-        <div className="stage" style={{ width: STAGE.w, height: STAGE.h, transform: `scale(${scale})` }}>
+      <div className="stage-box" style={{ width: size.w * scale, height: size.h * scale }}>
+        <div className="stage" style={{ width: size.w, height: size.h, transform: `scale(${scale})` }}>
           {children}
         </div>
       </div>

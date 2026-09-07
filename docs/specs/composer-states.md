@@ -284,11 +284,30 @@ The send arrow is gone; her screens have only the mic, and Enter with nothing ty
 
 Eight-angle code review, verified. Fixed: the beat-strip reset and replay left the microphone open with no control on screen (one `reset()` now releases it); a refusal or an unsupported browser flashed the listening face for a frame (listening is derived from the hook's state, never from the click); a retry stayed salmon through the new prompt; the meter dropped the first 320ms of speech during the unroll (bookkeeping never waits, only the drawing); `ac.resume()` is awaited inside the try; the voice-script run now ends built; the `yours` id normalises whitespace; the settle curve lives in one `EASE`; the mic tick allocates nothing per frame; the field's line height is measured once; `.mic:where(:hover)` uses the same zero-specificity trick as the button reset; `.chip--yours` has its outline back per §13. Left as is: the beat strip's `go` ignores its index (one beat); the 80ms on/off ease on dots (deliberate, values only change on a row change); the parked stories stay behind flags rather than becoming components until they are their own episodes.
 
-## 18 · The grip is the way in (Lindsay, 2026-09-06)
+## 18 · The grip is the way in, and the way through (Lindsay, 2026-09-06; FLOWIE friction pass)
 
 Clicking anywhere used to focus the field, which misled: it suggested the surface was a text box you address. For a voice demo the entry is the grip and nothing else.
 
-- **Closed.** Title `friendly voice composer` on the left, a single status tag on the right (`drafting`), the grip alone under the title. No composer. The two bindings (`main`, `tuliptech-docs`) belong to the picker's story and are parked with it behind `?pick`; only the status tag narrates this one.
-- **Hover.** The dots go orange: it is pressable.
-- **Press.** The composer appears already listening — the mic starts inside the same click (what iOS needs), the mic glyph and the dots go orange at once, and when the browser says yes the grid unrolls and the slot smiles. Press again to stop; the composer stays so you can read what you got. Refused: the composer still opens, honestly — "Microphone not allowed. Type instead." — and the grid stays a grip.
-- **Nothing else opens it.** The root click only closes the project menu. The mic glyph in the field toggles listening once the composer is there.
+**One phase, nine values, every surface reads it.** `closed · rest · typing · pending · listening · stopped · cancelled · denied · unsupported`, derived once from the mic hook's own state (`off · pending · on · stopped · cancelled · denied · unsupported`) plus `open` and focus. Listening comes from the hook, never from the click, so a refusal can never flash a face. Adding a phase without all six columns below is the regression.
+
+| phase | grip (dots · status dot · label) | field edge | placeholder | status tag |
+|---|---|---|---|---|
+| closed | ink · **teal** (alive, pressable) · *open the composer and listen* | — | — | idle |
+| rest (open, idle) | ink · teal · plate stroke lifted · *close the composer* | plain | Describe your workflow | drafting / standing by |
+| typing | orange · orange | orange | (your text) | drafting |
+| pending | orange · orange · *stop listening* | orange | The browser is asking for the microphone. | asking |
+| listening | 9×3 meter + smile · *stop listening* | orange | Listening. Say what it should do. | listening |
+| stopped | ink · teal · *close the composer* | plain | Stopped listening. Nothing was kept. | stopped |
+| cancelled | ink · teal | plain | Stopped asking for the microphone. | drafting |
+| denied | ink · **salmon** · *close the composer* | salmon | Microphone not allowed. Try again, or type. | no microphone |
+| unsupported | ink · salmon | salmon | No microphone in this browser. Try Safari or Chrome, or type. | no microphone |
+
+**The press cycle.** `closed → open + listening` (the mic starts inside the same click, which is what iOS needs) · `pending | listening → stop` (the composer stays so you can read what you got) · `any other open phase → close`. Closing keeps your tokens and always releases the mic; only the beat strip's reset wipes tokens. A three-way cycle is not a toggle, so the grip's accessible name is its next effect, never a state. The mic glyph in the field starts and stops listening once the composer is open; *start from open* has that one trigger, *stop* has two, *close* has one.
+
+**Pressable without a pointer.** The teal status dot at rest is the cue; hover lights the dots orange only where hover exists (`@media (hover: hover)`, so a phone tap does not stick); the keyboard ring lights them the same way. Escape stops listening, else closes.
+
+**Copy names what changed and where the action is.** "The browser is asking" points at the prompt. "Stopped listening. Nothing was kept." states the two facts a viewer needs when nothing is transcribed. Refused and unsupported are different states with different sentences; refused offers the retry.
+
+**▶ play enters through the grip.** On this slice the transport's play opens the composer listening and then waits for you; the typing script belongs to the chips story (`?chips`).
+
+**Every device.** The episode declares a square frame (`stage: 1080×1080`) and `fluidMin: 0`, so it lays itself out at any width instead of being scaled: under 640px of composer width a container query brings the bar to 64px, the type down with `cqw` clamps, and the grip stays a 119×64 tap target. The record frame is the square.

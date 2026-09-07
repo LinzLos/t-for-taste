@@ -6,8 +6,9 @@
   --ink: #eaefd3; --muted: #98978f; --live: #1b998b; --active: #ff6a1f; --hot: #ff9b71;
   --sans: "Fredoka", "Nunito", system-ui, sans-serif;
   --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
+  --bar-h: 94px; --pad: 32px;
   position: absolute; inset: 0; color: var(--ink);
-  font-family: var(--sans); overflow: hidden; user-select: none;
+  font-family: var(--sans); overflow: hidden; user-select: none; container-type: inline-size;
   /* the canvas is a dot grid: a place things will land, not an empty room */
   background: var(--canvas) radial-gradient(var(--line) 1px, transparent 1.3px) 8px 8px / 16px 16px;
 }
@@ -15,7 +16,7 @@
 :where(.session) button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 /* top bar: where you are, in the system's voice */
-.bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; height: 94px; padding: 0 32px;
+.bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; height: var(--bar-h); padding: 0 var(--pad);
   background: var(--canvas); border-bottom: 2px solid var(--line); }
 .agent { font-size: 26px; font-weight: 600; color: var(--live); }
 .scope { margin-left: auto; display: flex; align-items: center; gap: 12px; }
@@ -30,7 +31,7 @@
 .tag--status { border-color: var(--muted); color: var(--ink); }
 
 /* the project menu: search first, because the list is not the point */
-.menu { position: absolute; z-index: 3; right: 32px; top: 94px; width: 350px; display: flex; flex-direction: column;
+.menu { position: absolute; z-index: 3; right: var(--pad); top: var(--bar-h); width: 350px; display: flex; flex-direction: column;
   background: var(--field); border: 2px solid var(--line); border-top: 0; font-family: var(--mono); font-size: 22px; }
 .menu-search { padding: 11px 12px; font: inherit; color: var(--ink); background: none; border: 0; border-bottom: 2px solid var(--active); outline: none; }
 .menu-search::placeholder { color: var(--muted); }
@@ -40,29 +41,38 @@
 
 /* the gripper: a rigid grid and one soft mouth. Docked under the bar, top left with the name, always there.
    It is the way in: hover says it is pressable (the dots go orange), a press opens the composer listening. */
-.grip { position: absolute; z-index: 2; left: 32px; top: 94px; padding: 0; display: block; line-height: 0; }
+.grip { position: absolute; z-index: 2; left: var(--pad); top: var(--bar-h); padding: 0; display: block; line-height: 0; }
 .gripper { display: block; overflow: visible; }
-.grip:where(:hover) .gripper-dot, .grip:where(:hover) .gripper-status { fill: var(--active); }
+/* pressable without a pointer: at rest the status dot is teal (the system is alive) and the keyboard ring
+   lights the dots the way hover does. Hover only where hover exists, so a phone tap does not stick orange. */
+.gripper--rest .gripper-status, .gripper--open .gripper-status { fill: var(--live); }
+@media (hover: hover) { .grip:where(:hover) .gripper-dot, .grip:where(:hover) .gripper-status { fill: var(--active); } }
+.grip:focus-visible { outline: none; }
+.grip:focus-visible .gripper-dot, .grip:focus-visible .gripper-status { fill: var(--active); }
+/* open and idle: the plate says so, so the press that closes it is no surprise */
+.gripper--open .gripper-plate { stroke: var(--muted); }
+/* last, so trouble outranks alive: a refused mic is salmon whatever else the grip is doing */
+.gripper--denied .gripper-status { fill: var(--hot); }
 .gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
 .gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 80ms ease-out; } /* on/off is crisp, not fuzzy */
 .gripper--typing .gripper-dot, .gripper--typing .gripper-status,
 .gripper--listening .gripper-dot, .gripper--listening .gripper-status { fill: var(--active); }
-.gripper--denied .gripper-status { fill: var(--hot); }
 .gripper-mouth { fill: none; stroke: var(--canvas); stroke-width: 12; stroke-linecap: round; }
 
 /* the composer sits in the middle of the canvas, like a thing you address */
-.composer { position: absolute; left: 50%; top: 235px; width: 880px; transform: translateX(-50%);
+.composer { position: absolute; left: 50%; top: calc(var(--bar-h) + 141px); width: min(880px, calc(100% - 2 * var(--pad))); transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 25px;
   animation: rise 260ms cubic-bezier(.33,1,.68,1) both; }
 @keyframes rise { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
 html[data-reduced='true'] .composer { animation: none; }
-.built { width: 740px; margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
+.built { width: min(740px, 100%); margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
 .built-warn { color: var(--active); }
 
 /* the field: no box, a fill and a bottom edge, and only that edge goes active */
-.field { width: 740px; box-sizing: border-box; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
+.field { width: min(740px, 100%); box-sizing: border-box; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
   border: 0; border-bottom: 2px solid var(--line); padding: 14px 18px; transition: border-color 120ms ease-out; }
 .field--on { border-bottom-color: var(--active); }
+.field--denied { border-bottom-color: var(--hot); }
 .field-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
 .input { flex: 1 1 12ch; min-width: 12ch; font: 26px/34px var(--sans); color: var(--ink); background: none; border: 0; outline: none; resize: none; overflow-y: auto; padding: 0;
   /* growth is never eased: the box follows the text */ transition: none; }
@@ -93,3 +103,21 @@ html[data-reduced='true'] .composer { animation: none; }
 .chip--yours { color: var(--active); border-color: var(--active); } /* a request: outlined, per the state table */
 .empty { display: flex; align-items: center; gap: 16px; }
 .empty span { font-family: var(--mono); font-size: 20px; color: var(--muted); }
+
+/* narrow: the same drawing, sized from the composer's own width. Everything above is in stage units
+   at 1080; this brings the type and the gaps down without changing any relationship. */
+@container (max-width: 640px) {
+  /* a container query cannot restyle the container itself, so the tokens are set on the parts */
+  .bar, .grip, .composer, .menu { --bar-h: 64px; --pad: 16px; }
+  .agent { font-size: clamp(15px, 4.8cqw, 26px); white-space: nowrap; }
+  .pick, .tag, .change { font-size: clamp(13px, 3.6cqw, 22px); }
+  .tag { padding: 7px 9px; }
+  .composer { top: calc(var(--bar-h) + 96px); gap: 16px; }
+  .field { padding: 10px 12px; gap: 10px; }
+  .input { font-size: clamp(17px, 4.6cqw, 26px); line-height: 1.3; }
+  .token { font-size: clamp(15px, 4cqw, 24px); padding: 7px 11px; }
+  .mic { width: 30px; height: 30px; }
+  .built { font-size: 14px; }
+  .chip { font-size: clamp(14px, 3.8cqw, 20px); padding: 9px 12px; }
+  .empty span { font-size: 15px; }
+}

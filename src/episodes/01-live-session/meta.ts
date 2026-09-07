@@ -23,4 +23,7 @@ export const meta: EpisodeMeta = {
   ],
   embeddable: true,
   status: 'draft',
+  // Square: the story is one grip and one field, and a tall frame was empty canvas on every device.
+  stage: { w: 1080, h: 1080 },
+  fluidMin: 0, // one grip and one field lay themselves out at any width; scaling would shrink the tap target
 }
