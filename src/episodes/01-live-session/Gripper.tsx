@@ -98,7 +98,8 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
           <circle key={`${r}${c}`} ref={el => { dots.current[r * COLS + c] = el }} className="gripper-dot"
             cx={restX(c)} cy={y} r="3" style={c >= 3 ? { opacity: 0 } : undefined} />
         )))}
-        <circle ref={status} className="gripper-status" cx="114" cy="11" r="3" />
+        {/* same inset as the grid (8px), and exactly where the meter's ninth column lands: on unroll it becomes that column */}
+        <circle ref={status} className="gripper-status" cx={METER_X(COLS - 1)} cy="11" r="3" />
         <path ref={mouth} className="gripper-mouth" d={FLAT} />
       </svg>
     )
