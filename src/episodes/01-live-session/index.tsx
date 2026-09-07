@@ -268,7 +268,7 @@ export default function LiveSession() {
   const status = ({ closed: 'idle', rest: built ? 'standing by' : 'drafting', typing: 'drafting', pending: 'asking',
     listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone', lost: 'no microphone', leaving: 'stopped' } as const)[phase]
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
-  const ask = leaving === 'voice' ? 'You were talking. Keep going, keep it, or close?' : 'You have a request here. Keep it, or close?'
+  const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You have a request here. Keep it, or close?'
   const placeholder = phase === 'leaving' && leaving === 'voice' ? ask // the text case asks on the line beneath, so the box keeps its own words
     : kept && !query ? 'Kept as a request. Your words were not saved.'
     : phase === 'pending' ? 'The browser is asking for the microphone.'
@@ -385,7 +385,7 @@ export default function LiveSession() {
             )}
             {phase === 'leaving' ? (
               <span className="answers">
-                <button type="button" className="answer answer--keep" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepGoing() }}>{leaving === 'voice' ? 'keep going' : 'keep it'}</button>
+                <button type="button" className="answer answer--keep" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepGoing() }}>{leaving === 'voice' ? 'go on' : 'keep it'}</button>
                 {leaving === 'voice' && <button type="button" className="answer" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepIt() }}>keep it</button>}
                 <button type="button" className="answer" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); shut() }}>close</button>
               </span>
