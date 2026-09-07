@@ -64,14 +64,13 @@ export default function LiveSession() {
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
   const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null) }, [mic])
-  // The grip is the way in, and the way through: press → the composer appears already listening
-  // (the mic starts inside the same click, which is what iOS needs); press → it stops, the composer
-  // stays so you can read what you got; press → it closes.
+  // The grip is a drawer handle: one press opens the composer already listening (the mic starts inside
+  // the same click, which is what iOS needs), the next closes it. Stopping the mic is the mic glyph's job,
+  // so no control has two meanings and nobody has to remember where they are in a cycle.
   const press = useCallback(() => {
     if (!open) { setOpen(true); void mic.start(); return }
-    if (listening) { mic.stop(); return }
     close()
-  }, [mic, open, listening, close])
+  }, [mic, open, close])
   // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
   // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
   type Phase = 'closed' | 'rest' | 'typing' | 'pending' | 'listening' | 'stopped' | 'cancelled' | 'denied' | 'unsupported' | 'lost'
@@ -263,7 +262,7 @@ export default function LiveSession() {
   const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser' : phase === 'lost' ? 'microphone lost, try again'
     : phase === 'stopped' ? 'done' : listening ? 'stop listening' : 'speak'
   // A three-way cycle is not a toggle: the grip's name is its next effect.
-  const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
+  const gripLabel = !open ? 'open the composer and listen' : 'close the composer'
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
   // While it listens (or has just stopped) the field is a sentence, not a text box: nothing to type into,
   // nothing to read but what is happening. The keyboard is the fallback when the mic cannot be used.

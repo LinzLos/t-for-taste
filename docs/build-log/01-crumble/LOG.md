@@ -415,3 +415,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06 (5181):** with a pill in the field the state copy is cut off; gibberish must not become a pill ("there needs to be a checker on the data in the pill"); the green check looks like Claude design, not T for Taste. **Agent:** text row stacks under pills; `looksLikeWords` before a request is minted, with a plain-words note on failure (5 cases in check:rules); the check replaced by a mono `done` tag in the status-tag family.
 
 **Lindsay, 2026-09-06:** stacking the text under the pill is not the answer — if it is listening, why is there a pill and a text box at all? **Agent:** the field is either voice (a sentence + glyph) or text (box + pills); listening starts from empty; the keyboard is the fallback only.
+
+**Lindsay, 2026-09-06:** "the double click is weird, might be non-intuitive." **Agent:** agreed — a three-way cycle on one icon was a patch; grip = open/close (drawer handle), glyph = start/stop (the mic), `done` closes. One meaning per control.
