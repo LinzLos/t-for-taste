@@ -11,14 +11,15 @@
   /* the canvas is a dot grid: a place things will land, not an empty room */
   background: var(--canvas) radial-gradient(var(--line) 1px, transparent 1.3px) 8px 8px / 16px 16px;
 }
-.session button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; } /* buttons do not inherit font-size on their own */
+/* zero-specificity reset (:where), so a single state class like .mic--on always outranks it */
+:where(.session) button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
 /* top bar: where you are, in the system's voice */
 .bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; height: 94px; padding: 0 32px;
   background: var(--canvas); border-bottom: 2px solid var(--line); }
 .agent { margin-left: auto; font-size: 26px; font-weight: 600; color: var(--live); }
 .folder { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
-.session .pick, .tag, .session .change { font-family: var(--mono); font-size: 22px; line-height: 1; }
+.pick, .tag, .change { font-family: var(--mono); font-size: 22px; line-height: 1; }
 .pick { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 2px solid var(--line-strong); color: var(--muted); transition: border-color 140ms ease-out, color 140ms ease-out; }
 .pick:hover, .pick[aria-expanded='true'] { border-color: var(--muted); color: var(--ink); }
 .change { padding: 8px 6px 8px 0; color: var(--muted); }
@@ -51,6 +52,8 @@
   animation: rise 260ms cubic-bezier(.33,1,.68,1) both; }
 @keyframes rise { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
 html[data-reduced='true'] .composer { animation: none; }
+/* the field alone, no chip row: the composer stays a single block */
+.composer > .field:last-child { margin-bottom: 0; }
 .built { width: 740px; margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
 .built-warn { color: var(--active); }
 
@@ -72,7 +75,8 @@ html[data-reduced='true'] .composer { animation: none; }
 .mic { width: 34px; height: 34px; margin-top: 2px; padding: 0; display: grid; place-items: center; color: var(--muted); transition: color 140ms ease-out; }
 .mic svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .mic:hover { color: var(--ink); }
-.mic--on { color: var(--active); }
+/* orange the moment it is pressed; the unroll and the smile wait for the browser's answer */
+.mic--pending, .mic--on { color: var(--active); }
 .mic--denied { color: var(--hot); }
 
 /* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
