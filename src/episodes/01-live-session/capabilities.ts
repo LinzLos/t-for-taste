@@ -40,3 +40,13 @@ export const asYours = (raw: string): Capability => {
 // Kept for reference, unused: filtering the row by sequence rules made it unstable and unreadable.
 // Absence in the row means "not connected". Sequence is the canvas's job, because it can show
 // structure rather than only remove things.
+
+// A request has to look like words before it becomes a pill, or the pill means nothing. The check is
+// small on purpose and explainable in one sentence: real words have vowels, and a keyboard mash does not.
+// Tags (#growers), handles (@marike) and numbers pass on their own.
+export const looksLikeWords = (raw: string) => {
+  const words = raw.trim().split(/\s+/).filter(Boolean)
+  if (!words.length) return false
+  const ok = (w: string) => /^[#@]\w+$/.test(w) || /^\d+([.:]\d+)?%?$/.test(w) || (/[aeiouy]/i.test(w) && !/[bcdfghjklmnpqrstvwxz]{5,}/i.test(w))
+  return words.every(ok) && words.join('').replace(/[^a-z]/gi, '').length >= 3
+}

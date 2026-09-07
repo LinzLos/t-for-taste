@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimate } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
-import { CAPABILITIES, SCRIPT, asYours, match, type Capability } from './capabilities'
+import { CAPABILITIES, SCRIPT, asYours, looksLikeWords, match, type Capability } from './capabilities'
 import { Gripper, type GripperHandle } from './Gripper'
 import { useMic } from './use-mic'
 import { EASE } from './motion'
@@ -20,11 +20,6 @@ const Folder = () => (
     <path d="M1.5 3.5h7l2 2.5h12v12h-21z" />
   </svg>
 )
-const DoneGlyph = () => (
-  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
-    <path d="M5 12.5l4.5 4.5L19 7.5" />
-  </svg>
-)
 const MicGlyph = () => (
   <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
     <rect x="9" y="3" width="6" height="11" rx="3" />
@@ -37,6 +32,7 @@ export default function LiveSession() {
   const { reduced } = useReducedMotion()
   const [picking, setPicking] = useState(false)
   const [open, setOpen] = useState(false) // the grip opens the composer; nothing else does
+  const [note, setNote] = useState<string | null>(null) // one line under the field when a request could not be made
   const [pickQuery, setPickQuery] = useState('')
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
@@ -63,7 +59,7 @@ export default function LiveSession() {
   const toggleVoice = useCallback(() => { if (listening) mic.stop(); else void mic.start() }, [mic, listening])
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
-  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null) }, [mic])
+  const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null) }, [mic])
   // The grip is the way in, and the way through: press → the composer appears already listening
   // (the mic starts inside the same click, which is what iOS needs); press → it stops, the composer
   // stays so you can read what you got; press → it closes.
@@ -133,6 +129,8 @@ export default function LiveSession() {
   // Enter on something nothing can do commits it anyway, as yours.
   const askAnyway = useCallback(() => {
     const label = query.trim(); if (!label) return
+    // Not words, not a request. Say so, keep the text so it can be fixed, and mint nothing.
+    if (!looksLikeWords(label)) { setNote('Not sure what that means. Try words, like: summarize it for #growers'); return }
     const c = asYours(label)
     setLearned(l => (l.some(x => x.id === c.id) ? l : [...l, c]))
     take(c)
@@ -317,7 +315,7 @@ export default function LiveSession() {
           )}
 
           <div className={`field${edge}`}>
-            <div className="field-inner">
+            <div className={`field-inner${tokens.length ? ' field-inner--stacked' : ''}`}>
               <AnimatePresence initial={false}>
                 {tokens.map((t, i) => (
                   <motion.button
@@ -344,7 +342,7 @@ export default function LiveSession() {
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                onChange={e => { setQuery(e.target.value); mic.dismiss() }}
+                onChange={e => { setQuery(e.target.value); setNote(null); mic.dismiss() }}
                 onKeyDown={e => {
                   if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
                   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit() }
@@ -355,8 +353,10 @@ export default function LiveSession() {
               aria-label={micLabel}
               aria-pressed={phase === 'stopped' ? undefined : listening} onMouseDown={e => e.preventDefault()}
               onClick={e => { e.stopPropagation(); if (phase === 'stopped') close(); else toggleVoice() }}>
-              {phase === 'stopped' ? <DoneGlyph /> : <MicGlyph />}</button>
+              {phase === 'stopped' ? <span className="done">done</span> : <MicGlyph />}</button>
           </div>
+
+          {note && <p className="note">{note}</p>}
 
           {chipsOn && <div className="chips">
             <AnimatePresence mode="popLayout" initial={false}>
