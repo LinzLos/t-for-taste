@@ -56,7 +56,11 @@ export default function LiveSession() {
   // Real sound drives the grip. It cannot perform, because it has nothing to perform with.
   const mic = useMic(levels => grip.current?.setLevels(levels))
   const listening = mic.state === 'on' || mic.state === 'pending'
-  const toggleVoice = useCallback(() => { if (listening) mic.stop(); else void mic.start() }, [mic, listening])
+  // Listening always begins from empty: the field is either voice or text, never both.
+  const toggleVoice = useCallback(() => {
+    if (listening) { mic.stop(); return }
+    setQuery(''); setTokens([]); setNote(null); void mic.start()
+  }, [mic, listening])
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
   const close = useCallback(() => { mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null) }, [mic])
@@ -261,6 +265,9 @@ export default function LiveSession() {
   // A three-way cycle is not a toggle: the grip's name is its next effect.
   const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
+  // While it listens (or has just stopped) the field is a sentence, not a text box: nothing to type into,
+  // nothing to read but what is happening. The keyboard is the fallback when the mic cannot be used.
+  const voiceMode = phase === 'pending' || phase === 'listening' || phase === 'stopped'
   const edge = phase === 'denied' || phase === 'unsupported' || phase === 'lost' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
 
   return (
@@ -315,6 +322,9 @@ export default function LiveSession() {
           )}
 
           <div className={`field${edge}`}>
+            {voiceMode ? (
+              <p className="input voice-line">{placeholder}</p>
+            ) : (
             <div className={`field-inner${tokens.length ? ' field-inner--stacked' : ''}`}>
               <AnimatePresence initial={false}>
                 {tokens.map((t, i) => (
@@ -349,6 +359,7 @@ export default function LiveSession() {
                 }}
               />
             </div>
+            )}
             <button type="button" className={`mic mic--${phase}`}
               aria-label={micLabel}
               aria-pressed={phase === 'stopped' ? undefined : listening} onMouseDown={e => e.preventDefault()}
