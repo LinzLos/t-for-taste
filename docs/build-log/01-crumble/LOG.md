@@ -423,3 +423,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06 (frame):** scope down; use this frame for position only — grip and field in one row under the bar. **Agent:** composer docked in the grip's row, field to the right edge at grip height; drops beneath on narrow widths. Verified at 375px (field 311 wide under the grip).
 
 **Lindsay, 2026-09-06:** closing after a session has no recognition; offer continue or quit; "let's think thru this logic so we land it." **Agent:** the leaving table (ask once, only mid-session or with a request; stopped/empty just close; second press answers); `leaving` phase with `keep going`/`keep it` · `close` mono tags; copy "You were talking. Keep going, or close?"
+
+**Lindsay, 2026-09-06:** "with the scope reduction is the microphone needed now? or is it overkill, the active gripper does it all?" **Agent:** it does; the glyph removed. Grip: open+listen → pause+ask → close; the question labels the second press. `stopped` folded into `leaving`; fallback copy points at the grip; from a fallback with nothing typed, a press listens again.
