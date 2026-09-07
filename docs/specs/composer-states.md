@@ -293,17 +293,17 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 | phase | grip (dots · status dot · label) | field edge | placeholder | status tag |
 |---|---|---|---|---|
 | closed | ink · **teal** (alive, pressable) · *open the composer and listen* | — | — | idle |
-| rest (open, idle) | ink · teal · plate stroke lifted · *close the composer* | plain | Describe your workflow | drafting / standing by |
+| rest (open, idle) | dots quiet (muted) · teal · *close the composer* | plain | Describe your workflow | drafting / standing by |
 | typing | orange · orange | orange | (your text) | drafting |
 | pending | orange · orange · *stop listening* | orange | The browser is asking for the microphone. | asking |
 | listening | 9×3 meter + smile · *stop listening* | orange | Listening. Say what it should do. | listening |
-| stopped | ink · teal · *close the composer* | plain | Stopped listening. Nothing was kept. | stopped |
+| stopped | quiet dots · teal · *close the composer* | plain | Stopped listening. Nothing was kept: this one listens, it does not transcribe. | stopped — and the mic glyph becomes a teal **check** (*done*) that closes |
 | cancelled | ink · teal | plain | Stopped asking for the microphone. | drafting |
 | denied | ink · **salmon** · *close the composer* | salmon | Microphone not allowed. Try again, or type. | no microphone |
 | unsupported | ink · salmon | salmon | No microphone in this browser. Try Safari or Chrome, or type. | no microphone |
 | lost | ink · salmon · *close the composer* | salmon | The microphone went away. Press the mic to try again, or type. | no microphone |
 
-**The press cycle.** `closed → open + listening` (the mic starts inside the same click, which is what iOS needs) · `pending | listening → stop` (the composer stays so you can read what you got) · `any other open phase → close`. Closing is a clean slate — the field and any requests go with it (Lindsay: "the type persists!!"; it must not, when the sentence is *nothing was kept*) — and it always releases the mic. A three-way cycle is not a toggle, so the grip's accessible name is its next effect, never a state. The mic glyph in the field starts and stops listening once the composer is open; *start from open* has that one trigger, *stop* has two, *close* has one.
+**The press cycle.** `closed → open + listening` (the mic starts inside the same click, which is what iOS needs) · `pending | listening → stop` (the composer stays so you can read what you got) · `any other open phase → close`. Closing is a clean slate — the field and any requests go with it (Lindsay: "the type persists!!"; it must not, when the sentence is *nothing was kept*) — and it always releases the mic. A three-way cycle is not a toggle, so the grip's accessible name is its next effect, never a state. The mic glyph in the field starts and stops listening once the composer is open; *start from open* has that one trigger, *stop* has two, *close* has two: the grip, and after listening the check — the flow needs an end the viewer can see. (A plate stroke as the open look read as a stray border; the quiet dots replace it.)
 
 **Pressable without a pointer.** The teal status dot at rest is the cue; hover lights the dots orange only where hover exists (`@media (hover: hover)`, so a phone tap does not stick); the keyboard ring lights them the same way. Escape stops listening, else closes.
 

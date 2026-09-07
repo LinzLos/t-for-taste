@@ -49,8 +49,8 @@
 @media (hover: hover) { .grip:where(:hover) .gripper-dot, .grip:where(:hover) .gripper-status { fill: var(--active); } }
 .grip:focus-visible { outline: none; }
 .grip:focus-visible .gripper-dot, .grip:focus-visible .gripper-status { fill: var(--active); }
-/* open and idle: the plate says so, so the press that closes it is no surprise */
-.gripper--open .gripper-plate { stroke: var(--muted); }
+/* open and idle: the dots go quiet, so the press that closes it is no surprise (a plate stroke read as a stray border) */
+.gripper--open .gripper-dot { fill: var(--muted); }
 /* last, so trouble outranks alive: a refused mic is salmon whatever else the grip is doing */
 .gripper--denied .gripper-status { fill: var(--hot); }
 .gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
@@ -92,6 +92,8 @@ html[data-reduced='true'] .composer { animation: none; }
 .mic:where(:hover) { color: var(--ink); }
 .mic--pending, .mic--listening { color: var(--active); }
 .mic--denied { color: var(--hot); }
+/* after listening: the glyph becomes the way out — a check, teal, the system saying it is done with you */
+.mic--stopped { color: var(--live); }
 
 /* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; min-height: 52px; align-content: flex-start; }

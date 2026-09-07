@@ -20,6 +20,11 @@ const Folder = () => (
     <path d="M1.5 3.5h7l2 2.5h12v12h-21z" />
   </svg>
 )
+const DoneGlyph = () => (
+  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
+    <path d="M5 12.5l4.5 4.5L19 7.5" />
+  </svg>
+)
 const MicGlyph = () => (
   <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden>
     <rect x="9" y="3" width="6" height="11" rx="3" />
@@ -247,14 +252,14 @@ export default function LiveSession() {
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
   const placeholder = phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
-    : phase === 'stopped' ? 'Stopped listening. Nothing was kept.'
+    : phase === 'stopped' ? 'Stopped listening. Nothing was kept: this one listens, it does not transcribe.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Try again, or type.'
     : phase === 'unsupported' ? 'No microphone in this browser. Try Safari or Chrome, or type.'
     : phase === 'lost' ? 'The microphone went away. Press the mic to try again, or type.'
     : tokens.length ? 'and then…' : 'Describe your workflow'
   const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser' : phase === 'lost' ? 'microphone lost, try again'
-    : listening ? 'stop listening' : 'speak'
+    : phase === 'stopped' ? 'done' : listening ? 'stop listening' : 'speak'
   // A three-way cycle is not a toggle: the grip's name is its next effect.
   const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
@@ -348,8 +353,9 @@ export default function LiveSession() {
             </div>
             <button type="button" className={`mic mic--${phase}`}
               aria-label={micLabel}
-              aria-pressed={listening} onMouseDown={e => e.preventDefault()}
-              onClick={e => { e.stopPropagation(); toggleVoice() }}><MicGlyph /></button>
+              aria-pressed={phase === 'stopped' ? undefined : listening} onMouseDown={e => e.preventDefault()}
+              onClick={e => { e.stopPropagation(); if (phase === 'stopped') close(); else toggleVoice() }}>
+              {phase === 'stopped' ? <DoneGlyph /> : <MicGlyph />}</button>
           </div>
 
           {chipsOn && <div className="chips">
