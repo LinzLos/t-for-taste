@@ -260,7 +260,7 @@ export default function LiveSession() {
     : phase === 'lost' ? 'The microphone went away. Press the mic to try again, or type.'
     : tokens.length ? 'and then…' : 'Describe your workflow'
   const micLabel = phase === 'denied' ? 'microphone not allowed, try again' : phase === 'unsupported' ? 'no microphone in this browser' : phase === 'lost' ? 'microphone lost, try again'
-    : phase === 'stopped' ? 'done' : listening ? 'stop listening' : 'speak'
+    : listening ? 'stop listening' : 'speak'
   // A three-way cycle is not a toggle: the grip's name is its next effect.
   const gripLabel = !open ? 'open the composer and listen' : 'close the composer'
   const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
@@ -361,9 +361,8 @@ export default function LiveSession() {
             )}
             <button type="button" className={`mic mic--${phase}`}
               aria-label={micLabel}
-              aria-pressed={phase === 'stopped' ? undefined : listening} onMouseDown={e => e.preventDefault()}
-              onClick={e => { e.stopPropagation(); if (phase === 'stopped') close(); else toggleVoice() }}>
-              {phase === 'stopped' ? <span className="done">done</span> : <MicGlyph />}</button>
+              aria-pressed={listening} onMouseDown={e => e.preventDefault()}
+              onClick={e => { e.stopPropagation(); toggleVoice() }}><MicGlyph /></button>
           </div>
 
           {note && <p className="note">{note}</p>}

@@ -95,10 +95,7 @@ html[data-reduced='true'] .composer { animation: none; }
 .mic:where(:hover) { color: var(--ink); }
 .mic--pending, .mic--listening { color: var(--active); }
 .mic--denied { color: var(--hot); }
-/* after listening: the glyph becomes the way out. Not a check (that is everyone's icon) — the system's
-   own voice, a mono word in the same rectangle family as the status tag */
-.mic--stopped { width: auto; height: auto; color: var(--live); }
-.done { display: block; padding: 6px 10px; border: 2px solid currentColor; font-family: var(--mono); font-size: 18px; line-height: 1; }
+/* after listening the glyph is simply a mic again: stopping is a complete action, nothing asks you to close */
 
 /* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; min-height: 52px; align-content: flex-start; }

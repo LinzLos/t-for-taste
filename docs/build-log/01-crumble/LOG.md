@@ -417,3 +417,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-06:** stacking the text under the pill is not the answer — if it is listening, why is there a pill and a text box at all? **Agent:** the field is either voice (a sentence + glyph) or text (box + pills); listening starts from empty; the keyboard is the fallback only.
 
 **Lindsay, 2026-09-06:** "the double click is weird, might be non-intuitive." **Agent:** agreed — a three-way cycle on one icon was a patch; grip = open/close (drawer handle), glyph = start/stop (the mic), `done` closes. One meaning per control.
+
+**Lindsay, 2026-09-06:** "to stop and then another click to close?? odd." **Agent:** stopping is the end — sentence shows, glyph is a mic again, no `done`, closing is optional via the grip.
