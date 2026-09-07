@@ -3,7 +3,7 @@ import type { EpisodeMeta } from '../episodes/types'
 // Default. Change. Reason. Then the numbers. Same voice every time.
 export function Caption({ meta }: { meta: EpisodeMeta }) {
   return (
-    <aside className="caption">
+    <aside className={meta.values.length ? 'caption' : 'caption caption--plain'}>
       <dl>
         <dt>Default</dt><dd>{meta.caption.default}</dd>
         <dt>Change</dt><dd>{meta.caption.change}</dd>

@@ -84,6 +84,8 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .mark { position: absolute; left: 36px; bottom: 32px; font: 700 28px/1 var(--mono); letter-spacing: .02em; color: currentColor; mix-blend-mode: difference; color: #fff; pointer-events: none; }
 
 .caption { padding: 20px; border-top: 2px solid var(--rule); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+/* no numbers table: one column, a reading measure, no scroll */
+.caption--plain { grid-template-columns: minmax(0, 72ch); }
 .caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
 .caption dt { font-weight: 700; font-style: italic; }
 .caption dd { margin: 0; }
