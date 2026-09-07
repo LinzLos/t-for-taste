@@ -17,7 +17,8 @@
 /* top bar: where you are, in the system's voice */
 .bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; height: 94px; padding: 0 32px;
   background: var(--canvas); border-bottom: 2px solid var(--line); }
-.agent { margin-left: auto; font-size: 26px; font-weight: 600; color: var(--live); }
+.agent { font-size: 26px; font-weight: 600; color: var(--live); }
+.scope { margin-left: auto; display: flex; align-items: center; gap: 12px; }
 .folder { fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; }
 .pick, .tag, .change { font-family: var(--mono); font-size: 22px; line-height: 1; }
 .pick { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 2px solid var(--line-strong); color: var(--muted); transition: border-color 140ms ease-out, color 140ms ease-out; }
@@ -29,7 +30,7 @@
 .tag--status { border-color: var(--muted); color: var(--ink); }
 
 /* the project menu: search first, because the list is not the point */
-.menu { position: absolute; z-index: 3; left: 32px; top: 94px; width: 350px; display: flex; flex-direction: column;
+.menu { position: absolute; z-index: 3; right: 32px; top: 94px; width: 350px; display: flex; flex-direction: column;
   background: var(--field); border: 2px solid var(--line); border-top: 0; font-family: var(--mono); font-size: 22px; }
 .menu-search { padding: 11px 12px; font: inherit; color: var(--ink); background: none; border: 0; border-bottom: 2px solid var(--active); outline: none; }
 .menu-search::placeholder { color: var(--muted); }
@@ -37,8 +38,8 @@
 .menu-item:last-child { border-bottom: 0; }
 .menu-item:hover, .menu-item:focus-visible, .menu-item--on { color: var(--ink); background: var(--panel); outline: none; }
 
-/* the gripper: a rigid grid and one soft mouth. Docked under the bar, top right, always there. */
-.gripper { position: absolute; z-index: 2; right: 30px; top: 94px; overflow: visible; }
+/* the gripper: a rigid grid and one soft mouth. Docked under the bar, top left with the name, always there. */
+.gripper { position: absolute; z-index: 2; left: 32px; top: 94px; overflow: visible; }
 .gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
 .gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 80ms ease-out; } /* on/off is crisp, not fuzzy */
 .gripper--typing .gripper-dot, .gripper--typing .gripper-status,
@@ -52,8 +53,6 @@
   animation: rise 260ms cubic-bezier(.33,1,.68,1) both; }
 @keyframes rise { from { opacity: 0; translate: 0 10px } to { opacity: 1; translate: 0 0 } }
 html[data-reduced='true'] .composer { animation: none; }
-/* the field alone, no chip row: the composer stays a single block */
-.composer > .field:last-child { margin-bottom: 0; }
 .built { width: 740px; margin: 0 0 -10px; font-family: var(--mono); font-size: 18px; color: var(--live); }
 .built-warn { color: var(--active); }
 
@@ -75,9 +74,10 @@ html[data-reduced='true'] .composer { animation: none; }
 .mic { width: 34px; height: 34px; margin-top: 2px; padding: 0; display: grid; place-items: center; color: var(--muted); transition: color 140ms ease-out; }
 .mic svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .mic:hover { color: var(--ink); }
-/* orange the moment it is pressed; the unroll and the smile wait for the browser's answer */
-.mic--pending, .mic--on { color: var(--active); }
-.mic--denied { color: var(--hot); }
+/* state outranks hover: orange the moment it is pressed (the unroll and the smile wait for the
+   browser's answer), salmon when the browser said no */
+.mic--pending, .mic--pending:hover, .mic--on, .mic--on:hover { color: var(--active); }
+.mic--denied, .mic--denied:hover { color: var(--hot); }
 
 /* the chips: what is connected, filtered by what you type. Colour means state, never kind. */
 .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; min-height: 52px; align-content: flex-start; }

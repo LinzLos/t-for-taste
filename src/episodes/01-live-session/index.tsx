@@ -12,6 +12,7 @@ const MAX_LINES = 5
 const EMPTY_HELP_DELAY = 220 // the gap is the message
 const TYPE_MS = 55
 const PROJECTS = ['tuliptech-docs', 'spring-lots-pricing', 'grower-forms']
+const VOICE_SCRIPT = [{ type: 'When a page is saved, summarize it for #growers', pick: null }] as const
 
 const Folder = () => (
   <svg className="folder" viewBox="0 0 24 20" width="24" height="20" aria-hidden>
@@ -64,7 +65,7 @@ export default function LiveSession() {
   // with no reason on screen. Absence only means something when it means "not connected".
   const chips = useMemo(() => match(query, learned), [query, learned])
   const offer = useMemo(() => chips.filter(c => !taken.has(c.id)), [chips, taken])
-  const empty = focused && chips.length === 0
+  const empty = chipsOn && focused && chips.length === 0 // the help belongs to the chips
 
   // The help arrives after the emptiness has registered, never with it — and never while
   // they are still typing, since the timer restarts on every keystroke.
@@ -155,7 +156,9 @@ export default function LiveSession() {
       }
       field.current?.focus(); setFocused(true)
       await wait(400)
-      for (const step of SCRIPT) {
+      // With the chips off there is nothing to pick, so the script says one whole thing and stops.
+      const script = chipsOn ? SCRIPT : VOICE_SCRIPT
+      for (const step of script) {
         for (let i = 1; i <= step.type.length; i++) {
           if (cancel.current) return
           setQuery(step.type.slice(0, i))
@@ -167,7 +170,7 @@ export default function LiveSession() {
           const c = CAPABILITIES.find(x => x.id === step.pick)!
           take(c)
           await wait(600)
-        } else {
+        } else if (chipsOn) {
           await wait(2200) // let the empty state land, then hand back something they can act from
           if (cancel.current) return
           setQuery('')
@@ -176,7 +179,7 @@ export default function LiveSession() {
       setPlaying(false)
     }
     void run()
-  }, [playing, take, pickOn])
+  }, [playing, take, pickOn, chipsOn])
 
   useEffect(() => () => { cancel.current = true }, [])
 
@@ -210,19 +213,21 @@ export default function LiveSession() {
   return (
     <div className="session" ref={scope} onClick={() => { setPicking(false); if (project) field.current?.focus() }}>
       <header className="bar">
-        {project ? (
-          <>
-            {pickOn && <button type="button" className="change" aria-label="change project" aria-expanded={picking}
-              onClick={e => { e.stopPropagation(); setPicking(p => !p) }}><Folder /></button>}
-            <span className="tag">main</span>
-            <span className="tag">{project}</span>
-            <span className="tag tag--status">{status}</span>
-          </>
-        ) : (
-          <button type="button" className="pick" aria-expanded={picking}
-            onClick={e => { e.stopPropagation(); setPicking(p => !p) }}>select project <Folder /></button>
-        )}
         <span className="agent">friendly agent composer</span>
+        <span className="scope">
+          {project ? (
+            <>
+              {pickOn && <button type="button" className="change" aria-label="change project" aria-expanded={picking}
+                onClick={e => { e.stopPropagation(); setPicking(p => !p) }}><Folder /></button>}
+              <span className="tag">main</span>
+              <span className="tag">{project}</span>
+              <span className="tag tag--status">{status}</span>
+            </>
+          ) : (
+            <button type="button" className="pick" aria-expanded={picking}
+              onClick={e => { e.stopPropagation(); setPicking(p => !p) }}>select project <Folder /></button>
+          )}
+        </span>
       </header>
 
       {picking && (
