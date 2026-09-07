@@ -283,3 +283,12 @@ The send arrow is gone; her screens have only the mic, and Enter with nothing ty
 ## Review pass (2026-09-06)
 
 Eight-angle code review, verified. Fixed: the beat-strip reset and replay left the microphone open with no control on screen (one `reset()` now releases it); a refusal or an unsupported browser flashed the listening face for a frame (listening is derived from the hook's state, never from the click); a retry stayed salmon through the new prompt; the meter dropped the first 320ms of speech during the unroll (bookkeeping never waits, only the drawing); `ac.resume()` is awaited inside the try; the voice-script run now ends built; the `yours` id normalises whitespace; the settle curve lives in one `EASE`; the mic tick allocates nothing per frame; the field's line height is measured once; `.mic:where(:hover)` uses the same zero-specificity trick as the button reset; `.chip--yours` has its outline back per §13. Left as is: the beat strip's `go` ignores its index (one beat); the 80ms on/off ease on dots (deliberate, values only change on a row change); the parked stories stay behind flags rather than becoming components until they are their own episodes.
+
+## 18 · The grip is the way in (Lindsay, 2026-09-06)
+
+Clicking anywhere used to focus the field, which misled: it suggested the surface was a text box you address. For a voice demo the entry is the grip and nothing else.
+
+- **Closed.** Title `friendly voice composer` on the left, a single status tag on the right (`drafting`), the grip alone under the title. No composer. The two bindings (`main`, `tuliptech-docs`) belong to the picker's story and are parked with it behind `?pick`; only the status tag narrates this one.
+- **Hover.** The dots go orange: it is pressable.
+- **Press.** The composer appears already listening — the mic starts inside the same click (what iOS needs), the mic glyph and the dots go orange at once, and when the browser says yes the grid unrolls and the slot smiles. Press again to stop; the composer stays so you can read what you got. Refused: the composer still opens, honestly — "Microphone not allowed. Type instead." — and the grid stays a grip.
+- **Nothing else opens it.** The root click only closes the project menu. The mic glyph in the field toggles listening once the composer is there.

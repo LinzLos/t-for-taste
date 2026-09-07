@@ -31,6 +31,7 @@ const MicGlyph = () => (
 export default function LiveSession() {
   const { reduced } = useReducedMotion()
   const [picking, setPicking] = useState(false)
+  const [open, setOpen] = useState(false) // the grip opens the composer; nothing else does
   const [pickQuery, setPickQuery] = useState('')
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
@@ -55,6 +56,12 @@ export default function LiveSession() {
   const mic = useMic(levels => grip.current?.setLevels(levels))
   const toggleVoice = useCallback(() => {
     if (mic.state === 'on' || mic.state === 'pending') mic.stop(); else void mic.start()
+  }, [mic])
+  // The grip is the way in: press it and the composer appears already listening. The mic starts
+  // inside the same click, which is what iOS needs. Press again to stop; the composer stays.
+  const press = useCallback(() => {
+    if (mic.state === 'on' || mic.state === 'pending') { mic.stop(); return }
+    setOpen(true); void mic.start()
   }, [mic])
   // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
   // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
@@ -146,7 +153,7 @@ export default function LiveSession() {
   const reset = useCallback(() => {
     // Back to the start. It releases the mic too: a composer that has gone must not leave the mic open.
     cancel.current = true; setPlaying(false); mic.stop()
-    setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false)
+    setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false); setOpen(false)
   }, [mic, pickOn])
 
   const play = useCallback(() => {
@@ -161,8 +168,10 @@ export default function LiveSession() {
         setProject(PROJECTS[0]); setPicking(false)
         await wait(700); if (cancel.current) return
       }
+      setOpen(true)
+      await wait(400); if (cancel.current) return
       field.current?.focus(); setFocused(true)
-      await wait(400)
+      await wait(300)
       // With the chips off there is nothing to pick, so the script says one whole thing and stops.
       const script = chipsOn ? SCRIPT : VOICE_SCRIPT
       for (const step of script) {
@@ -210,7 +219,7 @@ export default function LiveSession() {
     go: () => { reset(); setFocused(false) },
     play,
     playing,
-    hint: 'or press the mic yourself',
+    hint: 'or press the grip yourself',
   }), [play, playing, reset])
   useRegisterBeats(controls)
 
@@ -225,16 +234,16 @@ export default function LiveSession() {
   const micLabel = phase === 'denied' ? 'microphone not allowed' : phase === 'listening' || phase === 'pending' ? 'stop listening' : 'speak'
 
   return (
-    <div className="session" ref={scope} onClick={() => { setPicking(false); if (project) field.current?.focus() }}>
+    <div className="session" ref={scope} onClick={() => setPicking(false)}>
       <header className="bar">
-        <span className="agent">friendly agent composer</span>
+        <span className="agent">friendly voice composer</span>
         <span className="scope">
           {project ? (
             <>
               {pickOn && <button type="button" className="change" aria-label="change project" aria-expanded={picking}
                 onClick={e => { e.stopPropagation(); setPicking(p => !p) }}><Folder /></button>}
-              <span className="tag">main</span>
-              <span className="tag">{project}</span>
+              {pickOn && <span className="tag">main</span>}
+              {pickOn && <span className="tag">{project}</span>}
               <span className="tag tag--status">{status}</span>
             </>
           ) : (
@@ -258,9 +267,12 @@ export default function LiveSession() {
       )}
 
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
-      <Gripper ref={grip} mode={phase === 'listening' ? 'listening' : phase === 'pending' || focused ? 'typing' : 'rest'} denied={phase === 'denied'} />
+      <button type="button" className="grip" aria-pressed={phase === 'listening' || phase === 'pending'} aria-label={micLabel}
+        onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); press() }}>
+        <Gripper ref={grip} mode={phase === 'listening' ? 'listening' : phase === 'pending' || focused ? 'typing' : 'rest'} denied={phase === 'denied'} />
+      </button>
 
-      {project && (
+      {project && open && (
         <div className="composer">
 
           {built && (

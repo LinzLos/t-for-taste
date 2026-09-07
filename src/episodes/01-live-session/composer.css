@@ -38,8 +38,11 @@
 .menu-item:last-child { border-bottom: 0; }
 .menu-item:hover, .menu-item:focus-visible, .menu-item--on { color: var(--ink); background: var(--panel); outline: none; }
 
-/* the gripper: a rigid grid and one soft mouth. Docked under the bar, top left with the name, always there. */
-.gripper { position: absolute; z-index: 2; left: 32px; top: 94px; overflow: visible; }
+/* the gripper: a rigid grid and one soft mouth. Docked under the bar, top left with the name, always there.
+   It is the way in: hover says it is pressable (the dots go orange), a press opens the composer listening. */
+.grip { position: absolute; z-index: 2; left: 32px; top: 94px; padding: 0; display: block; line-height: 0; }
+.gripper { display: block; overflow: visible; }
+.grip:where(:hover) .gripper-dot, .grip:where(:hover) .gripper-status { fill: var(--active); }
 .gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
 .gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 80ms ease-out; } /* on/off is crisp, not fuzzy */
 .gripper--typing .gripper-dot, .gripper--typing .gripper-status,
