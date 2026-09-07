@@ -1,12 +1,13 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import { animate, useMotionValue } from 'motion/react'
 import { useReducedMotion } from '../../chassis/use-reduced-motion'
+import { EASE } from './motion'
 
 // One SVG, one viewBox, so it is the same drawing at 56px on a desktop and 44px on a phone.
 // The grid is rigid and stays a grid; all the organic quality goes to the mouth, which is a
 // single quadratic — only the pull point moves between the flat bar and the smile.
 export type GripperMode = 'rest' | 'typing' | 'listening'
-export interface GripperHandle { setLevels: (levels: number[]) => void }
+export interface GripperHandle { setLevels: (levels: readonly number[]) => void }
 
 const ROWS = [11, 19, 27] // top, mid, bottom
 const COLS = 9
@@ -16,7 +17,6 @@ const restX = (c: number) => GRIP_X[Math.min(c, 2)] // extra columns wait, hidde
 const FLAT = 'M 14 50 Q 59.5 50 105 50'
 const SMILE = 'M 20 45 Q 59.5 67 99 45'
 const PEAK_HOLD = 450, PEAK_FALL = 120 // ms: how long a peak sits, then how fast it falls per row
-const EASE: [number, number, number, number] = [0.33, 1, 0.68, 1]
 
 export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: boolean }>(
   function Gripper({ mode, denied }, ref) {
@@ -34,14 +34,15 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
     const peak = useRef(Array.from({ length: COLS }, () => ({ row: 1, t: 0 })))
     useImperativeHandle(ref, () => ({
       setLevels(levels) {
-        if (spread.get() < 1) return // not until the meter has unrolled
         const now = performance.now()
+        const drawn = spread.get() >= 1 // the unroll owns the dots until it lands; the bookkeeping never waits
         for (let c = 0; c < COLS; c++) {
           const l = levels[c] ?? 0
           const bar = l < 0.12 ? 1 : l < 0.5 ? 2 : 3
           const pk = peak.current[c]
           if (bar >= pk.row) { pk.row = bar; pk.t = now }
           else if (now - pk.t > PEAK_HOLD) { pk.row = Math.max(bar, pk.row - 1); pk.t = now - (PEAK_HOLD - PEAK_FALL) }
+          if (!drawn) continue
           for (let r = 0; r < 3; r++) {
             const fromBottom = 3 - r
             const d = dots.current[r * COLS + c]; if (!d) continue

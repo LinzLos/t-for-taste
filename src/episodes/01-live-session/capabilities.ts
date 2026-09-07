@@ -31,11 +31,11 @@ export const SCRIPT = [
   { type: 'curate it to my taste', pick: null },
 ] as const
 
-export const asYours = (label: string): Capability => ({
-  id: 'yours-' + label.toLowerCase().replace(/\W+/g, '-'),
-  label,
-  kind: 'yours',
-})
+// Whitespace is normalised first, so "curate  it" and "curate it" are one request, not two labels for one id.
+export const asYours = (raw: string): Capability => {
+  const label = raw.trim().replace(/\s+/g, ' ')
+  return { id: 'yours-' + label.toLowerCase().replace(/\W+/g, '-'), label, kind: 'yours' }
+}
 
 // Kept for reference, unused: filtering the row by sequence rules made it unstable and unreadable.
 // Absence in the row means "not connected". Sequence is the canvas's job, because it can show

@@ -6,6 +6,7 @@ import { useRegisterBeats } from '../../chassis/use-beats'
 import { CAPABILITIES, SCRIPT, asYours, match, type Capability } from './capabilities'
 import { Gripper, type GripperHandle } from './Gripper'
 import { useMic } from './use-mic'
+import { EASE } from './motion'
 import './composer.css'
 
 const MAX_LINES = 5
@@ -36,7 +37,6 @@ export default function LiveSession() {
   // Phrases the user has committed. They come back as suggestions, marked as theirs, never as capability.
   const [learned, setLearned] = useState<Capability[]>([])
   const [built, setBuilt] = useState<Capability[] | null>(null)
-  const [voice, setVoice] = useState(false)
   const [focused, setFocused] = useState(false)
   const [helpFor, setHelpFor] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -49,15 +49,16 @@ export default function LiveSession() {
   const face = params.has('face') // preview the listening face without a microphone, for tuning and recording
   const chipsOn = params.has('chips') // the capability chips are the next episode's story; kept here behind a flag
   const pickOn = params.has('pick') // choosing a project is another episode too; without the flag it is already chosen
-  const [project, setProject] = useState<string | null>(() => (new URLSearchParams(window.location.hash.split('?')[1] ?? '').has('pick') ? null : PROJECTS[0]))
+  const [project, setProject] = useState<string | null>(() => (pickOn ? null : PROJECTS[0]))
 
   // Real sound drives the grip. It cannot perform, because it has nothing to perform with.
   const mic = useMic(levels => grip.current?.setLevels(levels))
   const toggleVoice = useCallback(() => {
-    if (voice) { mic.stop(); setVoice(false); return }
-    setVoice(true)
-    void mic.start().then(ok => { if (!ok) setVoice(false) }) // denied: the face never appears
-  }, [voice, mic])
+    if (mic.state === 'on' || mic.state === 'pending') mic.stop(); else void mic.start()
+  }, [mic])
+  // One phase, derived once, that every surface reads: the grip, the field, the tag, the mic.
+  // Listening comes from the hook's own state, never from a click, so a refusal never shows a face.
+  const phase = face || mic.state === 'on' ? 'listening' : mic.state === 'pending' ? 'pending' : mic.state === 'denied' ? 'denied' : focused ? 'typing' : 'rest'
 
   const taken = useMemo(() => new Set(tokens.map(t => t.id)), [tokens])
   // The row shows what is connected, filtered only by what you type. Hiding a chip because of a
@@ -77,11 +78,12 @@ export default function LiveSession() {
   const showHelp = empty && helpFor === query
 
   // Growth: the box follows the text. Never eased — an eased height makes typing feel laggy.
+  const lineH = useRef(0)
   const grow = useCallback(() => {
     const el = field.current; if (!el) return
+    if (!lineH.current) lineH.current = parseFloat(getComputedStyle(el).lineHeight) || 34 // measured once: a computed-style read per keystroke is a layout flush
     el.style.height = 'auto'
-    const line = parseFloat(getComputedStyle(el).lineHeight) || 34
-    el.style.height = `${Math.min(el.scrollHeight, line * MAX_LINES)}px`
+    el.style.height = `${Math.min(el.scrollHeight, lineH.current * MAX_LINES)}px`
   }, [])
   useEffect(grow, [query, tokens, project, grow])
 
@@ -137,14 +139,19 @@ export default function LiveSession() {
     const now = el.getBoundingClientRect()
     void animate(el,
       { x: [rect.left - now.left, 0], y: [rect.top - now.top, 0], scale: [1, 1.04, 1] },
-      { duration: 0.32, ease: [0.33, 1, 0.68, 1], times: [0, 1] })
+      { duration: 0.32, ease: EASE, times: [0, 1] })
   }, [tokens, reduced, animate, scope])
 
   // Picks a project and types like a person, so a recording needs no hands.
+  const reset = useCallback(() => {
+    // Back to the start. It releases the mic too: a composer that has gone must not leave the mic open.
+    cancel.current = true; setPlaying(false); mic.stop()
+    setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false)
+  }, [mic, pickOn])
+
   const play = useCallback(() => {
     if (playing) return
-    cancel.current = false
-    setPlaying(true); setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false)
+    reset(); cancel.current = false; setPlaying(true)
     const wait = (ms: number) => new Promise<void>(r => setTimeout(r, ms))
     const run = async () => {
       await wait(700); if (cancel.current) return
@@ -174,12 +181,18 @@ export default function LiveSession() {
           await wait(2200) // let the empty state land, then hand back something they can act from
           if (cancel.current) return
           setQuery('')
+        } else {
+          // no chips to match: the sentence commits as a request, then builds, so the run ends somewhere
+          const c = asYours(step.type)
+          take(c)
+          await wait(700); if (cancel.current) return
+          setBuilt([c])
         }
       }
       setPlaying(false)
     }
     void run()
-  }, [playing, take, pickOn, chipsOn])
+  }, [playing, take, reset, chipsOn, pickOn])
 
   useEffect(() => () => { cancel.current = true }, [])
 
@@ -194,21 +207,22 @@ export default function LiveSession() {
   const controls = useMemo(() => ({
     beats: ['rest'] as const,
     index: 0,
-    go: () => { cancel.current = true; setPlaying(false); setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false); setFocused(false) },
+    go: () => { reset(); setFocused(false) },
     play,
     playing,
     hint: 'or press the mic yourself',
-  }), [play, playing, pickOn])
+  }), [play, playing, reset])
   useRegisterBeats(controls)
 
   const spring = reduced ? { duration: 0 } : { type: 'spring' as const, stiffness: 520, damping: 34, mass: 0.7 }
   const projects = PROJECTS.filter(p => p.includes(pickQuery.trim().toLowerCase()))
-  const status = voice ? 'listening' : built ? 'standing by' : 'drafting'
+  const status = phase === 'listening' ? 'listening' : built ? 'standing by' : 'drafting'
   // The field says what is happening, in the tool's voice: it reports, it never asks you to feel anything.
-  const placeholder = mic.denied ? 'Microphone not allowed. Type instead.'
-    : mic.pending ? 'Waiting for the microphone'
-    : voice ? 'Listening. Say what it should do.'
+  const placeholder = phase === 'denied' ? 'Microphone not allowed. Type instead.'
+    : phase === 'pending' ? 'Waiting for the microphone'
+    : phase === 'listening' ? 'Listening. Say what it should do.'
     : tokens.length ? 'and then…' : 'Describe your workflow'
+  const micLabel = phase === 'denied' ? 'microphone not allowed' : phase === 'listening' || phase === 'pending' ? 'stop listening' : 'speak'
 
   return (
     <div className="session" ref={scope} onClick={() => { setPicking(false); if (project) field.current?.focus() }}>
@@ -244,14 +258,14 @@ export default function LiveSession() {
       )}
 
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
-      <Gripper ref={grip} mode={face || (voice && !mic.pending) ? 'listening' : focused || voice ? 'typing' : 'rest'} denied={mic.denied} />
+      <Gripper ref={grip} mode={phase === 'listening' ? 'listening' : phase === 'pending' || focused ? 'typing' : 'rest'} denied={phase === 'denied'} />
 
       {project && (
         <div className="composer">
 
           {built && (
             <motion.p className="built" initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.24, ease: [0.33, 1, 0.68, 1] }}>
+              transition={{ duration: 0.24, ease: EASE }}>
               {built.map(b => b.label).join(' → ')}
               {built.some(b => b.kind === 'yours') && <span className="built-warn"> · one step is not connected yet</span>}
             </motion.p>
@@ -292,9 +306,9 @@ export default function LiveSession() {
                 }}
               />
             </div>
-            <button type="button" className={`mic${voice ? ' mic--on' : ''}${mic.pending ? ' mic--pending' : ''}${mic.denied ? ' mic--denied' : ''}`}
-              aria-label={mic.denied ? 'microphone not allowed' : voice ? 'stop listening' : 'speak'}
-              aria-pressed={voice} onMouseDown={e => e.preventDefault()}
+            <button type="button" className={`mic mic--${phase}`}
+              aria-label={micLabel}
+              aria-pressed={phase === 'listening' || phase === 'pending'} onMouseDown={e => e.preventDefault()}
               onClick={e => { e.stopPropagation(); toggleVoice() }}><MicGlyph /></button>
           </div>
 
@@ -309,7 +323,7 @@ export default function LiveSession() {
                   initial={reduced ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.9, transition: { duration: 0.1, ease: [0.32, 0, 0.67, 0] } }}
-                  transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: [0.33, 1, 0.68, 1] }}
+                  transition={reduced ? { duration: 0 } : { duration: 0.18, delay: i * 0.012, ease: EASE }}
                   disabled={taken.has(c.id)}
                   onClick={e => { e.stopPropagation(); take(c, e.currentTarget.getBoundingClientRect()) }}
                 >
@@ -324,7 +338,7 @@ export default function LiveSession() {
               className="empty"
               initial={reduced ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.22, ease: [0.33, 1, 0.68, 1] }}
+              transition={{ duration: 0.22, ease: EASE }}
             >
               <span>No match. Nothing connected does that yet.</span>
               <button type="button" className="chip chip--offer"

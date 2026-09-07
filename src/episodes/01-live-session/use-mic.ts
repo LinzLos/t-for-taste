@@ -6,9 +6,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 // instead of piling into the low end. Bins at 48k / fftSize 1024 are ~47Hz wide. The band under
 // 140Hz is left out on purpose: it is hum and fan, not voice.
 const BANDS: [number, number][] = [[3, 5], [5, 7], [7, 12], [12, 19], [19, 31], [31, 49], [49, 79], [79, 110], [110, 150]]
+const N = BANDS.length
 const GAIN = 2.2
 const MARGIN = 0.04 // above the measured floor before a band counts at all
 const TILT = 0.10 // voice rolls off with frequency; lift the high columns so they get a say
+const TILTED = BANDS.map((_, c) => GAIN * (1 + c * TILT))
 // Every band tracks its own quiet level: it drops to any new low at once and creeps up slowly,
 // so the room's noise is subtracted and only what rises above it moves the meter. Without this
 // the low columns sit fully lit on fan noise before anyone has spoken.
@@ -17,65 +19,71 @@ const FLOOR_CREEP = 0.00004 // per ms → about 0.04 a second
 // almost at once and falls slowly. Time constants, so it is the same at any frame rate.
 const ATTACK = 20, RELEASE = 260
 
-export function useMic(onLevels: (levels: number[]) => void) {
-  const [denied, setDenied] = useState(false)
-  const [pending, setPending] = useState(false)
+export type MicState = 'off' | 'pending' | 'on' | 'denied'
+
+export function useMic(onLevels: (levels: readonly number[]) => void) {
+  // One state, not three booleans, so every surface reads the same answer.
+  const [state, setState] = useState<MicState>('off')
   const supported = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia && 'AudioContext' in window
   const ctx = useRef<AudioContext | null>(null)
   const stream = useRef<MediaStream | null>(null)
   const raf = useRef(0)
   const cb = useRef(onLevels)
   useEffect(() => { cb.current = onLevels })
+  const zeros = useMemo(() => new Array<number>(N).fill(0), [])
 
   // Release everything the moment voice is off, so the browser's mic indicator goes with it.
   const stop = useCallback(() => {
     cancelAnimationFrame(raf.current); raf.current = 0
     stream.current?.getTracks().forEach(t => t.stop()); stream.current = null
-    void ctx.current?.close(); ctx.current = null
-    cb.current(new Array(BANDS.length).fill(0))
-  }, [])
+    void ctx.current?.close().catch(() => {}); ctx.current = null
+    cb.current(zeros)
+    setState(s => (s === 'denied' ? s : 'off'))
+  }, [zeros])
 
   // Call this from the click itself: on iOS the audio context has to be born inside a gesture.
   const start = useCallback(async () => {
-    if (!supported) { setDenied(true); return false }
-    stop(); setPending(true)
+    if (!supported) { setState('denied'); return false }
+    stop(); setState('pending') // a retry starts clean: not denied until the browser says so again
     const ac = new AudioContext(); ctx.current = ac
-    void ac.resume()
     let ms: MediaStream
-    try { ms = await navigator.mediaDevices.getUserMedia({ audio: true }) }
-    catch { setDenied(true); setPending(false); void ac.close(); ctx.current = null; return false }
-    setPending(false)
+    try {
+      await ac.resume()
+      ms = await navigator.mediaDevices.getUserMedia({ audio: true })
+    } catch {
+      setState('denied'); void ac.close().catch(() => {}); ctx.current = null; return false
+    }
     if (ctx.current !== ac) { ms.getTracks().forEach(t => t.stop()); return false } // stopped while we waited
-    setDenied(false)
     stream.current = ms
     const an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.5
     ac.createMediaStreamSource(ms).connect(an)
+    // Everything the tick touches is allocated once: sixty frames a second is no place for garbage.
     const data = new Uint8Array(an.frequencyBinCount)
-    const cur = new Array(BANDS.length).fill(0)
-    const floor = new Array(BANDS.length).fill(1)
+    const raw = new Float32Array(N), out = new Float32Array(N), floor = new Float32Array(N).fill(1)
+    const cur = new Array<number>(N).fill(0)
     let last = performance.now()
     const tick = (now: number) => {
       const dt = Math.min(50, now - last); last = now
       an.getByteFrequencyData(data)
-      const raw = BANDS.map(([a, b], c) => {
+      for (let c = 0; c < N; c++) {
+        const [a, b] = BANDS[c]
         let s = 0; for (let i = a; i < b; i++) s += data[i]
         const v = s / (b - a) / 255
         floor[c] = v < floor[c] ? v : Math.min(v, floor[c] + FLOOR_CREEP * dt)
-        return Math.max(0, Math.min(1, (v - floor[c] - MARGIN) * GAIN * (1 + c * TILT)))
-      })
-      // neighbours lean on each other a little, so adjacent columns move as a wave, not as noise
-      const out = raw.map((v, c) => 0.2 * (raw[c - 1] ?? v) + 0.6 * v + 0.2 * (raw[c + 1] ?? v))
-      for (let c = 0; c < cur.length; c++) {
-        const k = 1 - Math.exp(-dt / (out[c] > cur[c] ? ATTACK : RELEASE))
-        cur[c] += (out[c] - cur[c]) * k
+        raw[c] = Math.max(0, Math.min(1, (v - floor[c] - MARGIN) * TILTED[c]))
       }
-      cb.current(cur.slice())
+      // neighbours lean on each other a little, so adjacent columns move as a wave, not as noise
+      for (let c = 0; c < N; c++) out[c] = 0.2 * raw[c === 0 ? 0 : c - 1] + 0.6 * raw[c] + 0.2 * raw[c === N - 1 ? c : c + 1]
+      const kUp = 1 - Math.exp(-dt / ATTACK), kDown = 1 - Math.exp(-dt / RELEASE)
+      for (let c = 0; c < N; c++) cur[c] += (out[c] - cur[c]) * (out[c] > cur[c] ? kUp : kDown)
+      cb.current(cur)
       raf.current = requestAnimationFrame(tick)
     }
     raf.current = requestAnimationFrame(tick)
+    setState('on')
     return true
   }, [supported, stop])
 
   useEffect(() => stop, [stop])
-  return useMemo(() => ({ start, stop, denied, pending, supported }), [start, stop, denied, pending, supported])
+  return useMemo(() => ({ start, stop, state, supported }), [start, stop, state, supported])
 }

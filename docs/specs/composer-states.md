@@ -246,7 +246,9 @@ Lindsay's call: build the voice real, with the animation, and grow from there. S
 
 **Consent is the browser's and it is not optional.** The context is created inside the click (iOS will not start audio otherwise), the permission prompt is the browser's own, and the browser shows its mic indicator the whole time. Toggling voice off releases the tracks and closes the context in the same tick, so that indicator disappears with it. Leaving the mic open after the face has gone would be a trust failure.
 
-**Denied is a state, not an error.** If the user refuses, or the page is in a browser that blocks capture (in-app browsers, LinkedIn's included), `voice` goes back to false, the face never appears, and both the mic button and the gripper's status dot go salmon — trouble, in the colour rule. No prose. Verified in the Browser pane, which blocks the mic: the gripper reports "microphone not allowed" and the mouth stays flat.
+**Denied is a state, not an error.** If the user refuses, or the page is in a browser that blocks capture (in-app browsers, LinkedIn's included), the face never appears, and both the mic button and the gripper's status dot go salmon — trouble, in the colour rule. The field says it too (Lindsay's call, 2026-09-06: state copy in the composer so the viewer knows what changed): "Microphone not allowed. Type instead." Verified in the Browser pane, which blocks the mic: the gripper reports "microphone not allowed" and the mouth stays flat.
+
+**One phase.** `rest · typing · pending · listening · denied` is derived once from the mic hook's own state (`off · pending · on · denied`) plus focus, and every surface reads it: the grip's mode, the field's placeholder ("Waiting for the microphone" while the browser asks; "Listening. Say what it should do." once it has said yes), the status tag (`drafting → listening`), the mic button's colour and label. Listening comes from the hook, never from the click, so a refusal or an unsupported browser can never flash a face. **Leaving the composer releases the mic**: the beat-strip reset and replay both go through one `reset()` that calls `mic.stop()`.
 
 **It resolves the FLOWIE finding.** A face on a timer performed while you were silent. A face on the microphone cannot perform: it has nothing to perform with.
 
@@ -261,7 +263,7 @@ One inline SVG, `viewBox 0 0 119 64`, so it is the same drawing at any rendered 
 
 If three rows still feel coarse in her hands, the next move is five rows on a 6px pitch inside the same plate, not a bigger plate. Try the initial design first (her call).
 - **Colour is state.** Ink at rest, orange while typing or listening (you are doing something), status dot salmon when the mic is refused.
-- **It is a widget now, not a handle.** Docked under the bar, top right, always there. It no longer gates the session; the composer is on the canvas once a project is chosen.
+- **It is a widget now, not a handle.** Docked under the bar, top left beneath the name (Lindsay, 2026-09-06: the name and the thing that is alive sit together; the bindings go right). It no longer gates the session; the composer is on the canvas once a project is chosen.
 
 Open, for her eyes: the unroll timing, and whether nine columns respond legibly to speech. The bottom-row anchor is the bet.
 
@@ -269,7 +271,7 @@ Open, for her eyes: the unroll timing, and whether nine columns respond legibly 
 
 ## 17 · The layout, from her four screens (2026-09-05)
 
-1. **Rest.** Bar with `select project` (mono, outlined, folder glyph) and `friendly agent composer` (Fredoka, teal). Empty dot-grid canvas — a place things will land, not an empty room. Gripper top right.
+1. **Rest.** Bar with `friendly agent composer` (Fredoka, teal) on the left and the bindings on the right. Empty dot-grid canvas — a place things will land, not an empty room. Gripper top left under the name. (The project picker and the capability chips are parked behind `?pick` and `?chips`: other episodes' stories, kept, not deleted. Without the flags the project is already chosen and the composer is on the canvas from the first frame.)
 2. **Picking.** A 350px menu under the bar: search first (orange underline), then projects in mono. Enter takes the first match; Escape closes; clicking anywhere else closes.
 3. **Project chosen.** The bar becomes bindings: folder glyph, `main`, `tuliptech-docs`, and a status tag that reads `drafting` until a build, then `standing by`. The composer rises onto the canvas (260ms CSS, none under reduced motion): a 740px field, `Describe your workflow`, mic glyph inside it at the right, chips centred beneath in an 880px row.
 4. **Typing.** The field's bottom edge and the gripper's dots go orange together.
@@ -277,3 +279,7 @@ Open, for her eyes: the unroll timing, and whether nine columns respond legibly 
 The send arrow is gone; her screens have only the mic, and Enter with nothing typed builds. The built line sits above the field.
 
 **On transcription (2026-09-06).** Lindsay asked whether words should appear in the field as she talks. Decision: not in this slice. The browser speech API is small, but in Chrome it sends audio to Google, which breaks the nothing-leaves-this-device claim; it does not exist in Firefox or in-app browsers. Words for some viewers with a privacy asterisk is a second feature with its own decisions. Instead the field states it: placeholder "Listening", orange edge, the meter alive. The caption carries the rest.
+
+## Review pass (2026-09-06)
+
+Eight-angle code review, verified. Fixed: the beat-strip reset and replay left the microphone open with no control on screen (one `reset()` now releases it); a refusal or an unsupported browser flashed the listening face for a frame (listening is derived from the hook's state, never from the click); a retry stayed salmon through the new prompt; the meter dropped the first 320ms of speech during the unroll (bookkeeping never waits, only the drawing); `ac.resume()` is awaited inside the try; the voice-script run now ends built; the `yours` id normalises whitespace; the settle curve lives in one `EASE`; the mic tick allocates nothing per frame; the field's line height is measured once; `.mic:where(:hover)` uses the same zero-specificity trick as the button reset; `.chip--yours` has its outline back per §13. Left as is: the beat strip's `go` ignores its index (one beat); the 80ms on/off ease on dots (deliberate, values only change on a row change); the parked stories stay behind flags rather than becoming components until they are their own episodes.
