@@ -37,11 +37,11 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .lede { margin: 0 0 3em; max-width: 44ch; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
-.episode-list a { display: grid; grid-template-columns: 5ch 1fr auto auto; gap: 1.5ch; padding: 1.1em 0; text-decoration: none; color: var(--ink); }
+/* the row: name left, one line on what it explores from the midline. Mono at two sizes, ruled, nothing else. */
+.episode-list a { display: grid; grid-template-columns: 1fr 1fr; gap: 2ch; align-items: start; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink); font-family: var(--mono); }
+.episode-list .name { font-size: 22px; line-height: 1.15; }
+.episode-list .blurb { font-size: 16px; line-height: 1.35; padding-top: .2em; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
-.episode-list .num, .episode-list .mat, .episode-list .draft { font-family: var(--mono); font-size: 14px; }
-.episode-list .mat, .episode-list .draft { opacity: .55; }
-.episode-list li[data-status="draft"] .name { opacity: .55; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
 .index .foot { margin-top: 5em; }
@@ -100,9 +100,9 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 /* phone: stack the episode row, tighten the frame, keep everything inside the viewport */
 @media (max-width: 600px) {
   .index { padding: 6vh 20px 10vh; }
-  .episode-list a { grid-template-columns: 5ch 1fr; grid-template-rows: auto auto; }
-  .episode-list .name { grid-column: 2; }
-  .episode-list .mat, .episode-list .draft { grid-column: 2; font-size: 13px; }
+  .episode-list a { grid-template-columns: 1fr; gap: 6px; }
+  .episode-list .name { font-size: 19px; }
+  .episode-list .blurb { font-size: 14px; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }

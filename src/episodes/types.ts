@@ -9,6 +9,8 @@ export interface EpisodeMeta {
   /** URL slug, matches the folder name minus the number prefix */
   slug: string
   title: string
+  /** One line for the episode list: what the exploration is about, in plain words. */
+  blurb?: string
   /** The one physical idea the episode commits to: plaster, rubber stamp, film leader… */
   material: string
   /** One library per episode. Never both on the same element. */
