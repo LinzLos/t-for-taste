@@ -19,7 +19,7 @@ body { background: var(--paper); color: var(--ink); font: 17px/1.5 var(--serif);
 a { color: inherit; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 
 /* index */
-.index { max-width: 62ch; margin: 0 auto; padding: 8vh 24px 12vh; }
+.index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
 .title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
 .index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
@@ -38,9 +38,12 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row: name left, one line on what it explores from the midline. Mono at two sizes, ruled, nothing else. */
-.episode-list a { display: grid; grid-template-columns: 1fr 1fr; gap: 2ch; align-items: start; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink); font-family: var(--mono); }
-.episode-list .name { font-size: 22px; line-height: 1.15; }
-.episode-list .blurb { font-size: 16px; line-height: 1.35; padding-top: .2em; }
+/* her frame (239:338): a 100px row, name at 32 and the line at 24, the line starting at the midline */
+.episode-list { border-top: 3px solid var(--rule); }
+.episode-list li { border-bottom: 3px solid var(--rule); }
+.episode-list a { display: grid; grid-template-columns: 1fr 1fr; gap: 3ch; align-items: start; min-height: 100px; padding: 30px 0 26px; box-sizing: border-box; text-decoration: none; color: var(--ink); font-family: var(--mono); }
+.episode-list .name { font-size: 30px; line-height: 1.1; }
+.episode-list .blurb { font-size: 22px; line-height: 1.25; padding-top: .15em; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
@@ -86,6 +89,11 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .caption { padding: 20px; border-top: 2px solid var(--rule); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 /* no numbers table: one column, a reading measure, no scroll */
 .caption--plain { grid-template-columns: minmax(0, 72ch); }
+/* the episode's colours and what each one is for: restraint, shown */
+.palette { grid-column: 1 / -1; list-style: none; margin: .5em 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 28px; font-family: var(--mono); font-size: 14px; }
+.palette li { display: flex; align-items: center; gap: 10px; }
+.palette i { width: 22px; height: 22px; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
+.palette .hex { opacity: .55; }
 .caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
 .caption dt { font-weight: 700; font-style: italic; }
 .caption dd { margin: 0; }
@@ -101,8 +109,9 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 @media (max-width: 600px) {
   .index { padding: 6vh 20px 10vh; }
   .episode-list a { grid-template-columns: 1fr; gap: 6px; }
-  .episode-list .name { font-size: 19px; }
-  .episode-list .blurb { font-size: 14px; }
+  .episode-list a { min-height: 0; padding: 18px 0; }
+  .episode-list .name { font-size: 22px; }
+  .episode-list .blurb { font-size: 16px; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }

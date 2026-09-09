@@ -23,6 +23,8 @@ export interface EpisodeMeta {
     /** What it is not, when honesty needs a fourth line. */
     not?: string
   }
+  /** The episode's colours, each with its one job, in plain words. Restraint, shown. */
+  palette?: { hex: string; job: string }[]
   /** The actual numbers. This is the "if you're stealing this" block. */
   values: { label: string; value: string }[]
   /** Can the portfolio open this in an iframe, or should it link out? */

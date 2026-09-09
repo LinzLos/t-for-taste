@@ -17,6 +17,15 @@ export const meta: EpisodeMeta = {
   },
   // The numbers table is cut: a number without the decision it serves is trivia, and it drifts.
   // The spec in docs/ is the "if you're stealing this".
+  // Six colours, one job each. The three that mean something are the ones a viewer has to learn.
+  palette: [
+    { hex: '#241f27', job: 'the ground' },
+    { hex: '#352c3c', job: 'the field' },
+    { hex: '#eaefd3', job: 'words' },
+    { hex: '#1b998b', job: 'the system is alive' },
+    { hex: '#ff6a1f', job: "you're doing something" },
+    { hex: '#ff9b71', job: 'trouble' },
+  ],
   values: [],
   embeddable: true,
   status: 'draft',

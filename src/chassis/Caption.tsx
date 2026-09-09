@@ -10,6 +10,13 @@ export function Caption({ meta }: { meta: EpisodeMeta }) {
         <dt>Reason</dt><dd>{meta.caption.reason}</dd>
         {meta.caption.not && <><dt>Not</dt><dd>{meta.caption.not}</dd></>}
       </dl>
+      {meta.palette && meta.palette.length > 0 && (
+        <ul className="palette" aria-label="colours and their jobs">
+          {meta.palette.map(c => (
+            <li key={c.hex}><i style={{ background: c.hex }} aria-hidden /><span>{c.job}</span><span className="hex">{c.hex}</span></li>
+          ))}
+        </ul>
+      )}
       {meta.values.length > 0 && (
         <table className="values">
           <caption>If you're stealing this</caption>
