@@ -22,6 +22,10 @@ const SPAN_MIN = 0.12 // the ceiling never sits closer than this to the floor
 // Meter ballistics, the thing that makes it read as motion rather than static: a bar rises
 // almost at once and falls slowly. Time constants, so it is the same at any frame rate.
 const ATTACK = 20, RELEASE = 260
+const QUIET_AFTER = 6000 // ms of nothing before the field says so
+const LOUD = 0.1 // what counts as hearing something
+// "Default - MacBook Air Microphone (Built-in)" → "MacBook Air Microphone": honest and short enough for a sentence
+const clean = (label: string) => label.replace(/^default\s*-\s*/i, '').replace(/\s*\([^)]*\)/g, '').trim()
 
 // `stopped` and `cancelled` are what just happened, so the field can say so; `dismiss()` clears them.
 // `lost` is the microphone going away mid-sentence (a headset drops, a tab comes back suspended and will
@@ -31,6 +35,8 @@ export type MicState = 'off' | 'pending' | 'on' | 'stopped' | 'cancelled' | 'den
 export function useMic(onLevels: (levels: readonly number[]) => void) {
   // One state, not three booleans, so every surface reads the same answer.
   const [state, setState] = useState<MicState>('off')
+  const [device, setDevice] = useState('') // which mic is live, from the track itself — a string nobody can fake
+  const [quiet, setQuiet] = useState(false) // listening, and nothing has arrived for a while
   const supported = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getUserMedia && 'AudioContext' in window
   const ctx = useRef<AudioContext | null>(null)
   const stream = useRef<MediaStream | null>(null)
@@ -50,7 +56,7 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
     cb.current(zeros)
   }, [zeros])
   const stop = useCallback(() => {
-    release()
+    release(); setQuiet(false)
     setState(s => (s === 'on' ? 'stopped' : s === 'pending' ? 'cancelled' : s))
   }, [release])
 
@@ -73,6 +79,7 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
     }
     if (ctx.current !== ac) { ms.getTracks().forEach(t => t.stop()); return false } // stopped while we waited
     stream.current = ms
+    setDevice(clean(ms.getAudioTracks()[0]?.label ?? ''))
     const an = ac.createAnalyser(); an.fftSize = 1024; an.smoothingTimeConstant = 0.5
     ac.createMediaStreamSource(ms).connect(an)
     // The mic can go away without you: a headset disconnects, or the tab comes back from the background
@@ -88,7 +95,7 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
     const data = new Uint8Array(an.frequencyBinCount)
     const raw = new Float32Array(N), out = new Float32Array(N), floor = new Float32Array(N).fill(1), ceil = new Float32Array(N)
     const cur = new Array<number>(N).fill(0)
-    let last = performance.now()
+    let last = performance.now(), lastLoud = last, wasQuiet = false
     const tick = (now: number) => {
       const dt = Math.min(50, now - last); last = now
       an.getByteFrequencyData(data)
@@ -106,6 +113,9 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
       const kUp = 1 - Math.exp(-dt / ATTACK), kDown = 1 - Math.exp(-dt / RELEASE)
       for (let c = 0; c < N; c++) cur[c] += (out[c] - cur[c]) * (out[c] > cur[c] ? kUp : kDown)
       cb.current(cur)
+      let loud = false; for (let c = 0; c < N; c++) if (cur[c] > LOUD) { loud = true; break }
+      if (loud) { lastLoud = now; if (wasQuiet) { wasQuiet = false; setQuiet(false) } }
+      else if (!wasQuiet && now - lastLoud > QUIET_AFTER) { wasQuiet = true; setQuiet(true) }
       raf.current = requestAnimationFrame(tick)
     }
     raf.current = requestAnimationFrame(tick)
@@ -114,5 +124,5 @@ export function useMic(onLevels: (levels: readonly number[]) => void) {
   }, [supported, stop, release])
 
   useEffect(() => stop, [stop])
-  return useMemo(() => ({ start, stop, dismiss, state, supported }), [start, stop, dismiss, state, supported])
+  return useMemo(() => ({ start, stop, dismiss, state, supported, device, quiet }), [start, stop, dismiss, state, supported, device, quiet])
 }

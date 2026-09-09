@@ -447,3 +447,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-08:** is the transport (play / rest / motion) there for keyboard access? **Agent:** no — the grip is; play and the beat strip removed from the voice slice (kept for `?chips`), motion toggle stays.
 
 **Lindsay, 2026-09-08:** the episode row looks out of balance — closer to her frame (239:338); the chassis colours are not in Figma; the palette should appear in each episode's description to show restraint. **Agent:** row at her frame's proportions (924 column, 30/22, 3px rules, 100px row); caption gains a palette strip (`meta.palette`: six swatches, one job each); chassis palette + type frame added to her file (243:456).
+
+**Lindsay, 2026-09-09:** a mic picker? (no — think first); device name and silence named; smaller field text?; run contrast and the big boulders. **Agent:** no picker; device name from the track label; silence sentence after 6s; contrast table all AA (two pairs at 4.54, so no smaller/dimmer); live regions for the status word and the sentence, hidden mirror for the placeholder in text mode.

@@ -286,7 +286,10 @@ export default function LiveSession() {
   const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You were typing. Keep typing, or close?'
   const placeholder = phase === 'leaving' && (leaving === 'voice' || !query) ? ask // the question sits in the box unless your own words are there
     : phase === 'pending' ? 'The browser is asking for the microphone.'
-    : phase === 'listening' ? (again ? 'Listening again. In the full build your words would land here. Not this one.' : 'Listening. Say what it should do.')
+    : phase === 'listening' ? (
+        mic.quiet ? `Hearing nothing${mic.device ? ` from ${mic.device}` : ''}. Check which mic your browser is using.`
+        : again ? 'Listening again. In the full build your words would land here. Not this one.'
+        : `Listening${mic.device ? ` through ${mic.device}` : ''}. Say what it should do.`)
     : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Press the grip to try again, or type.'
@@ -319,7 +322,7 @@ export default function LiveSession() {
                 onClick={e => { e.stopPropagation(); setPicking(p => !p) }}><Folder /></button>}
               {pickOn && <span className="tag">main</span>}
               {pickOn && <span className="tag">{project}</span>}
-              <span className="status" data-tone={tone}>{status}</span>
+              <span className="status" data-tone={tone} aria-live="polite">{status}</span>
             </>
           ) : (
             <button type="button" className="pick" aria-expanded={picking}
@@ -361,11 +364,13 @@ export default function LiveSession() {
           <div className={`field${edge}`}>
             {voiceMode ? (
               <>
-                <p className="input voice-line">{placeholder}</p>
+                <p className="input voice-line" role="status" aria-live="polite">{placeholder}</p>
                 {(phase === 'pending' || phase === 'listening') && <Ear live={phase === 'listening'} />}
               </>
             ) : (
             <div className={`field-inner${tokens.length ? ' field-inner--stacked' : ''}`}>
+              {/* the state sentence is the placeholder here; a placeholder is not announced when it changes, so it is mirrored for readers */}
+              <span className="sr-only" role="status" aria-live="polite">{placeholder}</span>
               <AnimatePresence initial={false}>
                 {tokens.map((t, i) => t.kind === 'heard' ? (
                   // the spoken stub is inert: nothing to open, nothing sensible to remove it to; only closing takes it

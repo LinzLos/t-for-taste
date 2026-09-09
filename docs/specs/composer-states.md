@@ -328,3 +328,11 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 ## 19 · Kept for later: the 27×5 meter (2026-09-08)
 
 Tried and reverted the same day: a 180×64 plate so the nine resting dots could seed a **27×5 lattice** (6px pitch, 2px dots, nine bands blended into twenty-seven columns, four thresholds, the same peak idiom). The meter was the best-looking one yet; the plate stretched the face and lost the cute, so the grip is back to 119×64 and 9×3. The pattern is worth keeping for a bigger instrument — a run view, a standalone meter — where the face is not the point. The word grip (`PRESS` / `TALK` in a 3×5 pixel face) was tried the same day and cut: a key cap that says PRESS talks down to the user. Both live in the history (`1194a1b`, `e23cfc6`).
+
+## 20 · The device's name, and silence named (2026-09-09)
+
+A mic picker was considered and refused for this slice: it is a settings surface and a second control, and the browser already has one (Chrome's address-bar mic icon). What the stream gives for free does most of the picker's job: the track's label, cleaned ("Default - MacBook Air Microphone (Built-in)" → "MacBook Air Microphone"), goes into the listening sentence — *Listening through MacBook Air Microphone. Say what it should do.* — a string nobody can fake. And when nothing above 0.1 has arrived for six seconds: *Hearing nothing from MacBook Air Microphone. Check which mic your browser is using.* The virtual-device failure gets a sentence instead of a picker.
+
+## 21 · Accessibility pass (2026-09-09)
+
+Contrast, computed for every text pair in use: all AA. Ink on field 11.3, helper copy and answers (muted on field) 4.54, tagline / note / status muted on canvas 5.5, status teal 4.6, orange 5.6, salmon 7.8, token text on orange 5.6, chassis body 15.5, footer 6.4, hint 4.6. The pink period is decorative. The two pairs at 4.54 have no margin: do not make helper copy smaller or the muted dimmer without re-checking. Live regions: the status word and the field's sentence announce their changes; in text mode the placeholder is mirrored into a hidden `role="status"`. Targets: grip 119×64, answers ≥34px tall. Focus visible. Reduced-motion twin. Colour never the only carrier (the word carries the state). The meter's area is well under the flash-threshold area.
