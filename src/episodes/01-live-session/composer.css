@@ -91,8 +91,8 @@ html[data-reduced='true'] .composer { animation: none; }
 .field--on { border-bottom-color: var(--active); }
 .field--denied { border-bottom-color: var(--hot); }
 .field-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
-/* with pills present the text takes its own row, so a state sentence always reads in full */
-.field-inner--stacked .input { flex-basis: 100%; }
+/* with pills present the text sits beside them and wraps only when there is genuinely no room (a phone) */
+.field-inner--stacked .input { flex: 1 1 24ch; }
 .input { flex: 1 1 12ch; min-width: 12ch; font: 26px/34px var(--sans); color: var(--ink); background: none; border: 0; outline: none; resize: none; overflow-y: auto; padding: 0;
   /* growth is never eased: the box follows the text */ transition: none; }
 /* helper copy is smaller than what you type: it reports, it is not the content */
@@ -104,7 +104,8 @@ html[data-reduced='true'] .composer { animation: none; }
 .token--only { background: none; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line-strong);
   font-size: 19px; padding: 6px 12px; margin-left: -4px; }
 /* a spoken request in a build that does not transcribe: it holds no words and looks like it */
-.token--heard { background: none; color: var(--muted); box-shadow: none; border: 2px dashed var(--line-strong); cursor: pointer; }
+.token--heard { background: none; color: var(--muted); box-shadow: none; border: 2px dashed var(--line-strong); cursor: pointer;
+  font-size: 20px; padding: 6px 12px; } /* a stub, at helper size, not a typed token */
 /* a request, not a capability: outlined, so a built workflow shows which of its steps are real */
 .token--yours { background: none; color: var(--active); box-shadow: inset 0 0 0 2px var(--active); }
 /* the mic as a tell, not a control (user feedback, 2026-09-08): orange, at the field's right, only while asking or
