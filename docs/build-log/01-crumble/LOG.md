@@ -443,3 +443,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-08:** too much copy after `keep it`; not explicit that the tag is the request; "your words were not saved" confusing. **Agent:** pill reads `your request`; the kept sentence cut; the grip does not ask over a spoken stub; the typed question is "You were typing. Keep typing, or close?" and shows once.
 
 **Lindsay, 2026-09-08:** after `go on` the user is looking at where their transcript would be — it isn't built; say so; and the caption should say ELI5 what this is and is not. **Agent:** second-listen copy names the missing transcript; caption gains an optional **Not** line in the chassis; T/01 uses it.
+
+**Lindsay, 2026-09-08:** is the transport (play / rest / motion) there for keyboard access? **Agent:** no — the grip is; play and the beat strip removed from the voice slice (kept for `?chips`), motion toggle stays.

@@ -257,10 +257,10 @@ export default function LiveSession() {
   // Record mode plays itself, so a recording needs no hands. `&hold` stops that.
   const started = useRef(false)
   useEffect(() => {
-    if (started.current || !params.has('record') || params.has('hold')) return
+    if (!chipsOn || started.current || !params.has('record') || params.has('hold')) return // the voice slice is recorded by hand
     started.current = true
     const t = setTimeout(play, 700); return () => clearTimeout(t)
-  }, [params, play])
+  }, [params, play, chipsOn])
 
   const controls = useMemo(() => ({
     beats: ['rest'] as const,
@@ -270,7 +270,9 @@ export default function LiveSession() {
     playing,
     hint: 'or press the grip yourself',
   }), [play, playing, reset])
-  useRegisterBeats(controls)
+  // Play and the beat strip belong to the typing story. The voice slice is one press, so the transport
+  // keeps only the motion toggle; keyboard access lives in the stage (the grip is a real button).
+  useRegisterBeats(chipsOn ? controls : null)
 
   const spring = reduced ? { duration: 0 } : { type: 'spring' as const, stiffness: 520, damping: 34, mass: 0.7 }
   const projects = PROJECTS.filter(p => p.includes(pickQuery.trim().toLowerCase()))

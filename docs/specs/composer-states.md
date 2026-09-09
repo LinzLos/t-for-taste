@@ -319,7 +319,7 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 
 **The typing door.** Typing exists because the refused, unsupported and lost sentences offer it, so it has to go somewhere true. In this slice a typed sentence becomes one request pill on Enter — *if it looks like words*: real words have vowels and a keyboard mash does not; tags, handles and numbers pass (`looksLikeWords`, covered by `check:rules`). Otherwise the field keeps the text and says "Not sure what that means. Try words, like: summarize it for #growers". With pills present the text takes its own row so a state sentence always reads in full. And that is all: no build, no built line, no "not connected" warning. Those are the chips story's vocabulary (`?chips`). Backspace takes a request back.
 
-**▶ play enters through the grip.** On this slice the transport's play opens the composer listening and then waits for you; the typing script belongs to the chips story (`?chips`).
+**No play, no beat strip (Lindsay, 2026-09-08: "is that why we need play and reset?" — no).** Keyboard access lives in the stage: the grip is a real button. Play and the beat strip belong to the typing story (`?chips`); on the voice slice the transport shows only the motion toggle, which is the one control there that is about access (the reduced-motion twin for people who have not set it at the OS level). The voice slice is recorded by hand.
 
 **Position (her frame, 2026-09-06, position only).** The composer sits in the grip's row, docked under the bar: grip at the left, a 20px gap, the field running to the right edge at the grip's height (64px). The two read as one instrument. Under 640px of composer width the field drops beneath the grip, full width.
 
