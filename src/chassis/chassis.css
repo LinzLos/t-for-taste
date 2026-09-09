@@ -7,6 +7,7 @@
   --ink: #141210;
   --rule: #141210;
   --pink: #ff2fa6;
+  --ink-muted: #67645e; /* ink at ~62% on the paper; 4.9:1, so it stays AA at body sizes */
   --serif: "Literata", Georgia, "Times New Roman", serif;
   --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
   --mark: "Monofett", var(--mono);
@@ -38,12 +39,14 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row: name left, one line on what it explores from the midline. Mono at two sizes, ruled, nothing else. */
-/* her frame (239:338): a 100px row, name at 32 and the line at 24, the line starting at the midline */
-.episode-list { border-top: 3px solid var(--rule); }
-.episode-list li { border-bottom: 3px solid var(--rule); }
-.episode-list a { display: grid; grid-template-columns: 1fr 1fr; gap: 3ch; align-items: start; min-height: 100px; padding: 30px 0 26px; box-sizing: border-box; text-decoration: none; color: var(--ink); font-family: var(--mono); }
-.episode-list .name { font-size: 30px; line-height: 1.1; }
-.episode-list .blurb { font-size: 22px; line-height: 1.25; padding-top: .15em; }
+/* the row (her frame 239:338, then smaller and muted, 2026-09-09): three columns — label, name, one line —
+   each centred on the row's middle, in the muted grey, mono throughout */
+.episode-list { border-top: 2px solid var(--rule); }
+.episode-list li { border-bottom: 2px solid var(--rule); }
+.episode-list a { display: grid; grid-template-columns: 9ch 1fr 1.2fr; gap: 3ch; align-items: center; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); }
+.episode-list .label { font-size: 16px; }
+.episode-list .name { font-size: 22px; line-height: 1.15; color: var(--ink); }
+.episode-list .blurb { font-size: 16px; line-height: 1.4; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
@@ -109,9 +112,9 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 @media (max-width: 600px) {
   .index { padding: 6vh 20px 10vh; }
   .episode-list a { grid-template-columns: 1fr; gap: 6px; }
-  .episode-list a { min-height: 0; padding: 18px 0; }
-  .episode-list .name { font-size: 22px; }
-  .episode-list .blurb { font-size: 16px; }
+  .episode-list a { grid-template-columns: 1fr; min-height: 0; padding: 18px 0; gap: 6px; align-items: start; }
+  .episode-list .name { font-size: 20px; }
+  .episode-list .blurb, .episode-list .label { font-size: 14px; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }
