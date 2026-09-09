@@ -286,7 +286,7 @@ export default function LiveSession() {
   const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You were typing. Keep typing, or close?'
   const placeholder = phase === 'leaving' && (leaving === 'voice' || !query) ? ask // the question sits in the box unless your own words are there
     : phase === 'pending' ? 'The browser is asking for the microphone.'
-    : phase === 'listening' ? (again ? 'Listening again. Your words would show up here. This one only listens.' : 'Listening. Say what it should do.')
+    : phase === 'listening' ? (again ? 'Listening again. In the full build your words would land here. Not this one.' : 'Listening. Say what it should do.')
     : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Press the grip to try again, or type.'

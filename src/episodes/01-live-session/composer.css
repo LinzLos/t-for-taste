@@ -88,6 +88,8 @@ html[data-reduced='true'] .composer { animation: none; }
 /* the field: no box, a fill and a bottom edge, and only that edge goes active */
 .field { width: 100%; box-sizing: border-box; min-height: 64px; display: flex; align-items: flex-start; gap: 16px; background: var(--field);
   border: 0; border-bottom: 2px solid var(--line); padding: 14px 18px; transition: border-color 120ms ease-out; }
+/* the chrome is not selectable (the session sets user-select: none); the field's words are */
+.field, .field * { user-select: text; -webkit-user-select: text; }
 .field--on { border-bottom-color: var(--active); }
 .field--denied { border-bottom-color: var(--hot); }
 .field-inner { flex: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
