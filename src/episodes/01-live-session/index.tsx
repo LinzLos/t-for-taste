@@ -5,6 +5,7 @@ import { useReducedMotion } from '../../chassis/use-reduced-motion'
 import { useRegisterBeats } from '../../chassis/use-beats'
 import { CAPABILITIES, SCRIPT, asYours, heard, looksLikeWords, match, type Capability } from './capabilities'
 import { Gripper, type GripperHandle } from './Gripper'
+import { WordGripper } from './WordGripper'
 import { useMic } from './use-mic'
 import { EASE } from './motion'
 import './composer.css'
@@ -55,6 +56,7 @@ export default function LiveSession() {
   const cancel = useRef(false)
   const [params] = useSearchParams()
   const face = params.has('face') // preview the listening face without a microphone, for tuning and recording
+  const word = params.has('word') // option B: the dots spell the action (prototype, compare against the grid grip)
   const chipsOn = params.has('chips') // the capability chips are the next episode's story; kept here behind a flag
   const pickOn = params.has('pick') // choosing a project is another episode too; without the flag it is already chosen
   const [project, setProject] = useState<string | null>(() => (pickOn ? null : PROJECTS[0]))
@@ -294,7 +296,7 @@ export default function LiveSession() {
     : tokens.length ? 'and then…' : 'Describe your workflow'
   // A three-way cycle is not a toggle: the grip's name is its next effect.
   const gripLabel = !open ? 'open the composer and listen' : listening ? 'stop listening' : 'close the composer'
-  const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' || phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
+  const gripMode = phase === 'listening' ? 'listening' : phase === 'pending' ? 'pending' : phase === 'typing' ? 'typing' : open ? 'open' : 'rest'
   // While it listens (or has just stopped) the field is a sentence, not a text box: nothing to type into,
   // nothing to read but what is happening. The keyboard is the fallback when the mic cannot be used.
   const voiceMode = phase === 'pending' || phase === 'listening' || (phase === 'leaving' && leaving === 'voice')
@@ -304,7 +306,7 @@ export default function LiveSession() {
   const edge = phase === 'denied' || phase === 'unsupported' || phase === 'lost' ? ' field--denied' : phase === 'typing' || phase === 'pending' || phase === 'listening' ? ' field--on' : ''
 
   return (
-    <div className="session" ref={scope} onClick={() => setPicking(false)}
+    <div className="session" ref={scope} style={{ '--grip-w': word ? '180px' : '119px' } as React.CSSProperties} onClick={() => setPicking(false)}
       onKeyDown={e => { if (e.key === 'Escape') { e.preventDefault(); if (picking) setPicking(false); else if (listening) mic.stop(); else if (open) close() } }}>
       <header className="bar">
         <span className="brand">
@@ -343,7 +345,9 @@ export default function LiveSession() {
       {/* pressed: everything goes orange at once; listening (the unroll, the smile) only once the browser has said yes */}
       <button type="button" className="grip" ref={gripButton} aria-expanded={open} aria-label={gripLabel}
         onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); press() }}>
-        <Gripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported' || phase === 'lost'} />
+        {word
+          ? <WordGripper ref={grip} mode={gripMode} denied={phase === 'denied' || phase === 'unsupported' || phase === 'lost'} />
+          : <Gripper ref={grip} mode={gripMode === 'pending' ? 'typing' : gripMode} denied={phase === 'denied' || phase === 'unsupported' || phase === 'lost'} />}
       </button>
 
       {project && open && (

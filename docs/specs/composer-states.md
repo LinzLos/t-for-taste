@@ -322,3 +322,7 @@ Clicking anywhere used to focus the field, which misled: it suggested the surfac
 **Position (her frame, 2026-09-06, position only).** The composer sits in the grip's row, docked under the bar: grip at the left, a 20px gap, the field running to the right edge at the grip's height (64px). The two read as one instrument. Under 640px of composer width the field drops beneath the grip, full width.
 
 **Every device.** The episode declares a square frame (`stage: 1080×1080`) and `fluidMin: 0`, so it lays itself out at any width instead of being scaled: under 640px of composer width a container query brings the bar to 64px, the type down with `cqw` clamps, and the grip stays a 119×64 tap target. The record frame is the square.
+
+## 19 · Option B, behind `?word` (2026-09-08)
+
+User feedback: the grip does not say what to do. Prototype: the dots spell it. A 27×5 matrix on a 180×64 plate (6px pitch, 4px dots) in a 3×5 pixel face. At rest `PRESS` in ink (orange on hover and focus). Pressed: `TALK`, orange, dimmer while the browser asks. The first sound above 0.15 drops the letters to the baseline (280ms, each column 1.2% behind the last) and the same dots become a **27×5 meter** — bottom row always lit, four thresholds against the adaptive ceiling, the peak idiom as before. Open-idle and the leaving question show a quiet baseline. The smile is unchanged. Nine bands are blended into twenty-seven columns. Compare against the grid grip on the same URL without the flag; the composer's left edge follows the grip's width (`--grip-w`).
