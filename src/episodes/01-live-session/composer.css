@@ -56,9 +56,11 @@
 /* pressable without a pointer: at rest the status dot is teal (the system is alive) and the keyboard ring
    lights the dots the way hover does. Hover only where hover exists, so a phone tap does not stick orange. */
 .gripper--rest .gripper-status, .gripper--open .gripper-status { fill: var(--live); }
-@media (hover: hover) { .grip:where(:hover) .gripper-dot, .grip:where(:hover) .gripper-status { fill: var(--active); } }
+/* pressable ≠ active: hover and the keyboard ring light only the status dot, so a grip you just pressed to
+   close does not look like it is still listening. All the dots orange is reserved for doing something. */
+@media (hover: hover) { .grip:where(:hover) .gripper-status { fill: var(--active); } }
 .grip:focus-visible { outline: none; }
-.grip:focus-visible .gripper-dot, .grip:focus-visible .gripper-status { fill: var(--active); }
+.grip:focus-visible .gripper-status { fill: var(--active); }
 /* open and idle: the dots go quiet, so the press that closes it is no surprise (a plate stroke read as a stray border) */
 .gripper--open .gripper-dot { fill: var(--muted); }
 /* last, so trouble outranks alive: a refused mic is salmon whatever else the grip is doing */
