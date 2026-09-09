@@ -62,7 +62,7 @@ export function Index() {
           <li key={meta.slug} data-status={meta.status}>
             {/* her row (Figma 239:338): the name, and one line on what it explores. Mono, ruled, nothing else. */}
             <Link to={`/${pad(meta.number)}`}>
-              <span className="label">Episode:</span>
+              <span className="label">T no. {meta.number}</span>
               <span className="name">{meta.title}</span>
               <span className="blurb">{meta.blurb ?? meta.material}</span>
             </Link>

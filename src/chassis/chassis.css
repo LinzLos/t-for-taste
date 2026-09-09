@@ -43,7 +43,7 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
    each centred on the row's middle, in the muted grey, mono throughout */
 .episode-list { border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
-.episode-list a { display: grid; grid-template-columns: 9ch 1fr 1.2fr; gap: 3ch; align-items: center; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); }
+.episode-list a { display: grid; grid-template-columns: 8ch 1fr 1.2fr; gap: 3ch; align-items: center; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); }
 .episode-list .label { font-size: 16px; }
 .episode-list .name { font-size: 22px; line-height: 1.15; color: var(--ink); }
 .episode-list .blurb { font-size: 16px; line-height: 1.4; }
