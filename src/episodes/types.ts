@@ -4,7 +4,7 @@
 export type MotionLibrary = 'motion' | 'gsap'
 
 export interface EpisodeMeta {
-  /** Two-digit episode number, e.g. 1 renders as T/01 */
+  /** Episode number, shown as "T no. 1" and used unpadded. Assigned when it publishes, never reserved. */
   number: number
   /** URL slug, matches the folder name minus the number prefix */
   slug: string
