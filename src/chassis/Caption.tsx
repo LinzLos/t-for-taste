@@ -20,7 +20,6 @@ export function Caption({ meta }: { meta: EpisodeMeta }) {
           </tbody>
         </table>
       )}
-      <p className="meta-line">{meta.material} · {meta.library}</p>
     </aside>
   )
 }
