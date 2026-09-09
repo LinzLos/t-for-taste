@@ -37,6 +37,7 @@ export default function LiveSession() {
   const [open, setOpen] = useState(false) // the grip opens the composer; nothing else does
   const [note, setNote] = useState<string | null>(null) // one line under the field when a request could not be made
   const [leaving, setLeaving] = useState<null | 'voice' | 'text'>(null) // a close was asked for while something was there
+  const [again, setAgain] = useState(false) // listening for a second time: by now they have noticed no words appeared
   const [pickQuery, setPickQuery] = useState('')
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
@@ -64,7 +65,7 @@ export default function LiveSession() {
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
   const shut = useCallback(() => {
-    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null); setLeaving(null)
+    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null); setLeaving(null); setAgain(false)
     gripButton.current?.focus() // focus goes back to the handle, not off the page
   }, [mic])
   // Closing is the one move that throws something away, so it asks first when there is something:
@@ -77,7 +78,7 @@ export default function LiveSession() {
   }, [leaving, listening, mic, query, tokens, shut])
   const keepGoing = useCallback(() => {
     const was = leaving; setLeaving(null)
-    if (was === 'voice') { mic.dismiss(); void mic.start() } else field.current?.focus()
+    if (was === 'voice') { mic.dismiss(); setAgain(true); void mic.start() } else field.current?.focus()
   }, [leaving, mic])
   // What you said becomes a request — the same object typing makes, and the unit the rest of the
   // composer learns from. It holds no words, and the pill says so, because this build does not transcribe.
@@ -283,7 +284,7 @@ export default function LiveSession() {
   const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You were typing. Keep typing, or close?'
   const placeholder = phase === 'leaving' && (leaving === 'voice' || !query) ? ask // the question sits in the box unless your own words are there
     : phase === 'pending' ? 'The browser is asking for the microphone.'
-    : phase === 'listening' ? 'Listening. Say what it should do.'
+    : phase === 'listening' ? (again ? 'Listening again. Your words would show up here. This one only listens.' : 'Listening. Say what it should do.')
     : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
     : phase === 'cancelled' ? 'Stopped asking for the microphone.'
     : phase === 'denied' ? 'Microphone not allowed. Press the grip to try again, or type.'

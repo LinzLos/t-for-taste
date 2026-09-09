@@ -20,6 +20,8 @@ export interface EpisodeMeta {
     default: string
     change: string
     reason: string
+    /** What it is not, when honesty needs a fourth line. */
+    not?: string
   }
   /** The actual numbers. This is the "if you're stealing this" block. */
   values: { label: string; value: string }[]

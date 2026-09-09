@@ -8,6 +8,7 @@ export function Caption({ meta }: { meta: EpisodeMeta }) {
         <dt>Default</dt><dd>{meta.caption.default}</dd>
         <dt>Change</dt><dd>{meta.caption.change}</dd>
         <dt>Reason</dt><dd>{meta.caption.reason}</dd>
+        {meta.caption.not && <><dt>Not</dt><dd>{meta.caption.not}</dd></>}
       </dl>
       {meta.values.length > 0 && (
         <table className="values">
