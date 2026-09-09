@@ -3,7 +3,7 @@
 // capability, and it never pretends otherwise.
 // `heard` is a request made by voice in a build that does not transcribe: it holds no words and says so.
 export interface Capability { id: string; label: string; kind: 'when' | 'then' | 'only' | 'yours' | 'heard' }
-export const heard = (n: number): Capability => ({ id: `heard-${n}`, label: 'what you said', kind: 'heard' })
+export const heard = (n: number): Capability => ({ id: `heard-${n}`, label: 'your request', kind: 'heard' })
 
 export const CAPABILITIES: Capability[] = [
   { id: 'page-saved', label: 'When a page is saved', kind: 'when' },

@@ -37,7 +37,6 @@ export default function LiveSession() {
   const [open, setOpen] = useState(false) // the grip opens the composer; nothing else does
   const [note, setNote] = useState<string | null>(null) // one line under the field when a request could not be made
   const [leaving, setLeaving] = useState<null | 'voice' | 'text'>(null) // a close was asked for while something was there
-  const [kept, setKept] = useState(false) // a spoken request was just kept: the field says what that means, once
   const [pickQuery, setPickQuery] = useState('')
   const [query, setQuery] = useState('')
   const [tokens, setTokens] = useState<Capability[]>([])
@@ -65,7 +64,7 @@ export default function LiveSession() {
   // Closing is a clean slate — nothing was kept, and the field agrees: text and requests go with it.
   // It always releases the mic.
   const shut = useCallback(() => {
-    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null); setLeaving(null); setKept(false)
+    mic.stop(); mic.dismiss(); setOpen(false); setQuery(''); setTokens([]); setBuilt(null); setNote(null); setLeaving(null)
     gripButton.current?.focus() // focus goes back to the handle, not off the page
   }, [mic])
   // Closing is the one move that throws something away, so it asks first when there is something:
@@ -73,9 +72,9 @@ export default function LiveSession() {
   const close = useCallback(() => {
     if (leaving) { shut(); return } // asked once already: the second press is the answer
     if (listening) { mic.stop(); setLeaving('voice'); return } // stopped already: you ended it, nothing to ask
-    if (query.trim() || tokens.length) { setLeaving('text'); return }
+    if (query.trim() || tokens.some(t => t.kind !== 'heard')) { setLeaving('text'); return } // a spoken stub has nothing to lose
     shut()
-  }, [leaving, listening, mic, query, tokens.length, shut])
+  }, [leaving, listening, mic, query, tokens, shut])
   const keepGoing = useCallback(() => {
     const was = leaving; setLeaving(null)
     if (was === 'voice') { mic.dismiss(); void mic.start() } else field.current?.focus()
@@ -83,7 +82,7 @@ export default function LiveSession() {
   // What you said becomes a request — the same object typing makes, and the unit the rest of the
   // composer learns from. It holds no words, and the pill says so, because this build does not transcribe.
   const keepIt = useCallback(() => {
-    setLeaving(null); mic.dismiss(); setKept(true)
+    setLeaving(null); mic.dismiss()
     setTokens(t => [...t, heard(t.length + 1)])
   }, [mic])
   // The grip is a drawer handle: one press opens the composer already listening (the mic starts inside
@@ -198,7 +197,7 @@ export default function LiveSession() {
   const reset = useCallback(() => {
     // Back to the start. It releases the mic too: a composer that has gone must not leave the mic open.
     cancel.current = true; setPlaying(false); mic.stop()
-    setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false); setOpen(false); setKept(false)
+    setTokens([]); setQuery(''); setBuilt(null); setProject(pickOn ? null : PROJECTS[0]); setPicking(false); setOpen(false)
   }, [mic, pickOn])
 
   const play = useCallback(() => {
@@ -281,9 +280,8 @@ export default function LiveSession() {
   const tone = ({ closed: 'muted', rest: built ? 'live' : 'ink', typing: 'ink', pending: 'active', listening: 'live',
     stopped: 'muted', cancelled: 'ink', denied: 'hot', unsupported: 'hot', lost: 'hot', leaving: 'muted' } as const)[phase]
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
-  const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You have a request here. Keep it, or close?'
-  const placeholder = phase === 'leaving' && leaving === 'voice' ? ask // the text case asks on the line beneath, so the box keeps its own words
-    : kept && !query ? 'Kept as a request. Your words were not saved.'
+  const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You were typing. Keep typing, or close?'
+  const placeholder = phase === 'leaving' && (leaving === 'voice' || !query) ? ask // the question sits in the box unless your own words are there
     : phase === 'pending' ? 'The browser is asking for the microphone.'
     : phase === 'listening' ? 'Listening. Say what it should do.'
     : phase === 'stopped' ? 'Stopped listening. Nothing you said was saved.'
@@ -391,7 +389,7 @@ export default function LiveSession() {
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
-                onChange={e => { setQuery(e.target.value); setNote(null); setKept(false); mic.dismiss() }}
+                onChange={e => { setQuery(e.target.value); setNote(null); mic.dismiss() }}
                 onKeyDown={e => {
                   if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
                   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit() }
@@ -401,7 +399,7 @@ export default function LiveSession() {
             )}
             {phase === 'leaving' ? (
               <span className="answers">
-                <button type="button" className="answer answer--keep" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepGoing() }}>{leaving === 'voice' ? 'go on' : 'keep it'}</button>
+                <button type="button" className="answer answer--keep" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepGoing() }}>{leaving === 'voice' ? 'go on' : 'keep typing'}</button>
                 {leaving === 'voice' && <button type="button" className="answer" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); keepIt() }}>keep it</button>}
                 <button type="button" className="answer" onMouseDown={e => e.preventDefault()} onClick={e => { e.stopPropagation(); shut() }}>close</button>
               </span>
@@ -409,7 +407,7 @@ export default function LiveSession() {
           </div>
 
           {note && <p className="note">{note}</p>}
-          {phase === 'leaving' && leaving === 'text' && <p className="note note--ask">{ask}</p>}
+          {phase === 'leaving' && leaving === 'text' && query.trim() && <p className="note note--ask">{ask}</p>}
 
           {chipsOn && <div className="chips">
             <AnimatePresence mode="popLayout" initial={false}>
