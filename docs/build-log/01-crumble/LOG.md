@@ -437,3 +437,5 @@ The one card you press was the same colour as the two you don't. Reconnect now s
 **Lindsay, 2026-09-08 (user feedback):** mic tell back in the field; the dots could spell the action; the status chip looks pressable; a line between dots and smile and a doubled edge under the bar. **Agent:** status is a coloured word (all tones ≥4.5:1); grip in the field's language (one plate, bottom edge follows state); mic as a non-pressable tell; option B `?word` — PRESS/TALK in a 27×5 matrix that falls into a finer meter on the first sound.
 
 **Lindsay, 2026-09-08:** the word is condescending; love the bigger EQ; lost the cute; the smile sits on the edge. **Agent:** word grip removed; the grid grip on the 180 plate seeds a 27×5 meter on unroll; smile lifted off the edge.
+
+**Lindsay, 2026-09-08:** "go back to small dots — the big EQ stretches the face; save the pattern, it's cool, but nope." **Agent:** grip back to 119×64 / 9×3 with the smile lifted off the edge; 27×5 recorded in spec §19 for a bigger instrument.
