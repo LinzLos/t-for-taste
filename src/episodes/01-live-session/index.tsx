@@ -267,6 +267,9 @@ export default function LiveSession() {
   // Every surface reads the phase. Adding a phase without all of these is the regression.
   const status = ({ closed: 'idle', rest: built ? 'standing by' : 'drafting', typing: 'drafting', pending: 'asking',
     listening: 'listening', stopped: 'stopped', cancelled: 'drafting', denied: 'no microphone', unsupported: 'no microphone', lost: 'no microphone', leaving: 'stopped' } as const)[phase]
+  // The tag's colour is its job: teal = the system is alive, orange = you are doing something, salmon = trouble.
+  const tone = ({ closed: 'muted', rest: built ? 'live' : 'ink', typing: 'ink', pending: 'active', listening: 'live',
+    stopped: 'muted', cancelled: 'ink', denied: 'hot', unsupported: 'hot', lost: 'hot', leaving: 'muted' } as const)[phase]
   // The field says what is happening, in the tool's voice: it reports, and says where the action is.
   const ask = leaving === 'voice' ? 'You were talking. Go on, keep it, or close?' : 'You have a request here. Keep it, or close?'
   const placeholder = phase === 'leaving' && leaving === 'voice' ? ask // the text case asks on the line beneath, so the box keeps its own words
@@ -305,7 +308,7 @@ export default function LiveSession() {
                 onClick={e => { e.stopPropagation(); setPicking(p => !p) }}><Folder /></button>}
               {pickOn && <span className="tag">main</span>}
               {pickOn && <span className="tag">{project}</span>}
-              <span className="tag tag--status">{status}</span>
+              <span className="status" data-tone={tone}>{status}</span>
             </>
           ) : (
             <button type="button" className="pick" aria-expanded={picking}

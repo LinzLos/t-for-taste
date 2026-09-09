@@ -31,7 +31,14 @@
 .change:hover, .change[aria-expanded='true'] { color: var(--ink); }
 /* rectangles, on purpose: these are the session's bindings, not choices */
 .tag { padding: 9px 12px; border: 2px solid var(--line-strong); color: var(--muted); }
-.tag--status { border-color: var(--muted); color: var(--ink); }
+/* the status is a word, not a box: boxed means pressable here, and a status is not. Its colour is its job.
+   All four tones clear 4.5:1 on the canvas at this size. */
+.status { font-family: var(--mono); font-size: 22px; line-height: 1; transition: color 140ms ease-out; }
+.status[data-tone='muted'] { color: var(--muted); }
+.status[data-tone='ink'] { color: var(--ink); }
+.status[data-tone='live'] { color: var(--live); }
+.status[data-tone='active'] { color: var(--active); }
+.status[data-tone='hot'] { color: var(--hot); }
 
 /* the project menu: search first, because the list is not the point */
 .menu { position: absolute; z-index: 3; right: var(--pad); top: var(--bar-h); width: 350px; display: flex; flex-direction: column;
@@ -125,7 +132,7 @@ html[data-reduced='true'] .composer { animation: none; }
   .bar, .grip, .composer, .menu { --bar-h: 64px; --pad: 16px; }
   .agent { font-size: clamp(15px, 4.8cqw, 26px); white-space: nowrap; }
   .tagline { font-size: clamp(11px, 3.4cqw, 17px); }
-  .pick, .tag, .change { font-size: clamp(13px, 3.6cqw, 22px); }
+  .pick, .tag, .change, .status { font-size: clamp(13px, 3.6cqw, 22px); }
   .tag { padding: 7px 9px; }
   /* under the grip, full width: beside it there is no room */
   .composer { top: calc(var(--bar-h) + 64px + 12px); left: var(--pad); gap: 12px; }
