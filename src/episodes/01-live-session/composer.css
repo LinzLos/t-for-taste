@@ -56,7 +56,11 @@
 .gripper--open .gripper-dot { fill: var(--muted); }
 /* last, so trouble outranks alive: a refused mic is salmon whatever else the grip is doing */
 .gripper--denied .gripper-status { fill: var(--hot); }
-.gripper-plate { fill: var(--field); stroke: var(--line); stroke-width: 1; }
+.gripper-plate { fill: var(--field); }
+.gripper-edge { fill: var(--line); transition: fill 120ms ease-out; }
+/* the edge follows the field's: orange while typing, asking or listening; salmon in trouble */
+.gripper--typing .gripper-edge, .gripper--listening .gripper-edge { fill: var(--active); }
+.gripper--denied .gripper-edge { fill: var(--hot); }
 .gripper-dot, .gripper-status { fill: var(--ink); transition: fill 140ms ease-out, opacity 80ms ease-out; } /* on/off is crisp, not fuzzy */
 .gripper--typing .gripper-dot, .gripper--typing .gripper-status,
 .gripper--listening .gripper-dot, .gripper--listening .gripper-status { fill: var(--active); }

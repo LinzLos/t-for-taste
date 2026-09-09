@@ -92,8 +92,10 @@ export const Gripper = forwardRef<GripperHandle, { mode: GripperMode; denied?: b
     return (
       <svg className={`gripper gripper--${mode}${denied ? ' gripper--denied' : ''}`}
         viewBox="0 0 119 64" width="119" height="64" role="img" aria-label={label}>
-        <rect className="gripper-plate" x="0.5" y="0.5" width="118" height="36" />
-        <rect className="gripper-plate" x="0.5" y="36.5" width="118" height="27" />
+        {/* one plate, fill only, and a 2px bottom edge — the same language as the field beside it, so the
+            pair reads as one instrument and nothing doubles the bar's border above */}
+        <rect className="gripper-plate" x="0" y="0" width="119" height="64" />
+        <rect className="gripper-edge" x="0" y="62" width="119" height="2" />
         {ROWS.flatMap((y, r) => Array.from({ length: COLS }, (_, c) => (
           <circle key={`${r}${c}`} ref={el => { dots.current[r * COLS + c] = el }} className="gripper-dot"
             cx={restX(c)} cy={y} r="3" style={c >= 3 ? { opacity: 0 } : undefined} />
