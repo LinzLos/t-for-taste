@@ -367,7 +367,11 @@ export default function LiveSession() {
             ) : (
             <div className={`field-inner${tokens.length ? ' field-inner--stacked' : ''}`}>
               <AnimatePresence initial={false}>
-                {tokens.map((t, i) => (
+                {tokens.map((t, i) => t.kind === 'heard' ? (
+                  // the spoken stub is inert: nothing to open, nothing sensible to remove it to; only closing takes it
+                  <motion.span key={t.id} data-token={t.id} layout={!reduced} className="token token--heard" transition={spring}
+                    exit={{ opacity: 0, scale: 0.92 }}>{t.label}</motion.span>
+                ) : (
                   <motion.button
                     type="button"
                     key={t.id}
@@ -394,7 +398,7 @@ export default function LiveSession() {
                 onBlur={() => setFocused(false)}
                 onChange={e => { setQuery(e.target.value); setNote(null); mic.dismiss() }}
                 onKeyDown={e => {
-                  if (e.key === 'Backspace' && !query && tokens.length) setTokens(t => t.slice(0, -1))
+                  if (e.key === 'Backspace' && !query && tokens.length && tokens[tokens.length - 1].kind !== 'heard') setTokens(t => t.slice(0, -1))
                   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit() }
                 }}
               />
