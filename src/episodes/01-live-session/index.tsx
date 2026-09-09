@@ -21,6 +21,16 @@ const Folder = () => (
   </svg>
 )
 
+// A tell, not a control: the field looks like a listener while it is one. It appears on the press and
+// goes with the listening; the sentence beside it carries the meaning, so it is hidden from readers.
+const Ear = ({ live }: { live: boolean }) => (
+  <svg className={`ear${live ? ' ear--live' : ''}`} viewBox="0 0 24 24" width="26" height="26" aria-hidden>
+    <rect x="9" y="3" width="6" height="11" rx="3" />
+    <path d="M6 11a6 6 0 0 0 12 0" />
+    <path d="M12 17v4" />
+  </svg>
+)
+
 export default function LiveSession() {
   const { reduced } = useReducedMotion()
   const [picking, setPicking] = useState(false)
@@ -349,7 +359,10 @@ export default function LiveSession() {
 
           <div className={`field${edge}`}>
             {voiceMode ? (
-              <p className="input voice-line">{placeholder}</p>
+              <>
+                <p className="input voice-line">{placeholder}</p>
+                {(phase === 'pending' || phase === 'listening') && <Ear live={phase === 'listening'} />}
+              </>
             ) : (
             <div className={`field-inner${tokens.length ? ' field-inner--stacked' : ''}`}>
               <AnimatePresence initial={false}>
