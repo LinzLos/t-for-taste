@@ -19,16 +19,23 @@ export const meta: EpisodeMeta = {
   // Six colours, one job each. The three that mean something are the ones a viewer has to learn.
   // Every colour the episode uses, and the one job each has. Restraint is not a short list — it is
   // that nothing here does two things. Three of the nine carry state; the rest are the material.
+  // Grouped the way Lindsay laid them out: what a colour is for comes before what it is.
   palette: [
-    { hex: '#241f27', job: 'the ground' },
-    { hex: '#352c3c', job: 'the field' },
-    { hex: '#3f3547', job: 'edges' },
-    { hex: '#4f4459', job: 'edges, one step up' },
-    { hex: '#eaefd3', job: 'words' },
-    { hex: '#98978f', job: 'quiet words' },
-    { hex: '#1b998b', job: 'the system is alive' },
-    { hex: '#ff6a1f', job: "you're doing something" },
-    { hex: '#ff9b71', job: 'trouble' },
+    { group: 'States', items: [
+      { hex: '#ff6a1f', job: 'you are doing something', use: 'typing, asking, listening — the live edge' },
+      { hex: '#1b998b', job: 'the system is alive', use: 'status dot at rest, the name, standing by' },
+      { hex: '#ff9b71', job: 'trouble', use: 'refused, unsupported, lost' },
+    ] },
+    { group: 'Copy', items: [
+      { hex: '#98978f', job: 'quiet words', use: 'helper copy, idle status, the request pill' },
+      { hex: '#eaefd3', job: 'words', use: 'anything you typed or the tool said' },
+    ] },
+    { group: 'Surface', items: [
+      { hex: '#241f27', job: 'the ground', use: 'the canvas everything sits on' },
+      { hex: '#352c3c', job: 'the field', use: 'the composer and the grip plate' },
+      { hex: '#3f3547', job: 'edges', use: 'the bar rule, the grip edge, the dot grid' },
+      { hex: '#4f4459', job: 'edges, one step up', use: 'borders that must be seen: answers, tags' },
+    ] },
   ],
   values: [],
   embeddable: true,
