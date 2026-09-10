@@ -11,7 +11,7 @@ export const meta: EpisodeMeta = {
   // Lindsay's edit, 2026-09-09. Four fixes: the answers named as they appear on screen, "I" → "It"
   // (the tool never speaks in the first person), and the last line made grammatical.
   caption: {
-    default: 'A voice grip that is push to talk.',
+    default: 'A voice button that dances when you talk.',
     change: 'Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it. Press again and it asks: go on, keep it, or close.',
     reason: 'A thing you press, that answers only you when you need it. It can be put away and brought back.',
     not: "It doesn't write down what you say. That's a different build. This one is the press, and the listening. Next is how what you say becomes a command, and where it gets saved.",
