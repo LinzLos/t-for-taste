@@ -82,7 +82,7 @@ export function Index() {
           <h1 className="tlay tlay--face">T for<br /><RollingDot /></h1>
         </div>
       </div>
-      <p className="lede">Small React and TypeScript builds about how AI products should feel.</p>
+      <p className="lede">React and TypeScript builds about how AI products should feel.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
           <li key={meta.slug} data-status={meta.status}>
