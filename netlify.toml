@@ -15,10 +15,18 @@
   to = "/index.html"
   status = 200
 
-# The microphone is the whole episode: without this the browser blocks getUserMedia on the page.
+# Same-origin getUserMedia is allowed by default; this states the policy rather than enabling it, and
+# it keeps the mic working if the site is ever framed or moved behind another origin.
 [[headers]]
   for = "/*"
   [headers.values]
     Permissions-Policy = "microphone=(self)"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# The portfolio reads this manifest from another origin to name the newest episode on its card.
+[[headers]]
+  for = "/episodes.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=300"
