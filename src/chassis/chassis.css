@@ -159,9 +159,10 @@ html[data-reduced="true"] .frame-bar, html[data-reduced="true"] .frame-bar .back
 .mark-dot { display: inline-block; vertical-align: baseline; width: .17em; height: .17em;
   margin-left: var(--dot-gap, .075em); border-radius: 50%; background: var(--pink);
   transform: translateY(var(--wm-drop)); }
-/* on hover the underline is the chassis signature; the mark must not also gain one from the drop */
-.frame-bar .back:hover { text-decoration-thickness: 2px; }
-.frame-bar .back:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
+/* No underline here. The pink underline is how a link is drawn; the wordmark is a mark, and it is
+   already drawn — hollow, edged, dropped. Keyboard focus still needs a visible state, so the mark
+   takes the ring rather than borrowing the link's clothes. */
+.frame-bar .back:focus-visible { outline: 2px solid var(--pink); outline-offset: 4px; }
 
 /* no rule above: the stage is inset from the frame, so a full-width line left stubs either side of it */
 .transport { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 20px 16px; font-family: var(--mono); font-size: 14px; }
