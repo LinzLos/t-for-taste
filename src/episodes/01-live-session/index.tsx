@@ -255,12 +255,16 @@ export default function LiveSession() {
   useEffect(() => () => { cancel.current = true }, [])
 
   // Record mode plays itself, so a recording needs no hands. `&hold` stops that.
-  const started = useRef(false)
+  // The flags are read as booleans and `play` is held in a ref: depending on those objects
+  // re-ran this effect on every render, and its cleanup cancelled the timer before it fired.
+  const playRef = useRef(play)
+  useEffect(() => { playRef.current = play })
+  const recordOn = params.has('record'), holdOn = params.has('hold')
   useEffect(() => {
-    if (!chipsOn || started.current || !params.has('record') || params.has('hold')) return // the voice slice is recorded by hand
-    started.current = true
-    const t = setTimeout(play, 700); return () => clearTimeout(t)
-  }, [params, play, chipsOn])
+    if (!recordOn || holdOn) return
+    const t = setTimeout(() => playRef.current(), 700)
+    return () => clearTimeout(t)
+  }, [recordOn, holdOn])
 
   const controls = useMemo(() => ({
     beats: ['rest'] as const,

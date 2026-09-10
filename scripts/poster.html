@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!-- Episode poster generator. The screenshot is the real episode in an iframe, measured and cropped
+     to the grip + composer, so a poster can never drift from what the build actually looks like.
+
+     npm run build && npx vite preview --port 5243
+     chrome --headless=new --window-size=1080,1080 --force-device-scale-factor=2 --hide-scrollbars \
+       --screenshot=out.png --virtual-time-budget=9000 \
+       'http://localhost:5243/scripts/poster.html?ep=01&no=1&title=Listen+Grip&say=...'
+     sips -Z 1080 out.png --out public/posters/01.png                                            -->
+<style>
+  html,body{margin:0;background:#efe9dd}
+  .poster{width:1080px;height:1080px;box-sizing:border-box;padding:72px 72px 64px;
+    background:#efe9dd;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .wm{font-family:"Bevan",Georgia,serif;font-size:30px;line-height:1;color:#efe9dd;
+    -webkit-text-stroke:1.3px #141210;paint-order:stroke fill;
+    text-shadow:2.3px 2.3px 0 #141210;letter-spacing:.005em}
+  .wm i{display:inline-block;width:.17em;height:.17em;margin-left:.075em;border-radius:50%;
+    background:#ff2fa6;transform:translateY(2.3px)}
+  .mid{margin:auto 0}
+  .no{font-family:"Courier Prime",monospace;font-size:22px;color:#67645e;margin:0;letter-spacing:.06em}
+  .title{font-family:"Bevan",Georgia,serif;font-size:132px;line-height:.96;margin:14px 0 0;
+    color:#efe9dd;-webkit-text-stroke:3.4px #141210;paint-order:stroke fill;
+    text-shadow:8px 8px 0 #141210;letter-spacing:-.005em}
+  .card{margin-top:74px;height:200px;box-shadow:0 0 0 2px #141210;position:relative;overflow:hidden;background:#221f2b}
+  .card iframe{position:absolute;left:0;top:0;width:1080px;height:1080px;border:0;transform-origin:0 0}
+  .say{font-family:"Courier Prime",monospace;font-size:29px;line-height:1.5;color:#141210;margin:62px 0 0;max-width:840px}
+  .foot{font-family:"Courier Prime",monospace;font-size:23px;color:#67645e;margin:0;display:flex;justify-content:space-between}
+</style></head><body>
+<div class="poster">
+  <div class="wm">T for Taste<i></i></div>
+  <div class="mid">
+    <p class="no" id="no"></p>
+    <h1 class="title" id="title"></h1>
+    <div class="card"><iframe id="f"></iframe></div>
+    <p class="say" id="say"></p>
+  </div>
+  <p class="foot"><span id="blurb"></span><span>React &middot; TypeScript</span></p>
+</div>
+<script>
+  const q = new URLSearchParams(location.search)
+  const ep = q.get('ep') || '01'
+  document.getElementById('no').textContent = 'T no. ' + (q.get('no') || String(Number(ep)))
+  document.getElementById('title').textContent = q.get('title') || ''
+  document.getElementById('say').textContent = q.get('say') || ''
+  document.getElementById('blurb').textContent = q.get('blurb') || ''
+  const f = document.getElementById('f')
+  f.src = '/index.html#/' + ep + '?record&face'
+
+  // The crop is measured, not guessed: the union of the grip and the composer, padded, scaled to the
+  // card's width, with the card taking whatever height that leaves. Layout changes cannot break it.
+  // Borrow the app's own stylesheets so the poster is set in the real faces and the real tokens,
+  // whether this runs against the dev server or a built bundle.
+  let dressed = false
+  function dress(d) {
+    if (dressed) return
+    d.head.querySelectorAll('link[rel=stylesheet],style').forEach(n => document.head.appendChild(n.cloneNode(true)))
+    dressed = true
+  }
+
+  function fit() {
+    const d = f.contentDocument; if (!d) return false
+    dress(d)
+    const g = d.querySelector('.grip'), c = d.querySelector('.composer')
+    if (!g || !c) return false
+    const a = g.getBoundingClientRect(), b = c.getBoundingClientRect()
+    if (!a.width || !b.width) return false
+    const top = 16, bot = 42, side = 22
+    const x = Math.min(a.left, b.left) - side, y = Math.min(a.top, b.top) - top
+    const w = Math.max(a.right, b.right) - x + side, h = Math.max(a.bottom, b.bottom) - y + bot
+    const card = document.querySelector('.card')
+    const s = card.clientWidth / w
+    card.style.height = Math.round(h * s) + 'px'
+    f.style.transform = 'scale(' + s + ') translate(' + -x + 'px,' + -y + 'px)'
+    return true
+  }
+  const iv = setInterval(() => { if (fit()) clearInterval(iv) }, 120)
+</script></body></html>
