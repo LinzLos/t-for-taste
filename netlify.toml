@@ -23,6 +23,15 @@
     Permissions-Policy = "microphone=(self)"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    # Defence in depth: the site has no backend, no user content and no third-party scripts, so this
+    # is here to contain a compromised dependency rather than to close a hole. Three choices are not
+    # obvious. `frame-ancestors *` is deliberate — episodes are meant to be embeddable, and the
+    # microphone stays gated by Permissions-Policy and the browser's own prompt either way.
+    # `style-src 'unsafe-inline'` is required because motion and React write inline style attributes
+    # on every animated frame. `font-src data:` is required because one bundled face inlines as a
+    # data URI. Scripts stay locked to 'self', which is the directive that actually matters here:
+    # the built HTML carries no inline script, no inline style block and no on* attributes.
+    Content-Security-Policy = "default-src 'self'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors *; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; media-src 'self'"
 
 # The portfolio reads this manifest from another origin to name the newest episode on its card.
 [[headers]]
