@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from 'react'
+import { Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import type { EpisodeMeta } from '../episodes/types'
 import { Stage } from './Stage'
@@ -14,9 +14,11 @@ export function Frame(props: { meta: EpisodeMeta; children: ReactNode }) {
   return <BeatsProvider><FrameInner {...props} /></BeatsProvider>
 }
 
-// Under the stage, like a player: play, the beats, the motion toggle.
-function Transport({ reduced, toggle }: { reduced: boolean; toggle: () => void }) {
+// Under the stage, like a player: play and the beats. The motion toggle lives up in the header —
+// it is a setting for the whole page, not a control for the story.
+function Transport() {
   const ctl = useBeats()
+  if (!ctl) return null
   return (
     <div className="transport">
       {ctl?.play && <button type="button" className="play" onClick={ctl.play} disabled={ctl.playing}>{ctl.playing ? 'playing…' : '▶ play'}</button>}
@@ -28,7 +30,6 @@ function Transport({ reduced, toggle }: { reduced: boolean; toggle: () => void }
         </div>
       )}
       {ctl?.hint && <span className="beats-hint">{ctl.hint}</span>}
-      <button type="button" className="rm-toggle" aria-pressed={reduced} onClick={toggle}>motion {reduced ? 'off' : 'on'}</button>
     </div>
   )
 }
@@ -38,18 +39,30 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
   const record = params.has('record')
   const { reduced, toggle } = useReducedMotion()
 
+  // The bar settles once the page has moved. A passive scroll listener rather than a sentinel: it is
+  // four lines, it cannot be defeated by layout, and one boolean per frame costs nothing.
+  const [stuck, setStuck] = useState(false)
+  useEffect(() => {
+    const on = () => setStuck(window.scrollY > 8)
+    on()
+    window.addEventListener('scroll', on, { passive: true })
+    return () => window.removeEventListener('scroll', on)
+  }, [])
+
   return (
     <div className={record ? 'frame frame--record' : 'frame'}>
       {!record && (
-        <header className="frame-bar">
-          <Link to="/" className="back">T for Taste</Link>
-          <span className="title">{meta.title}</span>
+        <header className="frame-bar" data-stuck={stuck}>
+          {/* the wordmark keeps its period here, still and pink; the episode's name is on the stage
+              itself, so repeating it in the bar was the same words twice in 40px */}
+          <Link to="/" className="back">T for Taste<i className="mark-dot" aria-hidden /></Link>
+          <button type="button" className="rm-toggle" aria-pressed={reduced} onClick={toggle}>motion {reduced ? 'off' : 'on'}</button>
         </header>
       )}
       <Stage record={record} size={meta.stage} fluidMin={meta.fluidMin} height={meta.height}>
         <Suspense fallback={null}>{children}</Suspense>
       </Stage>
-      {!record && <Transport reduced={reduced} toggle={toggle} />}
+      {!record && <Transport />}
       {!record && <Caption meta={meta} />}
       {!record && <Footer />}
     </div>
