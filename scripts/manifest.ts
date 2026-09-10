@@ -4,7 +4,8 @@ import { writeFileSync, mkdirSync } from 'node:fs'
 import { metas } from '../src/episodes/registry'
 import type { ManifestEntry } from '../src/episodes/types'
 
-const SITE = process.env.SITE_URL ?? 'https://linzlos.github.io/t-for-taste'
+// Netlify is the one live home; GitHub Pages was retired 2026-09-10.
+const SITE = process.env.SITE_URL ?? 'https://t-for-taste.netlify.app'
 const pad = (n: number) => String(n).padStart(2, '0')
 
 const entries: ManifestEntry[] = metas
