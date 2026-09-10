@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { episodes } from './episodes'
@@ -53,6 +54,15 @@ const pad = (n: number) => String(n).padStart(2, '0')
 
 export function Index() {
   const rows = episodes.slice().reverse()
+  // ?display=<name> swaps the title face without touching the body, so the rolling dot can be judged
+  // against a different e. Nothing else in the chassis moves.
+  const [params] = useSearchParams()
+  const display = params.get('display')
+  useEffect(() => {
+    if (display) document.documentElement.dataset.display = display
+    else delete document.documentElement.dataset.display
+  }, [display])
+
   return (
     <main className="index">
       <div className="title-clip"><h1>T for<br /><RollingDot /></h1></div>

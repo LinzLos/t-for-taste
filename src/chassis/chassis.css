@@ -9,6 +9,9 @@
   --pink: #ff2fa6;
   --ink-muted: #67645e; /* ink at ~62% on the paper; 4.9:1, so it stays AA at body sizes */
   --serif: "Literata", Georgia, "Times New Roman", serif;
+  /* the display face for the big title; defaults to the body serif until an episode or a flag says otherwise */
+  --display: var(--serif);
+  --display-weight: 700;
   --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
   --mark: "Monofett", var(--mono);
   --sans: "Fredoka", "Nunito", system-ui, sans-serif;
@@ -22,7 +25,11 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 /* index */
 .index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
 .title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
-.index h1 { font-family: var(--serif); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: 700; }
+.index h1 { font-family: var(--display); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: var(--display-weight); }
+/* ?display=vidaloka — a didone with teardrop terminals; tighter, and the ball starts further into the e */
+html[data-display="vidaloka"] { --display: "Vidaloka", Georgia, serif; --display-weight: 400; }
+html[data-display="vidaloka"] .index h1 { letter-spacing: -.045em; }
+html[data-display="vidaloka"] .gate { width: .58em; margin-left: .01em; margin-right: -.3em; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
