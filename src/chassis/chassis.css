@@ -46,22 +46,31 @@ html[data-shade="1"] .tlay--face { color: var(--paper); -webkit-text-stroke: .02
    the face: the two t's come out the same size, so the name's own rhyme shows. */
 html[data-display="abril"] { --display: "Abril Fatface", Georgia, serif; --display-weight: 400; }
 html[data-display="abril"] .tlay { text-transform: lowercase; letter-spacing: -.035em; }
-html[data-display="abril"] .gate { width: .56em; margin-left: -.02em; margin-right: -.3em; }
+html[data-display="abril"] .gate { width: .56em; margin-left: 0; margin-right: -.3em; }
 /* ?display=bevan — a 19th-century wood-type revival, the Figgins lineage: even strokes and a blunt
    e terminal, which is what the in-shade treatment needs to hold together */
 html[data-display="bevan"] { --display: "Bevan", Georgia, serif; --display-weight: 400; }
 html[data-display="bevan"] .tlay { text-transform: lowercase; letter-spacing: -.03em; }
-html[data-display="bevan"] .gate { width: .56em; margin-left: -.02em; margin-right: -.3em; }
+html[data-display="bevan"] .gate { width: .56em; margin-left: 0; margin-right: -.3em; }
 /* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised
    small caps. Every layer transforms together, or the shade stops lining up with the faces. */
 html[data-case="lower"] .tlay { text-transform: lowercase; letter-spacing: -.02em; }
+/* ?body=<name> — the body serif. Literata is a screen face with no press behind it, which reads odd
+   beside a wood-type title and a typewriter mono; these three all have a printing story. */
+html[data-body="caslon"] { --serif: "Libre Caslon Text", Georgia, serif; }
+html[data-body="baskerville"] { --serif: "Libre Baskerville", Georgia, serif; }
+html[data-body="garamond"] { --serif: "EB Garamond", Georgia, serif; }
+/* Baskerville and Caslon run large and small for their size; the body settles back with a nudge */
+html[data-body="baskerville"] body { font-size: 16px; }
+html[data-body="garamond"] body { font-size: 19px; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
 .taste { cursor: default; -webkit-tap-highlight-color: transparent; }
+/* one number for the space between the e and the period: --dot-gap */
 .gate { display: inline-block; position: relative; vertical-align: baseline; width: .6em; height: .34em; overflow: hidden; margin-left: 0; margin-right: -.3em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.ball { position: absolute; left: .015em; bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
+.ball { position: absolute; left: var(--dot-gap, .045em); bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
   background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%); }
 /* The olive: a layer that fades in on hover once the period has settled. Green skin, pimento off-centre. */
 .ball::after { content: ''; position: absolute; inset: 0; border-radius: 50%; opacity: 0; transition: opacity 220ms ease-out;

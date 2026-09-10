@@ -59,6 +59,7 @@ export function Index() {
   const display = params.get('display')
   const textCase = params.get('case')
   const shade = params.get('shade')
+  const body = params.get('body')
   useEffect(() => {
     if (display) document.documentElement.dataset.display = display
     else delete document.documentElement.dataset.display
@@ -66,7 +67,9 @@ export function Index() {
     else delete document.documentElement.dataset.case
     if (shade) document.documentElement.dataset.shade = shade
     else delete document.documentElement.dataset.shade
-  }, [display, textCase, shade])
+    if (body) document.documentElement.dataset.body = body
+    else delete document.documentElement.dataset.body
+  }, [display, textCase, shade, body])
 
   return (
     <main className="index">
