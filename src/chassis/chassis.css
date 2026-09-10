@@ -127,8 +127,10 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 /* frame */
 /* minmax(0,1fr): the column is the viewport, never propped open by the stage's own width */
 .frame { min-height: 100%; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto auto; }
-.frame-bar { display: flex; align-items: center; gap: 2ch; flex-wrap: wrap; padding: 14px 20px; border-bottom: 2px solid var(--rule); font-family: var(--mono); font-size: 15px; }
-.frame-bar .back { text-decoration: none; font-weight: 700; }
+.frame-bar { display: flex; align-items: baseline; gap: 2ch; flex-wrap: wrap; padding: 12px 20px 13px; border-bottom: 2px solid var(--rule); font-family: var(--mono); font-size: 15px; }
+/* the brand in the display face, but solid: the in-shade treatment is a display move and turns to
+   mush at nav size. A wordmark keeps its face and drops its effects when it gets small. */
+.frame-bar .back { text-decoration: none; font-family: var(--display); font-weight: var(--display-weight); text-transform: lowercase; font-size: 21px; letter-spacing: -.02em; line-height: 1; }
 .frame-bar .back:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 .frame-bar .title { flex: 1; }
 /* no rule above: the stage is inset from the frame, so a full-width line left stubs either side of it */
@@ -187,6 +189,7 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
   .episode-list .label, .episode-list .name { font-size: 15px; }
   .episode-list .blurb { font-size: 15px; white-space: normal; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
+  .frame-bar .back { font-size: 18px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }
   .stage-host.stage-host--fluid { height: auto; min-height: 0; }
