@@ -1,4 +1,4 @@
-# T for Taste
+# t for taste
 
 Small React and TypeScript builds about how AI products should feel, one call at a time.
 

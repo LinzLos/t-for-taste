@@ -55,7 +55,7 @@ function FrameInner({ meta, children }: { meta: EpisodeMeta; children: ReactNode
         <header className="frame-bar" data-stuck={stuck}>
           {/* the wordmark keeps its period here, still and pink; the episode's name is on the stage
               itself, so repeating it in the bar was the same words twice in 40px */}
-          <Link to="/" className="back">T for Taste<i className="mark-dot" aria-hidden /></Link>
+          <Link to="/" className="back">t for taste<i className="mark-dot" aria-hidden /></Link>
           <button type="button" className="rm-toggle" aria-pressed={reduced} onClick={toggle}>motion {reduced ? 'off' : 'on'}</button>
         </header>
       )}

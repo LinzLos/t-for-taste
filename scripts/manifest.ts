@@ -18,5 +18,5 @@ const entries: ManifestEntry[] = metas
   }))
 
 mkdirSync('public', { recursive: true })
-writeFileSync('public/episodes.json', JSON.stringify({ series: 'T for Taste', generated: new Date().toISOString(), episodes: entries }, null, 2) + '\n')
+writeFileSync('public/episodes.json', JSON.stringify({ series: 't for taste', generated: new Date().toISOString(), episodes: entries }, null, 2) + '\n')
 console.log(`episodes.json: ${entries.length} live of ${metas.length}`)
