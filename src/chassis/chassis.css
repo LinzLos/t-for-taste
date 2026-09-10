@@ -63,6 +63,15 @@ html[data-body="garamond"] { --serif: "EB Garamond", Georgia, serif; }
 /* Baskerville and Caslon run large and small for their size; the body settles back with a nudge */
 html[data-body="baskerville"] body { font-size: 16px; }
 html[data-body="garamond"] body { font-size: 19px; }
+/* newsprint: the register of a job-printing shop, which is where the display face comes from */
+html[data-body="newsreader"] { --serif: "Newsreader", Georgia, serif; }
+/* a slab body, so the whole chassis is one family of forms */
+html[data-body="bitter"] { --serif: "Bitter", Georgia, serif; }
+html[data-body="bitter"] body { font-size: 16px; }
+/* no third face at all: the title, and everything else in the system voice */
+html[data-body="mono"] { --serif: var(--mono); }
+html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
+html[data-body="mono"] .caption dt { font-style: normal; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
