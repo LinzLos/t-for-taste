@@ -33,8 +33,8 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .tlay--shade { display: none; }
 .tlay--face { position: relative; z-index: 2; margin: 0 0 .3em; }
 /* the ball rides the shade's baseline: the letters are raised, the shade is on the paper, the ball
-   rolls on the paper too. Only the drop, not the sideways shift — sideways would open a gap of paper
-   between the e and the period, and they should sit close. */
+   rolls on the paper too. Only the drop, not the sideways shift — sideways would open a field of paper
+   between the e and the period. The gap itself is --dot-gap: enough to clear the shade's edge, no more. */
 .gate { transform: translateY(var(--shade-y)); }
 /* ?shade=1 — Figgins "in shade": hollow face, ink edge, a hard drop with no blur. Offsets in em so the
    clamp does not turn a 9px drop at 160px into a smear at 56px. */
@@ -70,7 +70,7 @@ html[data-body="garamond"] body { font-size: 19px; }
 /* one number for the space between the e and the period: --dot-gap */
 .gate { display: inline-block; position: relative; vertical-align: baseline; width: .6em; height: .34em; overflow: hidden; margin-left: 0; margin-right: -.3em; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.ball { position: absolute; left: var(--dot-gap, .045em); bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
+.ball { position: absolute; left: var(--dot-gap, .075em); bottom: 0; width: .17em; height: .17em; border-radius: 50%; will-change: transform;
   background: radial-gradient(circle at 34% 34%, #ffb3dd 0 15%, var(--pink) 19%); }
 /* The olive: a layer that fades in on hover once the period has settled. Green skin, pimento off-centre. */
 .ball::after { content: ''; position: absolute; inset: 0; border-radius: 50%; opacity: 0; transition: opacity 220ms ease-out;
@@ -85,9 +85,8 @@ html[data-body="garamond"] body { font-size: 19px; }
 .episode-list { border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 .episode-list a { display: grid; grid-template-columns: 8ch 1fr 1.2fr; gap: 3ch; align-items: center; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); }
-.episode-list .label { font-size: 16px; }
-.episode-list .name { font-size: 22px; line-height: 1.15; color: var(--ink); }
-.episode-list .blurb { font-size: 16px; line-height: 1.4; }
+/* one size, one grey: the number, the name and the line are the same voice */
+.episode-list .label, .episode-list .name, .episode-list .blurb { font-size: 18px; line-height: 1.4; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
@@ -154,8 +153,7 @@ html[data-body="garamond"] body { font-size: 19px; }
   .index { padding: 6vh 20px 10vh; }
   .episode-list a { grid-template-columns: 1fr; gap: 6px; }
   .episode-list a { grid-template-columns: 1fr; min-height: 0; padding: 18px 0; gap: 6px; align-items: start; }
-  .episode-list .name { font-size: 20px; }
-  .episode-list .blurb, .episode-list .label { font-size: 14px; }
+  .episode-list .label, .episode-list .name, .episode-list .blurb { font-size: 15px; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }
