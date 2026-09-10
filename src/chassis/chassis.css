@@ -28,7 +28,9 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 
 /* index */
 .index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
-.title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
+/* the window the title sits in. It needs room sideways too: the hollow face's stroke sits outside the
+   glyph and the drop lands to the right, so a clip with no horizontal padding shaves the first letter. */
+.title-clip { overflow: hidden; padding: .12em .3em .18em .1em; margin: -.12em -.3em -.18em -.1em; }
 /* the three layers share one type spec; only the face is in flow, so it sizes the stack */
 /* the gap under the title belongs to the face layer: .3em of the title's size, not the body's */
 .title-stack { position: relative; }
@@ -95,7 +97,8 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
   background: radial-gradient(circle at 62% 50%, #d1342f 0 26%, #7a8f1c 30%, #55661a 92%, #3d4a12 100%); }
 .ball.is-olive::after { opacity: 1; }
 /* the subhead outranks the episode row: 19 over 15, and the row is muted where this is ink */
-.lede { margin: 0 0 3em; max-width: 46ch; font-size: 19px; line-height: 1.5; }
+/* mono runs wide, so the subhead is sized from the viewport and capped by its own measure */
+.lede { margin: 0 0 3em; max-width: min(46ch, 100%); font-size: clamp(15px, 3.6vw, 19px); line-height: 1.5; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row: name left, one line on what it explores from the midline. Mono at two sizes, ruled, nothing else. */
@@ -105,7 +108,7 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row flows: the number and the name take what they need, the line takes the rest and stays on one
    line by shrinking with the column (cqi) rather than wrapping */
-.episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: baseline; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
+.episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: center; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
 /* one size, one grey: the number, the name and the line are the same voice */
 .episode-list .label, .episode-list .name { font-size: 15px; line-height: 1.4; white-space: nowrap; }
 /* the line holds to one line, sized from the row's own width so it never wraps and never overflows */
@@ -128,7 +131,8 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 .frame-bar .back { text-decoration: none; font-weight: 700; }
 .frame-bar .back:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 .frame-bar .title { flex: 1; }
-.transport { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 10px 20px; border-top: 2px solid var(--rule); font-family: var(--mono); font-size: 14px; }
+/* no rule above: the stage is inset from the frame, so a full-width line left stubs either side of it */
+.transport { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 20px; font-family: var(--mono); font-size: 14px; }
 .transport .rm-toggle { margin-left: auto; }
 .play { font: inherit; background: var(--ink); color: var(--paper); border: 2px solid var(--ink); padding: 2px 12px; cursor: pointer; }
 .play:disabled { opacity: .5; cursor: default; }
@@ -176,6 +180,7 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 /* phone: stack the episode row, tighten the frame, keep everything inside the viewport */
 @media (max-width: 600px) {
   .index { padding: 6vh 20px 10vh; }
+  body { font-size: 15px; }
   .episode-list a { grid-template-columns: 1fr; gap: 6px; }
   /* on a phone the row stacks, so the line can wrap and go back to a readable size */
   .episode-list a { grid-template-columns: 1fr; min-height: 0; padding: 18px 0; gap: 6px; align-items: start; }
