@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 // Two modes. Fluid (default): the stage IS the host, the episode lays itself out responsively,
 // and the social frame is whatever you resize the window to. Record (?record): a fixed 1080 × 1350
 // stage scaled to fit, so a recording from any machine is the same picture.
 import { STAGE } from './stage-size'
 
-export function Stage({ children, record, size = STAGE, fluidMin = 1000 }: { children: ReactNode; record?: boolean; size?: { w: number; h: number }; fluidMin?: number }) {
+export function Stage({ children, record, size = STAGE, fluidMin = 1000, height }: { children: ReactNode; record?: boolean; size?: { w: number; h: number }; fluidMin?: number; height?: number }) {
   const host = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(0.5)
   // Fluid needs room. Under 900px wide (phones, narrow tablets) the scaled 4:5 stage reads better.
@@ -34,7 +34,7 @@ export function Stage({ children, record, size = STAGE, fluidMin = 1000 }: { chi
 
   if (fluid) {
     return (
-      <div className="stage-host stage-host--fluid" ref={host}>
+      <div className="stage-host stage-host--fluid" ref={host} style={height ? ({ '--ep-h': `${height}px` } as CSSProperties) : undefined}>
         {/* the aspect only bites when the host has no fixed height (phones): the box keeps the social frame's shape */}
         <div className="stage-box stage-box--fluid" style={{ aspectRatio: `${size.w} / ${size.h}` }}>
           <div className="stage stage--fluid">{children}</div>

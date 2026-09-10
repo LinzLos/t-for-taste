@@ -35,6 +35,10 @@ export interface EpisodeMeta {
   published?: string
   /** The social frame for this episode. Defaults to 4:5 (1080×1350); square when the story is short. */
   stage?: { w: number; h: number }
+  /** How tall the episode stands on the page, in px. Separate from the recording frame: the page is
+   *  read, not filmed, so it is only as tall as the episode needs. The chassis caps it so the caption
+   *  below is always cut off in view — that edge is the cue that there is more. */
+  height?: number
   /** Body width from which the episode lays itself out fluidly instead of being scaled. Default 1000; 0 = always. */
   fluidMin?: number
 }

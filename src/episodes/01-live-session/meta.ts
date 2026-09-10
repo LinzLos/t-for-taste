@@ -32,4 +32,5 @@ export const meta: EpisodeMeta = {
   // Square: the story is one grip and one field, and a tall frame was empty canvas on every device.
   stage: { w: 1080, h: 1080 },
   fluidMin: 0, // one grip and one field lay themselves out at any width; scaling would shrink the tap target
+  height: 460, // a grip and a field: the canvas below them is texture, not a room to fill
 }
