@@ -316,7 +316,7 @@ export default function LiveSession() {
       onKeyDown={e => { if (e.key === 'Escape') { e.preventDefault(); if (picking) setPicking(false); else if (listening) mic.stop(); else if (open) close() } }}>
       <header className="bar">
         <span className="brand">
-          <span className="agent">Listen Grip</span>
+          <span className="agent">The Listen Grip</span>
           <span className="tagline">Compose a workflow out loud.</span>
         </span>
         <span className="scope">

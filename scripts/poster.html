@@ -18,7 +18,7 @@
     background:#ff2fa6;transform:translateY(2.3px)}
   .mid{margin:auto 0}
   .no{font-family:"Courier Prime",monospace;font-weight:700;font-size:22px;color:#67645e;margin:0;letter-spacing:.06em}
-  .title{font-family:"Bevan",Georgia,serif;font-size:132px;line-height:.96;margin:14px 0 0;
+  .title{font-family:"Bevan",Georgia,serif;font-size:132px;white-space:nowrap;line-height:.96;margin:14px 0 0;
     color:#efe9dd;-webkit-text-stroke:3.4px #141210;paint-order:stroke fill;
     text-shadow:8px 8px 0 #141210;letter-spacing:-.005em}
   .card{margin-top:74px;height:200px;box-shadow:0 0 0 2px #141210;position:relative;overflow:hidden;background:#221f2b}
@@ -73,5 +73,10 @@
     f.style.transform = 'scale(' + s + ') translate(' + -x + 'px,' + -y + 'px)'
     return true
   }
-  const iv = setInterval(() => { if (fit()) clearInterval(iv) }, 120)
+  // The title holds one line whatever it is called: shrink to fit rather than pick a size by hand.
+  function fitTitle() {
+    const t = document.getElementById('title'), room = t.parentElement.clientWidth
+    for (let px = 132; px >= 64 && t.scrollWidth > room; px -= 2) t.style.fontSize = px + 'px'
+  }
+  const iv = setInterval(() => { if (fit()) { fitTitle(); clearInterval(iv) } }, 120)
 </script></body></html>

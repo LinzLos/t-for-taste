@@ -1,11 +1,11 @@
 {
   "series": "t for taste",
-  "generated": "2026-09-10T17:43:52.913Z",
+  "generated": "2026-09-10T18:00:28.726Z",
   "episodes": [
     {
       "number": 1,
       "slug": "live-session",
-      "title": "Listen Grip",
+      "title": "The Listen Grip",
       "blurb": "A shape around starting a conversation.",
       "material": "an LED meter on a grip",
       "library": "motion",

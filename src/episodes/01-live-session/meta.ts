@@ -3,7 +3,7 @@ import type { EpisodeMeta } from '../types'
 export const meta: EpisodeMeta = {
   number: 1,
   slug: 'live-session',
-  title: 'Listen Grip', // her name for it (2026-09-08)
+  title: 'The Listen Grip', // her name for it (2026-09-08, definite article 2026-09-10)
   blurb: 'A shape around starting a conversation.',
   material: 'an LED meter on a grip',
   library: 'motion',
