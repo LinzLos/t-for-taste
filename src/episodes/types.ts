@@ -15,12 +15,15 @@ export interface EpisodeMeta {
   material: string
   /** One library per episode. Never both on the same element. */
   library: MotionLibrary
-  /** The three-line caption. Each line is one sentence. */
+  /** The caption, in the reader's own questions. Each answer is one sentence. */
   caption: {
-    default: string
-    change: string
-    reason: string
-    /** What it is not, when honesty needs a fourth line. */
+    /** What it is: the thing in one line. */
+    is: string
+    /** What it does: what happens when you use it. */
+    does: string
+    /** Why: the decision behind it. */
+    why: string
+    /** What it isn't, when honesty needs a fourth line. */
     not?: string
   }
   /** The episode's colours, grouped, each with its one job in plain words. Restraint, shown. */

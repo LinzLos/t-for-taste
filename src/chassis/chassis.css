@@ -229,7 +229,9 @@ html[data-reduced="true"] .frame-bar, html[data-reduced="true"] .frame-bar .back
 .caption-col { min-width: 0; }
 /* the rule belongs to the column: it starts at its heading and runs the width of that column only */
 .caption h2 { margin: 0 0 18px; padding-bottom: 9px; border-bottom: 2px solid var(--rule); font-family: var(--mono); font-size: 15px; font-weight: 700; line-height: 1; }
-.caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
+/* the label column is sized to the longest label — "What it isn't" — so no label ever wraps and the
+   answers all start on the same line */
+.caption dl { margin: 0; display: grid; grid-template-columns: 14ch 1fr; row-gap: .5em; column-gap: 1ch; }
 .caption dt { font-weight: 700; font-style: normal; }
 .caption dd { margin: 0; }
 .values { border-collapse: collapse; align-self: start; font-family: var(--mono); font-size: 15px; width: 100%; table-layout: fixed; }
@@ -266,7 +268,10 @@ html[data-reduced="true"] .frame-bar, html[data-reduced="true"] .frame-bar .back
   .stage-box--fluid { height: auto; } /* aspect-ratio from the episode's frame takes over */
   .transport { padding: 8px 14px; gap: 10px; font-size: 13px; }
   .caption { padding: 16px 14px; gap: 20px; }
-  .caption dl { grid-template-columns: 7ch 1fr; }
+  /* a 14ch gutter would leave the long answer a ribbon here, so the label takes its own line */
+  .caption dl { grid-template-columns: 1fr; row-gap: 0; }
+  .caption dt { margin-top: .9em; }
+  .caption dt:first-of-type { margin-top: 0; }
 }
 /* clip, not hidden: hidden on the root makes a scroll container and breaks position: sticky */
 body { overflow-x: clip; }

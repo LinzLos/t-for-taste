@@ -1,6 +1,6 @@
 {
   "series": "t for taste",
-  "generated": "2026-09-10T17:05:52.873Z",
+  "generated": "2026-09-10T17:08:37.677Z",
   "episodes": [
     {
       "number": 1,
@@ -10,9 +10,9 @@
       "material": "an LED meter on a grip",
       "library": "motion",
       "caption": {
-        "default": "A voice button that smiles and dances when you talk.",
-        "change": "Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it. Press again and it asks: go on, keep it, or close.",
-        "reason": "A thing you press, that answers only you when you need it. It can be put away and brought back.",
+        "is": "A voice button that smiles and dances when you talk.",
+        "does": "Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it. Press again and it asks: go on, keep it, or close.",
+        "why": "A thing you press, that answers only you when you need it. It can be put away and brought back.",
         "not": "It doesn't write down what you say. That's a different build. This one is the press, and the listening. Next is how what you say becomes a command, and where it gets saved."
       },
       "palette": [

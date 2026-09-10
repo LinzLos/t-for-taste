@@ -8,9 +8,9 @@ export const meta: EpisodeMeta = {
   material: 'a cute little builder',
   library: 'gsap',
   caption: {
-    default: 'A destructive action gets a red button and a confirm dialog.',
-    change: 'Rage-click the thing that keeps failing and the escape hatch appears. Press it, the workspace melts, and you see what the agent did while you clicked.',
-    reason: 'Three of the four things it did never errored. They are real.',
+    is: 'A destructive action gets a red button and a confirm dialog.',
+    does: 'Rage-click the thing that keeps failing and the escape hatch appears. Press it, the workspace melts, and you see what the agent did while you clicked.',
+    why: 'Three of the four things it did never errored. They are real.',
   },
   values: [
     { label: 'Rage detector', value: '5 presses inside 1.5s on the same control' },

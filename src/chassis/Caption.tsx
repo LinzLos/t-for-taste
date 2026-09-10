@@ -1,17 +1,18 @@
 import type { EpisodeMeta } from '../episodes/types'
 
-// Default. Change. Reason. Then the numbers. Same voice every time.
-// Default. Change. Reason. Then what it is not. The colours sit beside it, grouped by what they are for.
+// The reader's own questions, in the order they ask them: what it is, what it does, why, and what it
+// isn't. "Default" and "Change" described the machine's states, not the thing, and nobody asks either.
+// The colours sit beside it, grouped by what they are for.
 export function Caption({ meta }: { meta: EpisodeMeta }) {
   return (
     <aside className={meta.palette?.length ? 'caption caption--split' : 'caption caption--plain'}>
       <div className="caption-col">
         <h2>The call</h2>
         <dl>
-          <dt>Default</dt><dd>{meta.caption.default}</dd>
-          <dt>Change</dt><dd>{meta.caption.change}</dd>
-          <dt>Reason</dt><dd>{meta.caption.reason}</dd>
-          {meta.caption.not && <><dt>Not</dt><dd>{meta.caption.not}</dd></>}
+          <dt>What it is</dt><dd>{meta.caption.is}</dd>
+          <dt>What it does</dt><dd>{meta.caption.does}</dd>
+          <dt>Why</dt><dd>{meta.caption.why}</dd>
+          {meta.caption.not && <><dt>What it isn't</dt><dd>{meta.caption.not}</dd></>}
         </dl>
       </div>
       {meta.palette && meta.palette.length > 0 && (
