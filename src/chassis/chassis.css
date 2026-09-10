@@ -115,6 +115,9 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 .episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: center; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
 /* one size, one grey: the number, the name and the line are the same voice */
 .episode-list .label, .episode-list .name { font-size: 15px; line-height: 1.4; white-space: nowrap; }
+/* the number is a mark, not a word: same size and same grey as the rest of the row, but it carries
+   weight so the eye finds the episode before it reads the name */
+.episode-list .label { font-weight: 700; }
 /* the line holds to one line, sized from the row's own width so it never wraps and never overflows */
 .episode-list .blurb { font-size: clamp(11px, 1.75cqi, 15px); line-height: 1.4; white-space: nowrap; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
@@ -267,6 +270,13 @@ html[data-reduced="true"] .frame-bar, html[data-reduced="true"] .frame-bar .back
   .stage-host.stage-host--fluid { height: auto; min-height: 0; }
   .stage-box--fluid { height: auto; } /* aspect-ratio from the episode's frame takes over */
   .transport { padding: 8px 14px; gap: 10px; font-size: 13px; }
+  /* the three do not fit on one line here, and letting the year wrap on its own left it stranded at
+     the right of an empty row. The mark and the year bookend the first line, the sign-off takes the
+     second, and each line is centred within itself. */
+  .foot { display: grid; grid-template-columns: auto auto; align-items: center; gap: 12px 20px; }
+  .foot .mark-home { grid-area: 1 / 1; }
+  .foot .love { grid-area: 1 / 2; justify-self: end; margin-left: 0; }
+  .foot .sign { grid-area: 2 / 1 / 3 / -1; }
   .caption { padding: 16px 14px; gap: 20px; }
   /* a 14ch gutter would leave the long answer a ribbon here, so the label takes its own line */
   .caption dl { grid-template-columns: 1fr; row-gap: 0; }
