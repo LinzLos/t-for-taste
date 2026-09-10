@@ -1,0 +1,24 @@
+# Netlify serves the site at the root of its own domain, so the base path is "/" here — unlike the
+# GitHub Pages build, which lives under /t-for-taste/. Everything else is the same build.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_BASE = "/"
+  NODE_VERSION = "22"
+
+# The app uses a HashRouter, so every route is served from "/". This catch-all is insurance for
+# anyone who lands on a deep path, and it keeps a refresh from 404ing.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# The microphone is the whole episode: without this the browser blocks getUserMedia on the page.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Permissions-Policy = "microphone=(self)"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
