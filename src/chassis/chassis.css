@@ -84,9 +84,13 @@ html[data-body="garamond"] body { font-size: 19px; }
    each centred on the row's middle, in the muted grey, mono throughout */
 .episode-list { border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
-.episode-list a { display: grid; grid-template-columns: 8ch 1fr 1.2fr; gap: 3ch; align-items: center; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); }
+/* the row flows: the number and the name take what they need, the line takes the rest and stays on one
+   line by shrinking with the column (cqi) rather than wrapping */
+.episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: baseline; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
 /* one size, one grey: the number, the name and the line are the same voice */
-.episode-list .label, .episode-list .name, .episode-list .blurb { font-size: 18px; line-height: 1.4; }
+.episode-list .label, .episode-list .name { font-size: 18px; line-height: 1.4; white-space: nowrap; }
+/* the line holds to one line, sized from the row's own width so it never wraps and never overflows */
+.episode-list .blurb { font-size: clamp(11px, 2.05cqi, 18px); line-height: 1.4; white-space: nowrap; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
@@ -152,8 +156,10 @@ html[data-body="garamond"] body { font-size: 19px; }
 @media (max-width: 600px) {
   .index { padding: 6vh 20px 10vh; }
   .episode-list a { grid-template-columns: 1fr; gap: 6px; }
+  /* on a phone the row stacks, so the line can wrap and go back to a readable size */
   .episode-list a { grid-template-columns: 1fr; min-height: 0; padding: 18px 0; gap: 6px; align-items: start; }
-  .episode-list .label, .episode-list .name, .episode-list .blurb { font-size: 15px; }
+  .episode-list .label, .episode-list .name { font-size: 15px; }
+  .episode-list .blurb { font-size: 15px; white-space: normal; }
   .frame-bar { padding: 10px 14px; gap: 1ch; font-size: 13px; }
   .frame-bar .title { flex-basis: 100%; }
   .stage-host { padding: 12px; height: auto; min-height: 0; }
