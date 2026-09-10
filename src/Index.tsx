@@ -82,13 +82,13 @@ export function Index() {
           <h1 className="tlay tlay--face">T for<br /><RollingDot /></h1>
         </div>
       </div>
-      <p className="lede">React and TypeScript builds about how AI products should feel.</p>
+      <p className="lede">Playful React and TypeScript builds about how AI product should feel.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (
           <li key={meta.slug} data-status={meta.status}>
             {/* her row (Figma 239:338): the name, and one line on what it explores. Mono, ruled, nothing else. */}
             <Link to={`/${pad(meta.number)}`}>
-              <span className="label">T no. {meta.number}</span>
+              <span className="label">t no. {meta.number}</span>
               <span className="name">{meta.title}</span>
               <span className="blurb">{meta.blurb ?? meta.material}</span>
             </Link>

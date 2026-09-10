@@ -39,7 +39,7 @@
 <script>
   const q = new URLSearchParams(location.search)
   const ep = q.get('ep') || '01'
-  document.getElementById('no').textContent = 'T no. ' + (q.get('no') || String(Number(ep)))
+  document.getElementById('no').textContent = 't no. ' + (q.get('no') || String(Number(ep)))
   document.getElementById('title').textContent = q.get('title') || ''
   document.getElementById('say').textContent = q.get('say') || ''
   document.getElementById('blurb').textContent = q.get('blurb') || ''
