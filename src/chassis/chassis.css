@@ -28,9 +28,10 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 
 /* index */
 .index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
-/* the window the title sits in. It needs room sideways too: the hollow face's stroke sits outside the
-   glyph and the drop lands to the right, so a clip with no horizontal padding shaves the first letter. */
-.title-clip { overflow: hidden; padding: .12em .3em .18em .1em; margin: -.12em -.3em -.18em -.1em; }
+/* No clipping here. The hollow face's stroke sits outside the glyph and the drop lands past it, so any
+   window shaves the first letter — and em on this wrapper resolves against the body, not the title, so the
+   padding that was meant to save it was 1.6px. The ball is already clipped by its own gate. */
+.title-clip { }
 /* the three layers share one type spec; only the face is in flow, so it sizes the stack */
 /* the gap under the title belongs to the face layer: .3em of the title's size, not the body's */
 .title-stack { position: relative; }
@@ -136,14 +137,18 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 /* no rule above: the stage is inset from the frame, so a full-width line left stubs either side of it */
 .transport { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 20px; font-family: var(--mono); font-size: 14px; }
 .transport .rm-toggle { margin-left: auto; }
-.play { font: inherit; background: var(--ink); color: var(--paper); border: 2px solid var(--ink); padding: 2px 12px; cursor: pointer; }
-.play:disabled { opacity: .5; cursor: default; }
+/* Chassis controls are links, never boxes. The pink underline is the chassis's signature — it is how a
+   reader tells the frame from the thing inside it, where boxed means pressable. Their state is carried by
+   the word ("motion on" / "motion off"), the same rule the demo's status follows. */
+.play, .beats button, .rm-toggle { font: inherit; background: none; border: 0; color: inherit; padding: 0; cursor: pointer; text-decoration: none; }
+.play:hover, .beats button:hover, .rm-toggle:hover,
+.play:focus-visible, .beats button:focus-visible, .rm-toggle:focus-visible,
+.beats button[aria-current="true"] {
+  text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; outline: none;
+}
+.play:disabled { opacity: .5; cursor: default; text-decoration: none; }
 .beats { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.beats button { font: inherit; background: none; border: 2px solid var(--rule); color: inherit; padding: 2px 10px; cursor: pointer; }
-.beats button[aria-current="true"] { background: var(--ink); color: var(--paper); }
 .beats-hint { opacity: .6; margin-left: 8px; }
-.rm-toggle { font: inherit; background: none; border: 2px solid var(--rule); color: inherit; padding: 2px 10px; cursor: pointer; }
-.rm-toggle[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 
 .stage-host { position: relative; display: grid; place-items: center; padding: 24px; height: calc(100vh - 56px); min-height: 520px; box-sizing: border-box; min-width: 0; overflow: hidden; }
 /* fluid: the stage fills the host; the episode lays itself out */
