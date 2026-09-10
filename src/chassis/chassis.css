@@ -28,7 +28,9 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index h1 { font-family: var(--display); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: var(--display-weight); }
 /* ?display=vidaloka — a didone with teardrop terminals; tighter, and the ball starts further into the e */
 html[data-display="vidaloka"] { --display: "Vidaloka", Georgia, serif; --display-weight: 400; }
-html[data-display="vidaloka"] .index h1 { letter-spacing: -.045em; }
+/* lowercase comes with the face: the two t's come out the same size, so the name's own rhyme shows,
+   and there are no synthesised small caps (Vidaloka has no true small-cap set) */
+html[data-display="vidaloka"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
 html[data-display="vidaloka"] .gate { width: .58em; margin-left: .01em; margin-right: -.3em; }
 /* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised small caps */
 html[data-case="lower"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
