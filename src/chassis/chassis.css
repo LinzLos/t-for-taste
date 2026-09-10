@@ -8,18 +8,21 @@
   --rule: #141210;
   --pink: #ff2fa6;
   --ink-muted: #67645e; /* ink at ~62% on the paper; 4.9:1, so it stays AA at body sizes */
-  --serif: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
+  /* No third face: the title is the display, everything else is the system's voice. A page that is a
+   record of decisions reads truer typewritten than dressed in a book face. */
+  --serif: var(--mono);
   /* the display face for the big title; defaults to the body serif until an episode or a flag says otherwise */
   --display: var(--serif);
   --display-weight: 700;
-  --mono: "Courier Prime", "Courier New", ui-monospace, monospace;
   --mark: "Monofett", var(--mono);
   --sans: "Fredoka", "Nunito", system-ui, sans-serif;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
-body { background: var(--paper); color: var(--ink); font: 17px/1.5 var(--serif); }
+/* 16/1.6 mono: mono runs wide, so it wants a touch less size and a touch more leading than a serif */
+body { background: var(--paper); color: var(--ink); font: 16px/1.6 var(--serif); }
 a { color: inherit; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 
 /* index */
@@ -70,8 +73,8 @@ html[data-body="bitter"] { --serif: "Bitter", Georgia, serif; }
 html[data-body="bitter"] body { font-size: 16px; }
 /* no third face at all: the title, and everything else in the system voice */
 html[data-body="mono"] { --serif: var(--mono); }
+/* the serif flags stay wired for comparison; the default is now the mono itself */
 html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
-html[data-body="mono"] .caption dt { font-style: normal; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
@@ -85,7 +88,8 @@ html[data-body="mono"] .caption dt { font-style: normal; }
 .ball::after { content: ''; position: absolute; inset: 0; border-radius: 50%; opacity: 0; transition: opacity 220ms ease-out;
   background: radial-gradient(circle at 62% 50%, #d1342f 0 26%, #7a8f1c 30%, #55661a 92%, #3d4a12 100%); }
 .ball.is-olive::after { opacity: 1; }
-.lede { margin: 0 0 3em; max-width: 44ch; }
+/* the subhead outranks the episode row: 19 over 15, and the row is muted where this is ink */
+.lede { margin: 0 0 3em; max-width: 46ch; font-size: 19px; line-height: 1.5; }
 .episode-list { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--rule); }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row: name left, one line on what it explores from the midline. Mono at two sizes, ruled, nothing else. */
@@ -95,11 +99,11 @@ html[data-body="mono"] .caption dt { font-style: normal; }
 .episode-list li { border-bottom: 2px solid var(--rule); }
 /* the row flows: the number and the name take what they need, the line takes the rest and stays on one
    line by shrinking with the column (cqi) rather than wrapping */
-.episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: baseline; min-height: 84px; padding: 22px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
+.episode-list a { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 3ch; align-items: baseline; min-height: 68px; padding: 18px 0; box-sizing: border-box; text-decoration: none; color: var(--ink-muted); font-family: var(--mono); container-type: inline-size; }
 /* one size, one grey: the number, the name and the line are the same voice */
-.episode-list .label, .episode-list .name { font-size: 18px; line-height: 1.4; white-space: nowrap; }
+.episode-list .label, .episode-list .name { font-size: 15px; line-height: 1.4; white-space: nowrap; }
 /* the line holds to one line, sized from the row's own width so it never wraps and never overflows */
-.episode-list .blurb { font-size: clamp(11px, 2.05cqi, 18px); line-height: 1.4; white-space: nowrap; }
+.episode-list .blurb { font-size: clamp(11px, 1.75cqi, 15px); line-height: 1.4; white-space: nowrap; }
 .episode-list a:hover .name { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 /* footer: the anchor */
 .foot { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; margin-top: 4em; padding-top: 18px; }
@@ -151,7 +155,7 @@ html[data-body="mono"] .caption dt { font-style: normal; }
 .palette i { width: 22px; height: 22px; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.18); }
 .palette .hex { opacity: .55; }
 .caption dl { margin: 0; display: grid; grid-template-columns: 8ch 1fr; row-gap: .5em; column-gap: 1ch; }
-.caption dt { font-weight: 700; font-style: italic; }
+.caption dt { font-weight: 700; font-style: normal; }
 .caption dd { margin: 0; }
 .values { border-collapse: collapse; align-self: start; font-family: var(--mono); font-size: 15px; width: 100%; table-layout: fixed; }
 .values th { width: 11ch; }
