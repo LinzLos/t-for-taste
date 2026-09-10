@@ -1,7 +1,7 @@
 /* T/01 · the composer that shows its hand. Two fonts, three colours with jobs:
    teal = the system is alive · orange = you are doing something right now · salmon = trouble. */
 .session {
-  --canvas: #241f27; --panel: #220633; --field: #352c3c;
+  --canvas: #241f27; --field: #352c3c;
   --line: #3f3547; --line-strong: #4f4459;
   --ink: #eaefd3; --muted: #98978f; --live: #1b998b; --active: #ff6a1f; --hot: #ff9b71;
   --sans: "Fredoka", "Nunito", system-ui, sans-serif;
@@ -47,7 +47,7 @@
 .menu-search::placeholder { color: var(--muted); }
 .menu-item { padding: 11px 12px; text-align: left; color: var(--muted); border-bottom: 2px solid var(--line); transition: color 120ms ease-out, background 120ms ease-out; }
 .menu-item:last-child { border-bottom: 0; }
-.menu-item:hover, .menu-item:focus-visible, .menu-item--on { color: var(--ink); background: var(--panel); outline: none; }
+.menu-item:hover, .menu-item:focus-visible, .menu-item--on { color: var(--ink); background: var(--canvas); outline: none; }
 
 /* the gripper: a rigid grid and one soft mouth. Docked under the bar, top left with the name, always there.
    It is the way in: hover says it is pressable (the dots go orange), a press opens the composer listening. */

@@ -17,10 +17,15 @@ export const meta: EpisodeMeta = {
     not: "It doesn't write down what you say. That's a different build. This one is the press, and the listening. Next is how what you say becomes a command, and where it gets saved.",
   },
   // Six colours, one job each. The three that mean something are the ones a viewer has to learn.
+  // Every colour the episode uses, and the one job each has. Restraint is not a short list — it is
+  // that nothing here does two things. Three of the nine carry state; the rest are the material.
   palette: [
     { hex: '#241f27', job: 'the ground' },
     { hex: '#352c3c', job: 'the field' },
+    { hex: '#3f3547', job: 'edges' },
+    { hex: '#4f4459', job: 'edges, one step up' },
     { hex: '#eaefd3', job: 'words' },
+    { hex: '#98978f', job: 'quiet words' },
     { hex: '#1b998b', job: 'the system is alive' },
     { hex: '#ff6a1f', job: "you're doing something" },
     { hex: '#ff9b71', job: 'trouble' },
