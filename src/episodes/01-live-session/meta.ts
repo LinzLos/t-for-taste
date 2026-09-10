@@ -4,7 +4,7 @@ export const meta: EpisodeMeta = {
   number: 1,
   slug: 'live-session',
   title: 'Listen Grip', // her name for it (2026-09-08)
-  blurb: 'A shape around starting a conversation with the system.',
+  blurb: 'A shape around starting a conversation.',
   material: 'an LED meter on a grip',
   library: 'motion',
   // ELI5 pass (Lindsay, 2026-09-06): nothing a person outside the tool must look up. One sentence each.
