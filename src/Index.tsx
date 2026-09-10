@@ -30,7 +30,6 @@ function RollingDot() {
     <>
     <span className="taste" onClick={toggle}>Taste</span>
     <span className="gate" onMouseEnter={() => settled && setOlive(true)} onMouseLeave={() => setOlive(false)} onClick={toggle}>
-      <span className="sr">.</span>
       {reduced ? (
         <span className={olive ? 'ball is-olive' : 'ball'} aria-hidden />
       ) : (
@@ -59,16 +58,27 @@ export function Index() {
   const [params] = useSearchParams()
   const display = params.get('display')
   const textCase = params.get('case')
+  const shade = params.get('shade')
   useEffect(() => {
     if (display) document.documentElement.dataset.display = display
     else delete document.documentElement.dataset.display
     if (textCase) document.documentElement.dataset.case = textCase
     else delete document.documentElement.dataset.case
-  }, [display, textCase])
+    if (shade) document.documentElement.dataset.shade = shade
+    else delete document.documentElement.dataset.shade
+  }, [display, textCase, shade])
 
   return (
     <main className="index">
-      <div className="title-clip"><h1>T for<br /><RollingDot /></h1></div>
+      {/* Two layers. The letters are raised and cast the shade onto the paper; the ball rolls on that
+          same paper, so it rides the shade's baseline, not the letters'. The gate still does the
+          clipping, so the ball is never seen crossing a letter. */}
+      <div className="title-clip">
+        <div className="title-stack">
+          <span className="tlay tlay--shade" aria-hidden>T for<br />Taste</span>
+          <h1 className="tlay tlay--face">T for<br /><RollingDot /></h1>
+        </div>
+      </div>
       <p className="lede">Small React and TypeScript builds about how AI products should feel.</p>
       <ol className="episode-list">
         {rows.map(({ meta }) => (

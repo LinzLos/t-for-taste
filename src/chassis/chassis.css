@@ -25,15 +25,35 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 /* index */
 .index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
 .title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
-.index h1 { font-family: var(--display); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: var(--display-weight); }
+/* the three layers share one type spec; only the face is in flow, so it sizes the stack */
+/* the gap under the title belongs to the face layer: .3em of the title's size, not the body's */
+.title-stack { position: relative; --shade-x: 0em; --shade-y: 0em; }
+.tlay { font-family: var(--display); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; font-weight: var(--display-weight); margin: 0; display: block; }
+.tlay--shade { position: absolute; left: 0; top: 0; pointer-events: none; }
+.tlay--shade { display: none; }
+.tlay--face { position: relative; z-index: 2; margin: 0 0 .3em; }
+/* the ball rides the shade's baseline: the letters are raised, the shade is on the paper, the ball
+   rolls on the paper too */
+.gate { transform: translate(var(--shade-x), var(--shade-y)); }
+/* ?shade=1 — Figgins "in shade": hollow face, ink edge, a hard drop with no blur. Offsets in em so the
+   clamp does not turn a 9px drop at 160px into a smear at 56px. */
+html[data-shade="1"] .title-stack { --shade-x: .058em; --shade-y: .058em; }
+html[data-shade="1"] .tlay--shade { display: block; color: var(--ink); transform: translate(var(--shade-x), var(--shade-y)); z-index: 1; }
+html[data-shade="1"] .tlay--face { color: var(--paper); -webkit-text-stroke: .022em var(--ink); paint-order: stroke fill; }
 /* ?display=abril — the free fat didone: teardrop terminals, tight by default, and an e whose thick
    terminal ends near the baseline, so the ball reads as rolling out from under it. Lowercase comes with
    the face: the two t's come out the same size, so the name's own rhyme shows. */
 html[data-display="abril"] { --display: "Abril Fatface", Georgia, serif; --display-weight: 400; }
-html[data-display="abril"] .index h1 { text-transform: lowercase; letter-spacing: -.035em; }
+html[data-display="abril"] .tlay { text-transform: lowercase; letter-spacing: -.035em; }
 html[data-display="abril"] .gate { width: .56em; margin-left: 0; margin-right: -.3em; }
-/* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised small caps */
-html[data-case="lower"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
+/* ?display=bevan — a 19th-century wood-type revival, the Figgins lineage: even strokes and a blunt
+   e terminal, which is what the in-shade treatment needs to hold together */
+html[data-display="bevan"] { --display: "Bevan", Georgia, serif; --display-weight: 400; }
+html[data-display="bevan"] .tlay { text-transform: lowercase; letter-spacing: -.03em; }
+html[data-display="bevan"] .gate { width: .56em; margin-left: .02em; margin-right: -.3em; }
+/* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised
+   small caps. Every layer transforms together, or the shade stops lining up with the faces. */
+html[data-case="lower"] .tlay { text-transform: lowercase; letter-spacing: -.02em; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */
