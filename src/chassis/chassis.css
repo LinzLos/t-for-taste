@@ -26,12 +26,12 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 .index { max-width: 924px; margin: 0 auto; padding: 8vh 24px 12vh; }
 .title-clip { overflow: hidden; padding: .12em 0 .18em; margin: -.12em 0 -.18em; }
 .index h1 { font-family: var(--display); font-size: clamp(56px, 12vw, 160px); line-height: .85; letter-spacing: -.03em; margin: 0 0 .3em; font-weight: var(--display-weight); }
-/* ?display=vidaloka — a didone with teardrop terminals; tighter, and the ball starts further into the e */
-html[data-display="vidaloka"] { --display: "Vidaloka", Georgia, serif; --display-weight: 400; }
-/* lowercase comes with the face: the two t's come out the same size, so the name's own rhyme shows,
-   and there are no synthesised small caps (Vidaloka has no true small-cap set) */
-html[data-display="vidaloka"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
-html[data-display="vidaloka"] .gate { width: .58em; margin-left: .01em; margin-right: -.3em; }
+/* ?display=abril — the free fat didone: teardrop terminals, tight by default, and an e whose thick
+   terminal ends near the baseline, so the ball reads as rolling out from under it. Lowercase comes with
+   the face: the two t's come out the same size, so the name's own rhyme shows. */
+html[data-display="abril"] { --display: "Abril Fatface", Georgia, serif; --display-weight: 400; }
+html[data-display="abril"] .index h1 { text-transform: lowercase; letter-spacing: -.035em; }
+html[data-display="abril"] .gate { width: .56em; margin-left: 0; margin-right: -.3em; }
 /* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised small caps */
 html[data-case="lower"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
