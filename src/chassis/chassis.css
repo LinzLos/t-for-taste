@@ -30,6 +30,8 @@ a { color: inherit; text-decoration-color: var(--pink); text-decoration-thicknes
 html[data-display="vidaloka"] { --display: "Vidaloka", Georgia, serif; --display-weight: 400; }
 html[data-display="vidaloka"] .index h1 { letter-spacing: -.045em; }
 html[data-display="vidaloka"] .gate { width: .58em; margin-left: .01em; margin-right: -.3em; }
+/* ?case=lower — the two t's come out the same size, so the name's own rhyme shows; no synthesised small caps */
+html[data-case="lower"] .index h1 { text-transform: lowercase; letter-spacing: -.02em; }
 /* The gate: an empty inline-block whose bottom edge sits on the baseline. Its left edge is the e's
    right edge. overflow hidden clips anything still inside the letter. Width ≈ the period's advance. */
 /* wide enough to the right for the overshoot; the negative margin keeps the layout at the period's advance */

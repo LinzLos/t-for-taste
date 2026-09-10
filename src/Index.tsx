@@ -58,10 +58,13 @@ export function Index() {
   // against a different e. Nothing else in the chassis moves.
   const [params] = useSearchParams()
   const display = params.get('display')
+  const textCase = params.get('case')
   useEffect(() => {
     if (display) document.documentElement.dataset.display = display
     else delete document.documentElement.dataset.display
-  }, [display])
+    if (textCase) document.documentElement.dataset.case = textCase
+    else delete document.documentElement.dataset.case
+  }, [display, textCase])
 
   return (
     <main className="index">
