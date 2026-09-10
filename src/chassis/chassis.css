@@ -146,9 +146,21 @@ html[data-body="mono"] body { font-size: 16px; line-height: 1.6; }
 html[data-reduced="true"] .frame-bar, html[data-reduced="true"] .frame-bar .back { transition: none; }
 /* the brand in the display face, but solid: the in-shade treatment is a display move and turns to
    mush at nav size. A wordmark keeps its face and drops its effects when it gets small. */
-.frame-bar .back { text-decoration: none; font-family: var(--display); font-weight: var(--display-weight); text-transform: lowercase; font-size: 21px; letter-spacing: -.02em; line-height: 1; display: inline-flex; align-items: baseline; }
-/* the period, still: on the landing it rolls, here it is simply part of the mark */
-.mark-dot { width: .19em; height: .19em; margin-left: .07em; border-radius: 50%; background: var(--pink); align-self: flex-end; margin-bottom: .04em; }
+/* The wordmark wears the title's treatment — hollow face, ink edge, hard drop — but at its own scale.
+   The title's floors (2.5px edge, 5px drop) are tuned for 56px and up; at 21px they would be 12% and 24%
+   of the letter. These are proportional instead, so the mark reads the same at any size it is set. */
+.frame-bar .back { --wm-drop: .075em; --wm-edge: .042em;
+  text-decoration: none; font-family: var(--display); font-weight: var(--display-weight);
+  text-transform: lowercase; font-size: 21px; letter-spacing: -.02em; line-height: 1;
+  color: var(--paper); -webkit-text-stroke: var(--wm-edge) var(--ink); paint-order: stroke fill;
+  text-shadow: var(--wm-drop) var(--wm-drop) 0 var(--ink); }
+/* the period, still. Same proportions as the title's ball (.17em wide, .075em clear of the e) and it
+   rides the drop's baseline, the way the rolling one does — inline-block on the baseline, then dropped. */
+.mark-dot { display: inline-block; vertical-align: baseline; width: .17em; height: .17em;
+  margin-left: var(--dot-gap, .075em); border-radius: 50%; background: var(--pink);
+  transform: translateY(var(--wm-drop)); }
+/* on hover the underline is the chassis signature; the mark must not also gain one from the drop */
+.frame-bar .back:hover { text-decoration-thickness: 2px; }
 .frame-bar .back:hover { text-decoration: underline; text-decoration-color: var(--pink); text-decoration-thickness: 2px; text-underline-offset: .2em; }
 
 /* no rule above: the stage is inset from the frame, so a full-width line left stubs either side of it */
