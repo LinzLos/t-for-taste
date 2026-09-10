@@ -8,15 +8,14 @@ export const meta: EpisodeMeta = {
   material: 'an LED meter on a grip',
   library: 'motion',
   // ELI5 pass (Lindsay, 2026-09-06): nothing a person outside the tool must look up. One sentence each.
+  // Lindsay's edit, 2026-09-09. Four fixes: the answers named as they appear on screen, "I" → "It"
+  // (the tool never speaks in the first person), and the last line made grammatical.
   caption: {
-    default: "A voice button shows a wiggling line whether or not you're talking.",
-    change: 'Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it.',
-    // For the thing, and only the fact: no claim about what anyone will feel or remember (Lindsay, 2026-09-06).
-    reason: 'A thing you press, that answers only you.',
-    not: "It doesn't write down what you say. That's a different build. This one is the press, and the listening. Where a request goes once you've kept it is the next one.",
+    default: 'A voice grip that is push to talk.',
+    change: 'Press the grip and it listens through your mic, nothing else. The dots unroll into a sound meter, and only your voice moves it. Press again and it asks: go on, keep it, or close.',
+    reason: 'A thing you press, that answers only you when you need it. It can be put away and brought back.',
+    not: "It doesn't write down what you say. That's a different build. This one is the press, and the listening. Next is how what you say becomes a command, and where it gets saved.",
   },
-  // The numbers table is cut: a number without the decision it serves is trivia, and it drifts.
-  // The spec in docs/ is the "if you're stealing this".
   // Six colours, one job each. The three that mean something are the ones a viewer has to learn.
   palette: [
     { hex: '#241f27', job: 'the ground' },
