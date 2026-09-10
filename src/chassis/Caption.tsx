@@ -5,14 +5,19 @@ import type { EpisodeMeta } from '../episodes/types'
 export function Caption({ meta }: { meta: EpisodeMeta }) {
   return (
     <aside className={meta.palette?.length ? 'caption caption--split' : 'caption caption--plain'}>
-      <dl>
-        <dt>Default</dt><dd>{meta.caption.default}</dd>
-        <dt>Change</dt><dd>{meta.caption.change}</dd>
-        <dt>Reason</dt><dd>{meta.caption.reason}</dd>
-        {meta.caption.not && <><dt>Not</dt><dd>{meta.caption.not}</dd></>}
-      </dl>
+      <div className="caption-col">
+        <h2>The call</h2>
+        <dl>
+          <dt>Default</dt><dd>{meta.caption.default}</dd>
+          <dt>Change</dt><dd>{meta.caption.change}</dd>
+          <dt>Reason</dt><dd>{meta.caption.reason}</dd>
+          {meta.caption.not && <><dt>Not</dt><dd>{meta.caption.not}</dd></>}
+        </dl>
+      </div>
       {meta.palette && meta.palette.length > 0 && (
-        <div className="palette">
+        <div className="caption-col">
+          <h2>The palette</h2>
+          <div className="palette">
           {meta.palette.map(g => (
             <section key={g.group}>
               <h3>{g.group}</h3>
@@ -27,7 +32,8 @@ export function Caption({ meta }: { meta: EpisodeMeta }) {
                 ))}
               </ul>
             </section>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </aside>
